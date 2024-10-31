@@ -257,11 +257,12 @@ struct ListTeams: View {
                     }.padding(.vertical)
                 }
             }
-            ToolbarItem(placement: .navigationBarLeading){
-                Text(viewModel.df.string(from: ProvisioningProfile.profile()?.expiryDate ?? .now)).font(.caption).onTapGesture {
-                    viewModel.statsFile = Report().generate()
-                }
-            }
+//            ToolbarItem(placement: .navigationBarLeading){
+//                Text(viewModel.df.string(from: ProvisioningProfile.profile()?.expiryDate ?? .now)).font(.caption).onTapGesture {
+//                    viewModel.statsFile = Report().generate()
+//                }
+//                Text(viewModel.profile?.formattedExpiryDate ?? "some error")
+//            }
         }
         .quickLookPreview($viewModel.statsFile)
         .overlay(viewModel.reportLang && (viewModel.matchSelected != nil || !viewModel.reportMatches.isEmpty) ? langChooseModal() : nil)

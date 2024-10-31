@@ -66,7 +66,7 @@ struct SetData: View {
                     Text("ask.details".trad().uppercased()).font(.caption).foregroundColor(.gray).frame(maxWidth: .infinity, alignment: .leading).padding([.horizontal, .top])
                     VStack{
                         Toggle("ask.details.error".trad(), isOn: $viewModel.errorDetail).disabled(viewModel.match.n_players<6).tint(.cyan)
-                        Toggle("ask.details.direction".trad(), isOn: $viewModel.directionDetail).disabled(viewModel.match.n_players<6).tint(.cyan)
+//                        Toggle("ask.details.direction".trad(), isOn: $viewModel.directionDetail).disabled(viewModel.match.n_players<6).tint(.cyan)
                     }.padding().background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8))
                     
                     NavigationLink(destination: StatsView(viewModel: StatsViewModel(team: viewModel.team, match: viewModel.match, set: viewModel.set)), isActive: $viewModel.saved){

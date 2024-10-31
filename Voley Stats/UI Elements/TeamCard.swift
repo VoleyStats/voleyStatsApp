@@ -28,10 +28,10 @@ struct TeamCard: View{
                             Text("\(team.matches().count) "+"matches".trad())
                         }
                     }.padding().frame(maxWidth: .infinity, alignment: .leading)
-                    if team.pass{
-                        Image(systemName: "ticket.fill").resizable().aspectRatio(contentMode: .fit).rotationEffect(.degrees(-20))
-                            .frame(width: 50, height: 50).padding().background(Color.swatch.dark.high).clipShape(Circle()).foregroundStyle(.cyan)
-                    }
+//                    if team.pass{
+//                        Image(systemName: "ticket.fill").resizable().aspectRatio(contentMode: .fit).rotationEffect(.degrees(-20))
+//                            .frame(width: 50, height: 50).padding().background(Color.swatch.dark.high).clipShape(Circle()).foregroundStyle(.cyan)
+//                    }
                 }
             }.frame(maxWidth: .infinity, alignment: .leading).padding()
             

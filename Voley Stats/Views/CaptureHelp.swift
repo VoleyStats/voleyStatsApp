@@ -170,7 +170,7 @@ struct CaptureHelp: View {
                                         Text("\("earned.tip".trad())").fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
                                         
                                         Text("\("blockout".trad())").font(.title3.weight(.bold)).foregroundStyle(.green).padding(.top).frame(maxWidth: .infinity, alignment: .leading)
-                                        Text("\("earned.dump".trad())").fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
+                                        Text("\("earned.blockout".trad())").fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
                                         
                                         Text("\("downhit".trad())").font(.title3.weight(.bold)).foregroundStyle(.green).padding(.top).frame(maxWidth: .infinity, alignment: .leading)
                                         Text("\("earned.downhit".trad())").fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
@@ -192,8 +192,8 @@ struct CaptureHelp: View {
                                         Text("\("tip".trad())").font(.title3.weight(.bold)).foregroundStyle(Color.swatch.yellow.base).padding(.top).frame(maxWidth: .infinity, alignment: .leading)
                                         Text("\("error.attack".trad())").fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
                                         
-                                        Text("\("dump".trad())").font(.title3.weight(.bold)).foregroundStyle(Color.swatch.yellow.base).padding(.top).frame(maxWidth: .infinity, alignment: .leading)
-                                        Text("\("error.attack".trad())").fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
+//                                        Text("\("dump".trad())").font(.title3.weight(.bold)).foregroundStyle(Color.swatch.yellow.base).padding(.top).frame(maxWidth: .infinity, alignment: .leading)
+//                                        Text("\("error.attack".trad())").fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
                                         
                                         Text("\("downhit".trad())").font(.title3.weight(.bold)).foregroundStyle(Color.swatch.yellow.base).padding(.top).frame(maxWidth: .infinity, alignment: .leading)
                                         Text("\("error.attack".trad())").fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
@@ -255,27 +255,28 @@ struct CaptureHelp: View {
                                             Text("\("general.their.errors".trad())").fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
                                             Image("theirErrors").resizable().aspectRatio(contentMode: .fit)
                                         }
-                                        
-                                        Text("serve.errors".trad()).fixedSize(horizontal: false, vertical: true).font(.title3.weight(.bold)).padding(.top).frame(maxWidth: .infinity, alignment: .leading)
-                                        HStack{
-                                            Text("\("general.serve.errors".trad())").fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
-                                            Image("srv_errors").resizable().aspectRatio(contentMode: .fit)
-                                        }
+                                        //ACTIONS IN A ROW
+//                                        Text("serve.errors".trad()).fixedSize(horizontal: false, vertical: true).font(.title3.weight(.bold)).padding(.top).frame(maxWidth: .infinity, alignment: .leading)
+//                                        HStack{
+//                                            Text("\("general.serve.errors".trad())").fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
+//                                            Image("srv_errors").resizable().aspectRatio(contentMode: .fit)
+//                                        }
                                         Text("error.distribution".trad()).fixedSize(horizontal: false, vertical: true).font(.title3.weight(.bold)).padding(.top).frame(maxWidth: .infinity, alignment: .leading)
                                         HStack{
                                             Text("\("general.error.distribution".trad())").fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
                                             Image("errDistribution").resizable().aspectRatio(contentMode: .fit)
-                                        }
-                                        Text("attack.distribution".trad()).fixedSize(horizontal: false, vertical: true).font(.title3.weight(.bold)).padding(.top).frame(maxWidth: .infinity, alignment: .leading)
-                                        HStack{
-                                            Text("\("general.attack.distribution".trad())").fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
-                                            Image("atkDistribution").resizable().aspectRatio(contentMode: .fit)
                                         }
                                         Text("attack.chart".trad()).fixedSize(horizontal: false, vertical: true).font(.title3.weight(.bold)).padding(.top).frame(maxWidth: .infinity, alignment: .leading)
                                         HStack{
                                             Text("\("general.attack.chart".trad())").fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
                                             Image("atkGraph").resizable().aspectRatio(contentMode: .fit)
                                         }
+                                        Text("attack.distribution".trad()).fixedSize(horizontal: false, vertical: true).font(.title3.weight(.bold)).padding(.top).frame(maxWidth: .infinity, alignment: .leading)
+                                        HStack{
+                                            Text("\("general.attack.distribution".trad())").fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
+                                            Image("atkDistribution").resizable().aspectRatio(contentMode: .fit)
+                                        }
+                                        //SERVE DETAIL CHART
                                         Text("receive.chart".trad()).fixedSize(horizontal: false, vertical: true).font(.title3.weight(.bold)).padding(.top).frame(maxWidth: .infinity, alignment: .leading)
                                         HStack{
                                             Text("\("general.receive.chart".trad())").fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
@@ -300,18 +301,18 @@ struct CaptureHelp: View {
                                         Text("break.point.explanation".trad()).fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
                                     }
                                 }
-                                CollapsibleListElement(expanded: false, title: "direction.detail".trad()){
-                                    VStack{
-                                        Text("direction.detail.explanation".trad()).fixedSize(horizontal: false, vertical: true).padding(.vertical, 10).frame(maxWidth: .infinity, alignment: .leading)
-                                        
-                                    }
-                                }
-                                CollapsibleListElement(expanded: false, title: "heatmap.detail".trad()){
-                                    VStack{
-                                        Text("heatmap.detail.explanation".trad()).fixedSize(horizontal: false, vertical: true).padding(.vertical, 10).frame(maxWidth: .infinity, alignment: .leading)
-                                        
-                                    }
-                                }
+//                                CollapsibleListElement(expanded: false, title: "direction.detail".trad()){
+//                                    VStack{
+//                                        Text("direction.detail.explanation".trad()).fixedSize(horizontal: false, vertical: true).padding(.vertical, 10).frame(maxWidth: .infinity, alignment: .leading)
+//                                        
+//                                    }
+//                                }
+//                                CollapsibleListElement(expanded: false, title: "heatmap.detail".trad()){
+//                                    VStack{
+//                                        Text("heatmap.detail.explanation".trad()).fixedSize(horizontal: false, vertical: true).padding(.vertical, 10).frame(maxWidth: .infinity, alignment: .leading)
+//                                        
+//                                    }
+//                                }
                                 CollapsibleListElement(expanded: false, title: "stats.per.area".trad()){
                                     VStack{
                                         Text("area.explanation".trad()).fixedSize(horizontal: false, vertical: true).padding(.vertical, 10).frame(maxWidth: .infinity, alignment: .leading)

@@ -474,7 +474,8 @@ struct Lang{
             "set.preferences":"Set preferences",
             "in.row":"in a row",
             "player.edit":"Edit player",
-            "rotation.qr":"Rotation QR"
+            "rotation.qr":"Rotation QR",
+            "game.graph":"Game Graph"
         ],
         "es":[
             "your.teams":"Tus equipos",
@@ -766,7 +767,7 @@ struct Lang{
             "earned.ace":"Un saque que resulta en un punto directo o en un error de recepción.",
             "earned.spike":"Un remate directo al suelo o que termina en un error de defensa del rival.",
             "earned.tip":"Un golpe suave, normalmente con la yema de los dedos, directo al suelo o que termina en un error de defensa del rival.",
-            "earned.lockout":"Ataque o finta que toca el bloqueo contrario y bota directamente fuera del campo.",
+            "earned.blockout":"Ataque o finta que toca el bloqueo contrario y bota directamente fuera del campo.",
             "earned.downhit":"Golpe o pase realizado desde el suelo, directo al suelo o que termina en un error de defensa del contrario.",
             "earned.block":"Cuando el baløn tocado por el bloqueo termina en punto.",
             "error.actions":"Acciones de error (amarillo)",

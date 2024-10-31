@@ -42,7 +42,7 @@ struct MatchStats: View {
                             CollapsibleListElement(expanded: false, title: "rotation".trad()){
                                 subviews["rotation", [], viewModel]
                             }
-                            if viewModel.match.n_players == 6{
+                            if false{//viewModel.match.n_players == 6{
                                 CollapsibleListElement(expanded: false, title: "direction.detail".trad()){
                                         HStack{
                                             VStack{

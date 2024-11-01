@@ -255,12 +255,14 @@ struct CaptureHelp: View {
                                             Text("\("general.their.errors".trad())").fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
                                             Image("theirErrors").resizable().aspectRatio(contentMode: .fit)
                                         }
-                                        //ACTIONS IN A ROW
-//                                        Text("serve.errors".trad()).fixedSize(horizontal: false, vertical: true).font(.title3.weight(.bold)).padding(.top).frame(maxWidth: .infinity, alignment: .leading)
-//                                        HStack{
-//                                            Text("\("general.serve.errors".trad())").fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
-//                                            Image("srv_errors").resizable().aspectRatio(contentMode: .fit)
-//                                        }
+                                        Text("actions.in.row".trad()).fixedSize(horizontal: false, vertical: true).font(.title3.weight(.bold)).padding(.top).frame(maxWidth: .infinity, alignment: .leading)
+                                        HStack{
+                                            Text("\("actions.in.row.description".trad())").fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
+                                            VStack{
+                                                Image("earn_row").resizable().aspectRatio(contentMode: .fit)
+                                                Image("error_row").resizable().aspectRatio(contentMode: .fit)
+                                            }
+                                        }
                                         Text("error.distribution".trad()).fixedSize(horizontal: false, vertical: true).font(.title3.weight(.bold)).padding(.top).frame(maxWidth: .infinity, alignment: .leading)
                                         HStack{
                                             Text("\("general.error.distribution".trad())").fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
@@ -276,19 +278,16 @@ struct CaptureHelp: View {
                                             Text("\("general.attack.distribution".trad())").fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
                                             Image("atkDistribution").resizable().aspectRatio(contentMode: .fit)
                                         }
-                                        //SERVE DETAIL CHART
+                                        Text("serve.chart".trad()).fixedSize(horizontal: false, vertical: true).font(.title3.weight(.bold)).padding(.top).frame(maxWidth: .infinity, alignment: .leading)
+                                        HStack{
+                                            Text("\("general.serve.chart".trad())").fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
+                                            Image("srv_chart").resizable().aspectRatio(contentMode: .fit)
+                                        }
                                         Text("receive.chart".trad()).fixedSize(horizontal: false, vertical: true).font(.title3.weight(.bold)).padding(.top).frame(maxWidth: .infinity, alignment: .leading)
                                         HStack{
                                             Text("\("general.receive.chart".trad())").fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
                                             Image("rcv_graph").resizable().aspectRatio(contentMode: .fit)
                                         }
-//                                        Text("receive.rating".trad()).fixedSize(horizontal: false, vertical: true).font(.title3.weight(.bold)).padding(.top).frame(maxWidth: .infinity, alignment: .leading)
-//                                        Text("\("general.receive.rating".trad())").fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
-//                                        
-//                                        Text("kill.percentage".trad()).fixedSize(horizontal: false, vertical: true).font(.title3.weight(.bold)).padding(.top).frame(maxWidth: .infinity, alignment: .leading)
-//                                        Text("\("general.kill.percentage".trad())").fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
-//                                        
-//                                        Text("general.match.bests".trad()).fixedSize(horizontal: false, vertical: true).padding(.top).frame(maxWidth: .infinity, alignment: .leading)
                                     }
                                 }
                                 CollapsibleListElement(expanded: false, title: "rotation".trad()){

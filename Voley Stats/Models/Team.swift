@@ -6,6 +6,7 @@ import FirebaseFirestore
 import FirebaseAuth
 
 class Team: Model {
+    typealias Expression = SQLite.Expression
 //    var id:Int;
     var name:String
     var orgnization:String
@@ -14,17 +15,21 @@ class Team: Model {
     var color: Color
     var order: Int
     var code: String
+    var pass:Bool
+    var seasonEnd:Date
     static func ==(lhs: Team, rhs: Team) -> Bool {
         return lhs.id == rhs.id
     }
 
-    init(name:String, organization:String, category:String, gender:String, color:Color, order: Int, code: String? = nil, id:Int?){
+    init(name:String, organization:String, category:String, gender:String, color:Color, order: Int, pass: Bool, seasonEnd:Date = Date.distantPast, code: String? = nil, id:Int?){
         self.name=name
         self.orgnization=organization
         self.category=category
         self.gender=gender
         self.color = color
         self.order = order
+        self.pass = pass
+        self.seasonEnd = seasonEnd
         if code != nil{
             self.code = code!
         }else{
@@ -48,6 +53,8 @@ class Team: Model {
                     Expression<String>("gender") <- team.gender,
                     Expression<String>("code") <- team.code,
                     Expression<Int>("order") <- team.order,
+                    Expression<Bool>("pass") <- team.pass,
+                    Expression<Date>("season_end") <- team.seasonEnd,
                     Expression<Int>("id") <- team.id
                 ))
             }else{
@@ -58,7 +65,9 @@ class Team: Model {
                     Expression<String>("color") <- team.color.toHex() ?? "000000",
                     Expression<String>("gender") <- team.gender,
                     Expression<String>("code") <- team.code,
-                    Expression<Int>("order") <- team.order
+                    Expression<Int>("order") <- team.order,
+                    Expression<Bool>("pass") <- team.pass,
+                    Expression<Date>("season_end") <- team.seasonEnd
                 ))
                 team.id = Int(id)
             }
@@ -71,6 +80,7 @@ class Team: Model {
         }
         return nil
     }
+    
     func update() -> Bool{
         guard let database = DB.shared.db else {
             print("no db")
@@ -85,6 +95,8 @@ class Team: Model {
                 Expression<String>("gender") <- self.gender,
                 Expression<String>("code") <- self.code,
                 Expression<Int>("order") <- self.order,
+                Expression<Bool>("pass") <- self.pass,
+                Expression<Date>("season_end") <- self.seasonEnd
             ])
             if try database.run(update) > 0 {
 //                DB.saveToFirestore(collection: "teams", object: self)
@@ -95,6 +107,7 @@ class Team: Model {
         }
         return false
     }
+    
     func delete(deletePlayers: Bool = true) -> Bool{
         guard let database = DB.shared.db else {
             print("no db")
@@ -119,6 +132,7 @@ class Team: Model {
         }
         return false
     }
+    
     func matches(startDate: Date? = nil, endDate: Date? = nil) -> [Match]{
         var matches: [Match] = []
         do {
@@ -148,6 +162,7 @@ class Team: Model {
                     league: match[Expression<Bool>("league")],
                     code: match[Expression<String>("code")],
                     live: match[Expression<Bool>("live")],
+                    pass: match[Expression<Bool>("pass")],
                     tournament: Tournament.find(id: match[Expression<Int>("tournament")]),
                     id: match[Expression<Int>("id")]))
             }
@@ -157,6 +172,7 @@ class Team: Model {
             return []
         }
     }
+    
     func tournaments() -> [Tournament]{
         var tournaments: [Tournament] = []
         do{
@@ -171,7 +187,8 @@ class Team: Model {
                     team: Team.find(id: tournament[Expression<Int>("team")])!,
                     location: tournament[Expression<String>("location")],
                     startDate: tournament[Expression<Date>("date_start")],
-                    endDate: tournament[Expression<Date>("date_end")]))
+                    endDate: tournament[Expression<Date>("date_end")],
+                    pass: tournament[Expression<Bool>("pass")]))
             }
             return tournaments
         } catch {
@@ -179,37 +196,7 @@ class Team: Model {
             return []
         }
     }
-//    func scouts() -> [Scout]{
-//        var scouts: [Scout] = []
-//        do {
-//            guard let database = DB.shared.db else {
-//                print("no db")
-//                return []
-//            }
-//            
-//            var query = Table("scout").filter(Expression<Int>("team_related")==self.id).filter(Expression<String>("action") == "create")
-//            
-//            
-//            for scout in try database.prepare(query) {
-//                scouts.append(Scout(
-//                    id: scout[Expression<Int>("id")],
-//                    teamName: scout[Expression<String>("team_name")],
-//                    teamRelated: Team.find(id: scout[Expression<Int>("team_related")]) ?? Team(name: "error", organization: "error", category: "error", gender: "error", color: .red, order = 0, id: 0),
-//                    player: scout[Expression<Int>("player")],
-//                    rotation: scout[Expression<String>("rotation")].components(separatedBy: NSCharacterSet(charactersIn: "[,] ") as CharacterSet).filter{ Int($0) != nil }.map{ Int($0)! },
-//                    action: scout[Expression<String>("action")],
-//                    difficulty: scout[Expression<Int>("difficulty")],
-//                    from: scout[Expression<Int>("from")],
-//                    to: scout[Expression<Int>("to")],
-//                    date: scout[Expression<Date>("date")]
-//                    ))
-//            }
-//            return scouts
-//        }catch{
-//            print(error)
-//            return []
-//        }
-//    }
+    
     func players() -> [Player]{
         var players: [Player] = []
         do{
@@ -229,15 +216,17 @@ class Team: Model {
 //            for player in try database.prepare(Table("player").filter(ps.contains(Expression<Int>("id")))) {
 //                players.append(Player(name: player[Expression<String>("name")], number: player[Expression<Int>("number")], team: player[Expression<Int>("team")], active: player[Expression<Int>("active")], birthday: player[Expression<Date>("birthday")], position: PlayerPosition(rawValue: player[Expression<String>("position")])!, id: player[Expression<Int>("id")]))
 //            }
-            return players
+            return players.sorted(by: {$0.id < $1.id})
         } catch {
             print(error)
             return []
         }
     }
+    
     func activePlayers() -> [Player]{
             return self.players().filter{$0.active == 1}
     }
+    
     static func all() -> [Team]{
         var teams: [Team] = []
         do{
@@ -246,7 +235,7 @@ class Team: Model {
                 return []
             }
             for team in try database.prepare(Table("team").order(Expression<Int>("order"))) {
-                teams.append(Team(name: team[Expression<String>("name")], organization: team[Expression<String>("organization")], category: team[Expression<String>("category")], gender: team[Expression<String>("gender")], color: Color(hex: team[Expression<String>("color")]) ?? .black, order: team[Expression<Int>("order")], code: team[Expression<String>("code")], id: team[Expression<Int>("id")]))
+                teams.append(Team(name: team[Expression<String>("name")], organization: team[Expression<String>("organization")], category: team[Expression<String>("category")], gender: team[Expression<String>("gender")], color: Color(hex: team[Expression<String>("color")]) ?? .black, order: team[Expression<Int>("order")], pass: team[Expression<Bool>("pass")], seasonEnd: team[Expression<Date>("season_end")], code: team[Expression<String>("code")], id: team[Expression<Int>("id")]))
             }
             return teams
         } catch {
@@ -254,6 +243,7 @@ class Team: Model {
             return []
         }
     }
+    
     static func find(id: Int) -> Team?{
         do{
             guard let database = DB.shared.db else {
@@ -262,10 +252,26 @@ class Team: Model {
             guard let team = try database.pluck(Table("team").filter(Expression<Int>("id") == id)) else {
                 return nil
             }
-            return Team(name: team[Expression<String>("name")], organization: team[Expression<String>("organization")], category: team[Expression<String>("category")], gender: team[Expression<String>("gender")], color: Color(hex: team[Expression<String>("color")]) ?? .black, order: team[Expression<Int>("order")], code: team[Expression<String>("code")], id: team[Expression<Int>("id")])
+            return Team(name: team[Expression<String>("name")], organization: team[Expression<String>("organization")], category: team[Expression<String>("category")], gender: team[Expression<String>("gender")], color: Color(hex: team[Expression<String>("color")]) ?? .black, order: team[Expression<Int>("order")], pass: team[Expression<Bool>("pass")], seasonEnd: team[Expression<Date>("season_end")], code: team[Expression<String>("code")], id: team[Expression<Int>("id")])
         } catch {
             print(error)
             return nil
+        }
+    }
+    
+    func addPass(){
+        self.pass = true
+        self.seasonEnd = Calendar.current.date(byAdding: .year, value: 1, to: .now) ?? .now
+//        print(self.seasonEnd)
+        if self.update(){
+            self.matches().forEach{match in
+                match.pass = true
+                match.update()
+            }
+            self.tournaments().forEach{tournament in
+                tournament.pass = true
+                tournament.update()
+            }
         }
     }
     
@@ -398,7 +404,6 @@ class Team: Model {
         }
     }
     
-
     func fullStats(startDate: Date? = nil, endDate: Date? = nil, matches: [Match] = [], tournaments: [Tournament] = [], player: Player? = nil)->Dictionary<String,Dictionary<String,Int>>{
         let stats = self.stats(startDate: startDate, endDate: endDate, matches: matches, tournaments: tournaments, player: player)
 

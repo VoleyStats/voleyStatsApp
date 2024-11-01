@@ -14,8 +14,8 @@
             filePath = "Voley Stats/Views/Capture.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "504"
-            endingLineNumber = "504"
+            startingLineNumber = "572"
+            endingLineNumber = "572"
             landmarkName = "adjustmentModal()"
             landmarkType = "7">
          </BreakpointContent>
@@ -46,8 +46,8 @@
             filePath = "Voley Stats/Views/Capture.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "292"
-            endingLineNumber = "292"
+            startingLineNumber = "318"
+            endingLineNumber = "318"
             landmarkName = "body"
             landmarkType = "24">
          </BreakpointContent>
@@ -62,8 +62,8 @@
             filePath = "Voley Stats/Views/Capture.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "293"
-            endingLineNumber = "293"
+            startingLineNumber = "319"
+            endingLineNumber = "319"
             landmarkName = "body"
             landmarkType = "24">
          </BreakpointContent>

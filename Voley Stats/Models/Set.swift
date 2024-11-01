@@ -2,6 +2,7 @@ import SQLite
 import SwiftUI
 
 class Set: Model {
+    typealias Expression = SQLite.Expression
 //    var id:Int;
     var number:Int
     var first_serve:Int
@@ -180,6 +181,7 @@ class Set: Model {
         self.result = 0
         self.score_us = 0
         self.score_them = 0
+        self.rotation = Rotation()
         self.update()
         self.stats().forEach({$0.delete()})
     }

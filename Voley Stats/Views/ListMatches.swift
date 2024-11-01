@@ -44,29 +44,49 @@ struct ListMatches: View {
                                     .font(.caption)
                                     .padding(.vertical,10).padding(.horizontal, 20).background(.white.opacity(0.1)).clipShape(Capsule())
                                     //.frame(maxWidth: .infinity, alignment: .trailing)
-                                    .foregroundColor(viewModel.reportMatches.isEmpty ? .gray : .white)
+                                    .foregroundColor((viewModel.reportMatches.isEmpty) ? .gray : .white)
                             }.disabled(viewModel.reportMatches.isEmpty)
                             Button(action:{
-                                viewModel.reportLang.toggle()
+                                if(viewModel.reportMatches.allSatisfy{$0.pass} && !viewModel.reportMatches.isEmpty){
+                                    viewModel.reportLang.toggle()
+                                }
 //                                viewModel.statsFile = Report(team: viewModel.team(), matches: viewModel.reportMatches).generate()
                                 //                            viewModel.export.toggle()
                             }){
 //                                        Image(systemName: "square.and.arrow.up")
-                                Text("PDF")
+                                HStack{
+                                    if (!viewModel.reportMatches.allSatisfy{$0.pass}){
+                                        Image(systemName: "lock.fill")
+                                    }
+                                    Text("PDF")
+                                }
                                     .font(.caption)
                                     .padding(.vertical,10).padding(.horizontal, 20).background(.white.opacity(0.1)).clipShape(Capsule())
-                                    .disabled(viewModel.reportMatches.isEmpty)//.frame(maxWidth: .infinity, alignment: .trailing)
-                                    .foregroundColor(viewModel.reportMatches.isEmpty ? .gray : .white)
-                            }
+                                    //.frame(maxWidth: .infinity, alignment: .trailing)
+                                    .foregroundColor((!viewModel.reportMatches.allSatisfy{$0.pass} || viewModel.reportMatches.isEmpty) ? .gray : .white)
+                            }.disabled(!viewModel.reportMatches.allSatisfy{$0.pass} || viewModel.reportMatches.isEmpty)
                         }else{
-                            if viewModel.showTournaments{
-                                NavigationLink(destination: tournamentMatches ? AnyView(MatchData(viewModel: MatchDataModel(team: viewModel.team(), match: nil, league: viewModel.league, tournament: viewModel.tournament))) : AnyView(TournamentData(viewModel: TournamentDataModel(team: viewModel.team(), tournament: nil)))){
-                                    Image(systemName: "plus").font(.caption).padding(.vertical,10).padding(.horizontal, 20).background(.white.opacity(0.1)).clipShape(Capsule()).foregroundColor(viewModel.team().players().count < 3 ? .gray : .white)
-                                }.disabled(viewModel.team().players().count < 3)
-                            } else{
-                                NavigationLink(destination: AnyView(MatchData(viewModel: MatchDataModel(team: viewModel.team(), match: nil, league: viewModel.league, tournament: viewModel.tournament)))){
-                                    Image(systemName: "plus").font(.caption).padding(.vertical,10).padding(.horizontal, 20).background(.white.opacity(0.1)).clipShape(Capsule()).foregroundColor(viewModel.team().players().count < 3 ? .gray : .white)
-                                }.disabled(viewModel.team().players().count < 3)
+                            if !(viewModel.team().pass && viewModel.team().seasonEnd < .now){
+                                if viewModel.showTournaments{
+                                    if viewModel.tournament != nil{
+                                        if !viewModel.tournament!.pass || .now <= Calendar.current.date(byAdding: .day, value: 7, to: viewModel.tournament!.endDate) ?? .distantPast{
+                                            NavigationLink(destination: MatchData(viewModel: MatchDataModel(team: viewModel.team(), match: nil, league: viewModel.league, tournament: viewModel.tournament))){
+                                                Image(systemName: "plus").font(.caption).padding(.vertical,10).padding(.horizontal, 20).background(.white.opacity(0.1)).clipShape(Capsule()).foregroundColor(viewModel.team().players().count < 3 ? .gray : .white)
+                                            }.disabled(viewModel.team().players().count < 3)
+                                        }
+                                    }else{
+                                        if !(viewModel.tournament?.pass ?? false) || viewModel.tournament?.endDate ?? .distantFuture < .now{
+                                            NavigationLink(destination: TournamentData(viewModel: TournamentDataModel(team: viewModel.team(), tournament: nil))){
+                                                Image(systemName: "plus").font(.caption).padding(.vertical,10).padding(.horizontal, 20).background(.white.opacity(0.1)).clipShape(Capsule()).foregroundColor(viewModel.team().players().count < 3 ? .gray : .white)
+                                            }.disabled(viewModel.team().players().count < 3)
+                                        }
+                                    }
+                                    
+                                } else{
+                                    NavigationLink(destination: AnyView(MatchData(viewModel: MatchDataModel(team: viewModel.team(), match: nil, league: viewModel.league, tournament: viewModel.tournament)))){
+                                        Image(systemName: "plus").font(.caption).padding(.vertical,10).padding(.horizontal, 20).background(.white.opacity(0.1)).clipShape(Capsule()).foregroundColor(viewModel.team().players().count < 3 ? .gray : .white)
+                                    }.disabled(viewModel.team().players().count < 3)
+                                }
                             }
                         }
                         
@@ -82,6 +102,16 @@ struct ListMatches: View {
                             viewModel.getMatchesElements(team: viewModel.team())
                         }.padding()
                         
+                    }
+                    if tournamentMatches && viewModel.tournament != nil{
+                        HStack{
+                            Image(systemName: "chevron.left")
+                            Text("tournaments".trad())
+                        }.padding().frame(maxWidth: .infinity, alignment: .leading).onTapGesture{
+                            tournamentMatches.toggle()
+                            viewModel.tournament = nil
+                            viewModel.getMatchesElements(team: viewModel.team())
+                        }.padding()
                     }
                 }
                 if matchesEmpty(){
@@ -138,16 +168,7 @@ struct ListMatches: View {
                         } else {
                             VStack{
                                 
-                                if tournamentMatches && viewModel.tournament != nil{
-                                    HStack{
-                                        Image(systemName: "chevron.left")
-                                        Text("tournaments".trad())
-                                    }.padding().frame(maxWidth: .infinity, alignment: .leading).onTapGesture{
-                                        tournamentMatches.toggle()
-                                        viewModel.tournament = nil
-                                        viewModel.getMatchesElements(team: viewModel.team())
-                                    }
-                                }
+                                
                                 //                            ZStack{
                                 //                                //                                            Capsule()
                                 //                                RoundedRectangle(cornerRadius: 15).stroke(.gray, style: StrokeStyle(dash: [5]))
@@ -178,7 +199,10 @@ struct ListMatches: View {
                                         
                                         ZStack{
                                             //                                            Capsule()
-                                            RoundedRectangle(cornerRadius: 15).fill(.white.opacity(0.1))
+                                            RoundedRectangle(cornerRadius: 15).fill(t.pass && !viewModel.team().pass ? .cyan.opacity(0.1) : .white.opacity(0.1))
+                                            if t.pass && !viewModel.team().pass{
+                                                RoundedRectangle(cornerRadius: 15).stroke(.cyan, lineWidth: 1)
+                                            }
                                             HStack{
                                                 VStack(alignment: .leading){
                                                     Text("\(t.name)".trad())
@@ -204,16 +228,21 @@ struct ListMatches: View {
                                         }.foregroundColor(.white).frame(height: 60).padding().onTapGesture {
                                             viewModel.matches = t.matches()
                                             viewModel.tournament = t
-                                            tournamentMatches.toggle()
+                                            tournamentMatches = true
                                         }
-                                        .confirmationDialog("tournament.delete.description".trad(), isPresented: $deleting, titleVisibility: .visible){
-                                            Button("tournament.delete".trad(), role: .destructive){
-                                                
+                                        .alert(isPresented: $deleting){
+                                            Alert(title: Text("tournament.delete".trad()), message: Text("tournament.delete.description".trad()), primaryButton: .destructive(Text("delete".trad())){
                                                 if viewModel.tournament?.delete() ?? false{
                                                     viewModel.tournaments = viewModel.team().tournaments()
                                                 }
-                                                
-                                            }
+                                            }, secondaryButton: .cancel(Text("cancel".trad())))
+//                                            Button("tournament.delete".trad(), role: .destructive){
+//                                                
+//                                                if viewModel.tournament?.delete() ?? false{
+//                                                    viewModel.tournaments = viewModel.team().tournaments()
+//                                                }
+//                                                
+//                                            }
                                         }
                                     }
                                 }

@@ -50,13 +50,13 @@
 		5505DC382C41300D0020CA32 /* DirectionsCourt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5505DC372C41300D0020CA32 /* DirectionsCourt.swift */; };
 		5505DC3A2C5F82940020CA32 /* DirectionsGraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5505DC392C5F82940020CA32 /* DirectionsGraph.swift */; };
 		55163B1F2C1B1CD800E85870 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 55163B1E2C1B1CD800E85870 /* GoogleService-Info.plist */; };
+		551C10C72CC2B0FA00B3D215 /* SetData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 551C10C62CC2B0F500B3D215 /* SetData.swift */; };
 		552CFEBB2AEE3A8A00F5F3A4 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 552CFEBA2AEE3A8A00F5F3A4 /* FirebaseFirestore */; };
 		552CFEBD2AEE3A8A00F5F3A4 /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 552CFEBC2AEE3A8A00F5F3A4 /* FirebaseFirestoreSwift */; };
 		552CFEBF2AEE3C4200F5F3A4 /* FirebaseFirestoreCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = 552CFEBE2AEE3C4200F5F3A4 /* FirebaseFirestoreCombine-Community */; };
 		552EE4632B2C50B200A3E2E0 /* Polygon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 552EE4622B2C50B200A3E2E0 /* Polygon.swift */; };
 		552EE4652B2C563E00A3E2E0 /* RadarChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 552EE4642B2C563E00A3E2E0 /* RadarChart.swift */; };
 		5537F92F2B516178009BD75E /* Path.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5537F92E2B516178009BD75E /* Path.swift */; };
-		553E631E2B2A3AC9007D3D95 /* SetData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 553E631D2B2A3AC9007D3D95 /* SetData.swift */; };
 		55445E4C2BC91425006528A2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 55445E4B2BC91424006528A2 /* LaunchScreen.storyboard */; };
 		5556E08F29F1416A00D8F7B5 /* ListTeams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5556E08E29F1416A00D8F7B5 /* ListTeams.swift */; };
 		5556E09129F141B400D8F7B5 /* Capture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5556E09029F141B400D8F7B5 /* Capture.swift */; };
@@ -113,6 +113,8 @@
 		558472EE2C00E7E7008602EC /* Dropdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 558472ED2C00E7E7008602EC /* Dropdown.swift */; };
 		558472F02C0264F2008602EC /* CategoryGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 558472EF2C0264F2008602EC /* CategoryGroup.swift */; };
 		558472F22C05B8EB008602EC /* Switch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 558472F12C05B8EB008602EC /* Switch.swift */; };
+		5586EF9C2CA4232300636BAF /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5586EF9B2CA4230500636BAF /* Category.swift */; };
+		5586EF9D2CA4232300636BAF /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5586EF9B2CA4230500636BAF /* Category.swift */; };
 		559E3E322A9670B40040FF59 /* Rotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 559E3E312A9670B40040FF59 /* Rotation.swift */; };
 		559E3E342A975B3B0040FF59 /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 559E3E332A975B3B0040FF59 /* PlayerView.swift */; };
 		55B7DCFD2B3AE90B002F4DF5 /* ProvisioningProfile in Frameworks */ = {isa = PBXBuildFile; productRef = 55B7DCFC2B3AE90B002F4DF5 /* ProvisioningProfile */; };
@@ -196,6 +198,7 @@
 		5505DC372C41300D0020CA32 /* DirectionsCourt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionsCourt.swift; sourceTree = "<group>"; };
 		5505DC392C5F82940020CA32 /* DirectionsGraph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionsGraph.swift; sourceTree = "<group>"; };
 		55163B1E2C1B1CD800E85870 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		551C10C62CC2B0F500B3D215 /* SetData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetData.swift; sourceTree = "<group>"; };
 		55236E812B178305007B9A3E /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		55236E832B178305007B9A3E /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		55236ED02B17E4EC007B9A3E /* Intents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Intents.framework; path = System/Library/Frameworks/Intents.framework; sourceTree = SDKROOT; };
@@ -203,7 +206,6 @@
 		552EE4622B2C50B200A3E2E0 /* Polygon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Polygon.swift; sourceTree = "<group>"; };
 		552EE4642B2C563E00A3E2E0 /* RadarChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadarChart.swift; sourceTree = "<group>"; };
 		5537F92E2B516178009BD75E /* Path.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Path.swift; sourceTree = "<group>"; };
-		553E631D2B2A3AC9007D3D95 /* SetData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SetData.swift; path = ../../../../../.Trash/SetData.swift; sourceTree = "<group>"; };
 		55445E4B2BC91424006528A2 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		5556E08E29F1416A00D8F7B5 /* ListTeams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListTeams.swift; sourceTree = "<group>"; };
 		5556E09029F141B400D8F7B5 /* Capture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Capture.swift; sourceTree = "<group>"; };
@@ -259,6 +261,7 @@
 		558472ED2C00E7E7008602EC /* Dropdown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dropdown.swift; sourceTree = "<group>"; };
 		558472EF2C0264F2008602EC /* CategoryGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryGroup.swift; sourceTree = "<group>"; };
 		558472F12C05B8EB008602EC /* Switch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Switch.swift; sourceTree = "<group>"; };
+		5586EF9B2CA4230500636BAF /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
 		559E3E312A9670B40040FF59 /* Rotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rotation.swift; sourceTree = "<group>"; };
 		559E3E332A975B3B0040FF59 /* PlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
 		55BCF3F32B766BA4005F3B52 /* SummaryTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryTable.swift; sourceTree = "<group>"; };
@@ -369,7 +372,7 @@
 				5556E09E29F1420700D8F7B5 /* PlayerData.swift */,
 				5556E0A029F1421100D8F7B5 /* PointLog.swift */,
 				5556E0A629F1422C00D8F7B5 /* SetStats.swift */,
-				553E631D2B2A3AC9007D3D95 /* SetData.swift */,
+				551C10C62CC2B0F500B3D215 /* SetData.swift */,
 				5556E0AA29F1423E00D8F7B5 /* StatsView.swift */,
 				5556E0AC29F1424600D8F7B5 /* TeamData.swift */,
 				55FD5DEE2A1A2B8000C9844E /* TournamentData.swift */,
@@ -393,6 +396,7 @@
 		5556E0B029F1431E00D8F7B5 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				5586EF9B2CA4230500636BAF /* Category.swift */,
 				5556E0B129F1433000D8F7B5 /* Action.swift */,
 				5556E0B329F1433700D8F7B5 /* DB.swift */,
 				5556E0B929F1434E00D8F7B5 /* Match.swift */,
@@ -780,6 +784,7 @@
 				5505DBC52C36F2EE0020CA32 /* StatsDataIntent.swift in Sources */,
 				5505DBE52C36F4DA0020CA32 /* String.swift in Sources */,
 				5505DBDB2C36F4B00020CA32 /* Match.swift in Sources */,
+				5586EF9D2CA4232300636BAF /* Category.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -849,7 +854,6 @@
 				55FD5DDC2A152B0900C9844E /* Font.swift in Sources */,
 				5559A6522B8DD03E0022F97C /* ReportConfigurator.swift in Sources */,
 				5556E0E529F1455800D8F7B5 /* DigTable.swift in Sources */,
-				553E631E2B2A3AC9007D3D95 /* SetData.swift in Sources */,
 				55C3EA872B440A110057F22A /* ContentView.swift in Sources */,
 				55F7FD6429EA8D9200617907 /* Voley_StatsApp.swift in Sources */,
 				5559A6542B8F1D4D0022F97C /* TrainingCapture.swift in Sources */,
@@ -863,11 +867,13 @@
 				5556E0BC29F1435600D8F7B5 /* PDF.swift in Sources */,
 				5556E0F529F1467C00D8F7B5 /* String.swift in Sources */,
 				5556E0AD29F1424600D8F7B5 /* TeamData.swift in Sources */,
+				5586EF9C2CA4232300636BAF /* Category.swift in Sources */,
 				550085912AF1480A00668C71 /* RotationTable.swift in Sources */,
 				558472EC2BFF25C4008602EC /* EmptyState.swift in Sources */,
 				556DB1DC2AFA7D1F00DB11E3 /* Toast.swift in Sources */,
 				55FD5DEF2A1A2B8000C9844E /* TournamentData.swift in Sources */,
 				555F13ED2B70C731001D3357 /* ProgressBar.swift in Sources */,
+				551C10C72CC2B0FA00B3D215 /* SetData.swift in Sources */,
 				5556E0F129F1457F00D8F7B5 /* ServeTable.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

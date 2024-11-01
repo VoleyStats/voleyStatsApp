@@ -57,7 +57,7 @@ struct CreateMatchIntent: AppIntent {
     @Parameter(title: "Players", description: "Number of players that must be in the court") var n_players:Int
     @Parameter(title: "Date", description: "Date of the match") var date:Date
     func perform() async throws -> some IntentResult {
-        Match.createMatch(match: Match(opponent: opponent, date: date, location: location, home: home, n_sets: n_sets, n_players: n_players, team: team.dbID, league: league, code: "", live: false, tournament: nil, id: nil))
+        Match.createMatch(match: Match(opponent: opponent, date: date, location: location, home: home, n_sets: n_sets, n_players: n_players, team: team.dbID, league: league, code: "", live: false, pass: true, tournament: nil, id: nil))
         return .result()
     }
 }

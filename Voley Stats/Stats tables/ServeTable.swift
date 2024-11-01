@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct ServeTable: View {
-    let labels: [String] = ["total", "aces", "++", "+", "-", "err", "%", "P-G"]
+    let labels: [String] = ["total", "aces", "++", "+", "-", "err", "mark".trad(), "P-G"]
     let actions: [Int]
     let players: [Player]
     let stats: [Stat]
@@ -27,8 +27,8 @@ struct ServeTable: View {
                 }
             }.padding(3)
             ForEach(players, id:\.id){player in
-                let stat = stats.filter{s in return s.server == player && s.stage == 0 && [8,12,15,32,39,40,41].contains(s.action)}
-                let total = stats.filter{s in return s.server == player && s.stage == 0 && s.to != 0}.count
+                let stat = stats.filter{s in return s.server == player && s.stage != Stages.K1.rawValue && actionsByType["serve"]!.contains(s.action)}
+                let total = stats.filter{s in return s.server == player && s.stage != Stages.K1.rawValue && s.to != 0}.count
                 let won = getWon(stat:stats, player:player)
                 let pts = getTotals(stat: stat)
                 if total != 0 {
@@ -46,8 +46,8 @@ struct ServeTable: View {
                     }.foregroundColor(.white).padding(3)
                 }
             }
-            let stat = stats.filter{s in return s.server.id != 0 && s.stage == 0 && [8,12,15,32,39,40,41].contains(s.action)}
-            let total = stats.filter{s in return s.server.id != 0 && s.stage == 0 && s.to != 0}.count
+            let stat = stats.filter{s in return s.server.id != 0 && s.stage != Stages.K1.rawValue && actionsByType["serve"]!.contains(s.action)}
+            let total = stats.filter{s in return s.server.id != 0 && s.stage != Stages.K1.rawValue && s.to != 0}.count
             let won = getWon(stat:stats)
             let pts = getTotals(stat: stat)
             if total != 0 {

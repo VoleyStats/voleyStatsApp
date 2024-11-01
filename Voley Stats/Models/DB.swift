@@ -9,8 +9,9 @@ import FirebaseAuth
 
 
 class DB {
+    typealias Expression = SQLite.Expression
     var db: Connection? = nil
-    private var version = 5
+    private var version = 6
     static var shared = DB()
     var tables: [Any] = [Team.Type.self, Player.Type.self, ]
     init() {
@@ -24,7 +25,7 @@ class DB {
                     db = try Connection(dbPath)
                     initDatabase()
                     let uv = self.db?.userVersion as! Int32
-                    print(uv)
+//                    print(uv)
                     if uv < version && uv > 0{
                         self.migrate(userVersion: uv)
                     }else if uv == 0{
@@ -217,7 +218,7 @@ class DB {
         }
         if userVersion < 2 && self.version >= 2 {
             do{
-                let sc = SchemaChanger(connection: db!)
+//                let sc = SchemaChanger(connection: db!)
                 do{
 //                    try database.run(Table("team").addColumn(Expression<String>("code"), defaultValue: ""))
 //                    database.run(Table("team"))
@@ -243,7 +244,7 @@ class DB {
         }
         if userVersion < 3 && self.version >= 3 {
             do{
-                let sc = SchemaChanger(connection: db!)
+//                let sc = SchemaChanger(connection: db!)
             
                 do{
                     try database.run(Table("match").addColumn(Expression<String>("code"), defaultValue: ""))
@@ -259,7 +260,7 @@ class DB {
         }
         if userVersion < 4 && self.version >= 4 {
             do{
-                let sc = SchemaChanger(connection: db!)
+//                let sc = SchemaChanger(connection: db!)
             
                 do{
                     try database.run(Table("set").addColumn(Expression<Int>("rotation_turns"), defaultValue: 0))
@@ -275,7 +276,7 @@ class DB {
         
         if userVersion < 5 && self.version >= 5 {
             do{
-                let sc = SchemaChanger(connection: db!)
+//                let sc = SchemaChanger(connection: db!)
             
                 do{
                     try database.run(Table("set").addColumn(Expression<Int>("rotation_number"), defaultValue: 1))
@@ -285,6 +286,28 @@ class DB {
                     try database.run(Table("stat").addColumn(Expression<String>("direction"), defaultValue: ""))
                 }catch{
                     print("error migrating directions")
+                }
+                try db?.execute("PRAGMA user_version = \(version)")
+                print("migrated!")
+            }catch{
+                print("error migrating")
+            }
+        }
+        
+        if userVersion < 6 && self.version >= 6 {
+            do{
+//                let sc = SchemaChanger(connection: db!)
+            
+                do{
+                    
+                    try database.run(Table("team").addColumn(Expression<Bool>("pass"), defaultValue: false))
+                    try database.run(Table("team").addColumn(Expression<Date>("season_end"), defaultValue: Date.distantPast))
+                    try database.run(Table("tournament").addColumn(Expression<Bool>("pass"), defaultValue: false))
+                    try database.run(Table("match").addColumn(Expression<Bool>("pass"), defaultValue: false))
+//                    try database.run(Table("team").addColumn(Expression<Int>("season")))
+                    
+                }catch{
+                    print("error migrating pricing")
                 }
                 try db?.execute("PRAGMA user_version = \(version)")
                 print("migrated!")

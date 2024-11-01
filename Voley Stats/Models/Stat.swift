@@ -3,6 +3,7 @@ import SwiftUI
 import FirebaseFirestore
 
 class Stat: Model {
+    typealias Expression = SQLite.Expression
 //    var id:Int;
     var set:Int
     var player:Int

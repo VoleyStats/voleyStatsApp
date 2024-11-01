@@ -1,6 +1,6 @@
 import SwiftUI
 struct ReceiveTable: View {
-    let labels: [String] = ["player".trad(),"total", "++", "+", "-", "err", "%"]
+    let labels: [String] = ["player".trad(),"total", "++", "+", "-", "err", "mark".trad()]
     let actions: [Int]
     let players: [Player]
     let stats: [Stat]

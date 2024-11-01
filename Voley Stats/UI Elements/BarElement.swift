@@ -9,7 +9,7 @@ import SwiftUI
 
 struct BarElement{
     var value: Int
-    var color: Color
+    var color: UIColor
     var group: String
     var label: String
 }

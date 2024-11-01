@@ -65,7 +65,7 @@
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>8</integer>
+			<integer>4</integer>
 		</dict>
 		<key>SQLite (Playground) 1.xcscheme</key>
 		<dict>
@@ -107,12 +107,12 @@
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>5</integer>
+			<integer>6</integer>
 		</dict>
 		<key>StatsDataIntent.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>2</integer>
+			<integer>0</integer>
 		</dict>
 		<key>TeamStatsConfiguration.xcscheme_^#shared#^_</key>
 		<dict>
@@ -137,7 +137,7 @@
 		<key>Voley Stats.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<key>Voley StatsTests.xcscheme_^#shared#^_</key>
 		<dict>
@@ -147,7 +147,20 @@
 		<key>Voley StatsUITests.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>1</integer>
+			<integer>2</integer>
+		</dict>
+	</dict>
+	<key>SuppressBuildableAutocreation</key>
+	<dict>
+		<key>5505DBBF2C36F2EE0020CA32</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>55F7FD5F29EA8D9200617907</key>
+		<dict>
+			<key>primary</key>
+			<true/>
 		</dict>
 	</dict>
 </dict>

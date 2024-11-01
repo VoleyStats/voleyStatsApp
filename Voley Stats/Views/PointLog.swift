@@ -53,7 +53,12 @@ struct PointLog: View {
                         ZStack{
                             RoundedRectangle(cornerRadius: 15).fill(.white.opacity(0.3))
                             LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 6), spacing: 20){
-                                Text("stage".trad())
+                                HStack{
+                                    Image(systemName: viewModel.descending ? "chevron.up" : "chevron.down").onTapGesture {
+                                        viewModel.descending.toggle()
+                                    }
+                                    Text("stage".trad())
+                                }
                                 Text("server".trad())
                                 Text("player".trad())
                                 Text("action.type".trad())
@@ -62,7 +67,7 @@ struct PointLog: View {
                             }.padding()
                         }.clipped().frame(maxHeight: 20).padding(.vertical)
                         ScrollView {
-                            ForEach(viewModel.finals ? viewModel.finalsLog : viewModel.fullLog, id:\.id){ stat in
+                            ForEach(viewModel.finals ? viewModel.finalsLog : viewModel.fullLog.sorted(by: viewModel.descending ? { $0.order > $1.order } : { $0.order < $1.order }), id:\.id){ stat in
                                 if(stat.action == 0){
                                     HStack(spacing: 20){
                                         Text("time.out.by".trad()+(stat.to == 1 ? "us".trad() : "them".trad())).frame(maxWidth: .infinity)
@@ -113,6 +118,7 @@ class PointLogModel: ObservableObject{
     @Published var finals:Bool = false
     @Published var gameGraph:Bool = false
     @Published var gameGraphData:[(Int, String, Int, CGFloat)] = []
+    @Published var descending:Bool = true
     var x:CGFloat = 0
     var mid:CGFloat = 0
     var set:Set

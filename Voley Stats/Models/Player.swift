@@ -2,6 +2,7 @@ import SQLite
 import SwiftUI
 
 class Player: Model, Hashable {
+    typealias Expression = SQLite.Expression
 //    var id:Int;
     var number:Int
     var team:Int
@@ -71,6 +72,7 @@ class Player: Model, Hashable {
                 ))
                 player.id = Int(id)
             }
+            
 //            DB.saveToFirestore(collection: "player", object: player)
             return player
         } catch {
@@ -78,6 +80,7 @@ class Player: Model, Hashable {
         }
         return nil
     }
+    
     func update() -> Bool{
         guard let database = DB.shared.db else {
             print("no db")
@@ -119,6 +122,7 @@ class Player: Model, Hashable {
         }
         return false
     }
+    
     func delete() -> Bool{
         guard let database = DB.shared.db else {
             print("no db")
@@ -218,6 +222,7 @@ class Player: Model, Hashable {
         df.dateFormat = "yyyy/MM/dd"
         return df.string(from: self.birthday)
     }
+    
     static func deleted() -> [Player]{
         var players: [Player] = []
         do{
@@ -240,6 +245,7 @@ class Player: Model, Hashable {
             return []
         }
     }
+    
     static func find(id: Int) -> Player?{
         do{
             guard let database = DB.shared.db else {
@@ -261,6 +267,7 @@ class Player: Model, Hashable {
             return nil
         }
     }
+    
     func stats(match: Match? = nil, tournament: Tournament? = nil, dateRange: (Date, Date)? = nil) -> [Stat] {
         var stats: [Stat] = []
         do{
@@ -310,6 +317,7 @@ class Player: Model, Hashable {
             return []
         }
     }
+    
     func measurements() -> [PlayerMeasures] {
         var measures: [PlayerMeasures] = []
         do{
@@ -338,6 +346,7 @@ class Player: Model, Hashable {
             return []
         }
     }
+    
     func actualMeasures() -> PlayerMeasures? {
         var measures: PlayerMeasures? = nil
         do{
@@ -365,6 +374,7 @@ class Player: Model, Hashable {
             return nil
         }
     }
+    
     static func truncate(){
         do{
             guard let database = DB.shared.db else {
@@ -392,7 +402,7 @@ class Player: Model, Hashable {
     func report(match: Match? = nil, tournament: Tournament? = nil, dateRange: (Date, Date)? = nil)->Dictionary<String,Dictionary<String,Float>>{
         
         var stats = self.stats(match: match, tournament: tournament, dateRange: dateRange)
-        let serves = stats.filter{s in return s.server == self && s.stage == 0}
+        let serves = stats.filter{s in return s.server == self && s.stage != 1}
         let serveTot = serves.filter{ s in s.to != 0}.count
         let aces = serves.filter{s in return s.action==8}.count
         let serve1 = serves.filter{s in return s.action==39}.count
@@ -479,6 +489,7 @@ class Player: Model, Hashable {
         
         
     }
+    
     static func importTeams(id: Int, player: Int, team:Int, position: String, number: Int, active: Int)->Bool{
         do {
             guard let database = DB.shared.db else {

@@ -94,7 +94,7 @@ struct RadarChartView: View{
         self.size = size - 100
         self._dataPoints = dataPoints
         
-        print(dataPoints.wrappedValue)
+//        print(dataPoints.wrappedValue)
     }
     var body: some View{
         ZStack{

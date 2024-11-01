@@ -25,8 +25,15 @@ struct FillStats: View {
                             HStack{
                                 if viewModel.lastPoint?.action == 0{
                                     Text("time.out.by".trad()+(viewModel.lastPoint?.to == 1 ? "us".trad() : "them".trad())).frame(maxWidth: .infinity)
-                                }else{
+                                }
+                                if viewModel.lastPoint?.action == 98{
                                     Text("score.adjust".trad()).frame(maxWidth: .infinity)
+                                }
+                                if viewModel.lastPoint?.action == 99{
+                                    Image(systemName: "arrow.up.circle.fill").foregroundColor(.green)
+                                    Text("\(Player.find(id: viewModel.lastPoint?.player_in ?? 0)?.name ?? "")")
+                                    Image(systemName: "arrow.down.circle.fill").foregroundColor(.red)
+                                    Text("\(Player.find(id: viewModel.lastPoint?.player ?? 0)?.name ?? "")")
                                 }
                             }.padding().background(.gray).clipShape(RoundedRectangle(cornerRadius: 8))
                         }else{
@@ -67,7 +74,7 @@ struct FillStats: View {
                                 ZStack{
                                     statb.stroke(.blue, lineWidth: 3)
                                     Text("\(viewModel.lastPoint?.score_us ?? 0)").font(Font.body)
-                                }.overlay(Image("Voleibol").scaleEffect(0.007, anchor: .center).opacity(viewModel.lastPoint?.stage==0 ? 1 : 0).padding().offset(x: 20.0, y: -15.0))
+                                }.overlay(Image("Voleibol").scaleEffect(0.007, anchor: .center).opacity(viewModel.lastPoint?.server.id != 0 ? 1 : 0).padding().offset(x: 20.0, y: -15.0))
                                     .overlay{
                                         HStack{
                                             ForEach(0..<viewModel.timeOuts.0, id:\.self){t in
@@ -78,7 +85,7 @@ struct FillStats: View {
                                 ZStack{
                                     statb.stroke(.pink, lineWidth: 3)
                                     Text("\(viewModel.lastPoint?.score_them ?? 0)").font(Font.body)
-                                }.overlay(Image("Voleibol").scaleEffect(0.007, anchor: .center).opacity(viewModel.lastPoint?.stage==1 ? 1 : 0).padding().offset(x: 20.0, y: -15.0))
+                                }.overlay(Image("Voleibol").scaleEffect(0.007, anchor: .center).opacity(viewModel.lastPoint?.server.id == 0 ? 1 : 0).padding().offset(x: 20.0, y: -15.0))
                                     .overlay{
                                         HStack{
                                             ForEach(0..<viewModel.timeOuts.1, id:\.self){t in
@@ -103,8 +110,15 @@ struct FillStats: View {
                             HStack{
                                 if viewModel.nextPoint?.action == 0{
                                     Text("time.out.by".trad()+(viewModel.nextPoint?.to == 1 ? "us".trad() : "them".trad())).frame(maxWidth: .infinity)
-                                }else{
+                                }
+                                if viewModel.nextPoint?.action == 98{
                                     Text("score.adjust".trad()).frame(maxWidth: .infinity)
+                                }
+                                if viewModel.nextPoint?.action == 99{
+                                    Image(systemName: "arrow.up.circle.fill").foregroundColor(.green)
+                                    Text("\(Player.find(id: viewModel.nextPoint?.player_in ?? 0)?.name ?? "")")
+                                    Image(systemName: "arrow.down.circle.fill").foregroundColor(.red)
+                                    Text("\(Player.find(id: viewModel.nextPoint?.player ?? 0)?.name ?? "")")
                                 }
                             }.padding().background(.gray).clipShape(RoundedRectangle(cornerRadius: 8))
                         }else{
@@ -136,6 +150,8 @@ struct FillStats: View {
                                     let nextAction = Action.find(id: viewModel.nextPoint?.action ?? 0)
                                     statb.fill(nextAction?.color() ?? .black.opacity(0.4))
                                     Text("\(nextAction?.name.trad().capitalized ?? "action".trad())")
+                                }.onTapGesture{
+                                    viewModel.showActions.toggle()
                                 }
                                 ZStack{
                                     statb.fill(viewModel.nextPoint?.to == 1 ? .blue : viewModel.nextPoint?.to == 2 ? .pink : .black.opacity(0.4))
@@ -154,7 +170,7 @@ struct FillStats: View {
                                 ZStack{
                                     statb.stroke(.blue, lineWidth: 3)
                                     Text("\(viewModel.nextPoint?.score_us ?? 0)").font(Font.body)
-                                }.overlay(Image("Voleibol").scaleEffect(0.007, anchor: .center).opacity(viewModel.nextPoint?.stage == 0 ? 1 : 0).padding().offset(x: 20.0, y: -15.0))
+                                }.overlay(Image("Voleibol").scaleEffect(0.007, anchor: .center).opacity(viewModel.nextPoint?.server.id != 0 ? 1 : 0).padding().offset(x: 20.0, y: -15.0))
                                     .overlay{
                                         HStack{
                                             ForEach(0..<viewModel.timeOuts.0, id:\.self){t in
@@ -165,7 +181,7 @@ struct FillStats: View {
                                 ZStack{
                                     statb.stroke(.pink, lineWidth: 3)
                                     Text("\(viewModel.nextPoint?.score_them ?? 0)").font(Font.body)
-                                }.overlay(Image("Voleibol").scaleEffect(0.007, anchor: .center).opacity(viewModel.nextPoint?.stage==1 ? 1 : 0).padding().offset(x: 20.0, y: -15.0))
+                                }.overlay(Image("Voleibol").scaleEffect(0.007, anchor: .center).opacity(viewModel.nextPoint?.server.id == 0 ? 1 : 0).padding().offset(x: 20.0, y: -15.0))
                                     .overlay{
                                         HStack{
                                             ForEach(0..<viewModel.timeOuts.1, id:\.self){t in
@@ -205,7 +221,7 @@ struct FillStats: View {
                                     }else{
                                         HStack{
                                             Image(systemName: "square.and.pencil").font(Font.body).padding(.horizontal)
-                                            Text(viewModel.nextStat!.detail).font(Font.body).frame(maxWidth: .infinity)
+                                            Text(viewModel.nextPoint!.detail).font(Font.body).frame(maxWidth: .infinity)
                                         }
                                     }
                                 }.onTapGesture{
@@ -258,9 +274,13 @@ struct FillStats: View {
                                     
                                 }.foregroundColor(.white).font(Font.body)
                             }.onTapGesture {
-                                viewModel.player = player
+                                if viewModel.player == player{
+                                    viewModel.player = nil
+                                }else{
+                                    viewModel.player = player
+                                }
                             }
-                            .overlay(Image("Voleibol").scaleEffect(0.01, anchor: .center).opacity(player == viewModel.lastStat?.server ? 1 : 0).padding().offset(x: 40.0, y: -20.0))
+                            .overlay(Image("Voleibol").scaleEffect(0.01, anchor: .center).opacity(player == viewModel.nextPoint?.server ? 1 : 0).padding().offset(x: 40.0, y: -20.0))
                         }
                     }.padding().background(RoundedRectangle(cornerRadius: 8).fill(.white.opacity(0.2))).padding(.trailing, 5).frame(maxWidth: sq*2)
                     ZStack{
@@ -474,6 +494,7 @@ struct FillStats: View {
         .overlay(viewModel.showTimeout ? timeOutModal() : nil)
         .overlay(viewModel.showDetail ? detailModal() : nil)
         .overlay(viewModel.showDirection ? directionModal() : nil)
+        .overlay(viewModel.showActions ? actionModal() : nil)
         .font(.custom("stats", size: 12))
         .onDisappear(perform: {
             //here re-rank the order values back to int
@@ -481,7 +502,13 @@ struct FillStats: View {
         .onAppear(perform: {
             viewModel.players()
         })
-        
+        .toolbar{
+            ToolbarItem(placement: .navigationBarTrailing){
+                NavigationLink(destination: CaptureHelp()){
+                    Image(systemName: "questionmark.circle").font(.title3).foregroundStyle(.white)
+                }
+            }
+        }
         
     }
     
@@ -611,6 +638,38 @@ struct FillStats: View {
         .padding()
         
     }
+    
+    @ViewBuilder
+    func actionModal() -> some View {
+            VStack{
+                ZStack{
+                    Button(action:{
+                        viewModel.showActions.toggle()
+                    }){
+                        Image(systemName: "multiply").font(.title2)
+                    }.frame(maxWidth: .infinity, alignment: .trailing)
+                    Text("actions".trad()).font(.title2).frame(maxWidth: .infinity)
+                }.padding()
+                
+                LazyVGrid(columns: [GridItem](repeating: GridItem(), count: 4)){
+                    let ac = Action.find(id: viewModel.nextPoint!.action)!
+                    ForEach(Action.getByType(type: ac.type), id:\.id){action in
+                        Text("\(action.name.trad().capitalized)").padding().frame(maxWidth: .infinity, maxHeight: .infinity).background(ac.color()).clipShape(RoundedRectangle(cornerRadius: 8)).onTapGesture {
+                            viewModel.nextPoint!.action = action.id
+                            if viewModel.nextPoint!.update() {
+                                viewModel.showActions.toggle()
+                            }
+                        }
+                    }
+                }.padding()
+                
+            }.padding()
+            .foregroundColor(.white)
+            .background(.black.opacity(0.9))
+            .clipShape(RoundedRectangle(cornerRadius: 25))
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .padding()
+    }
 }
 
 class FillStatsModel: ObservableObject{
@@ -633,6 +692,7 @@ class FillStatsModel: ObservableObject{
     @Published var selectedStat: Stat? = nil
     @Published var showDetail: Bool = false
     @Published var showDirection: Bool = false
+    @Published var showActions: Bool = false
     var direction: String = ""
     let team: Team
     let match: Match

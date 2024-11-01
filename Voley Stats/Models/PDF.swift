@@ -2,6 +2,8 @@ import PDFKit
 
 struct Colors{
     static let green = UIColor(red: 0.33, green: 0.78, blue: 0.36, alpha: 1)
+    static let green2 = UIColor(red: 0.33, green: 0.8, blue: 0.36, alpha: 1)
+    static let green3 = UIColor(red: 0.25, green: 0.78, blue: 0.4, alpha: 1)
     static let orange = UIColor(red: 0.84, green: 0.57, blue: 0.23, alpha: 1)
     static let pink = UIColor(red: 0.77, green: 0.45, blue: 0.83, alpha: 1)
     static let yellow = UIColor(red: 0.97, green: 0.79, blue: 0.29, alpha: 1)
@@ -408,17 +410,20 @@ class PDF {
 //        print(data.max(by: {$0.value < $1.value}), data)
         let grouped = Dictionary(grouping: data, by: {$0.group})
         let gap = (width-((w+3)*data.count))/(grouped.count - 1)
+//        self.addShape(x: x, y: y, width: width, height: height, shape: "rect", color: Colors.gray.withAlphaComponent(0.2), fill: true, radius: 6)
+//        y+=30
         self.addText(x: x, y: y, text: title, font: PDFonts.heading, color: Colors.black, width: width, alignment: .center)
         y += 50
         
         grouped.sorted(by: {$0.key < $1.key}).forEach{group in
             let gw = group.value.count*w + 3*group.value.count
-            self.addShape(x: x, y: y+h+5, width: gw, height: 1, shape: "rect", color: Colors.black, fill: false)
+            self.addLine(from: (x, y+h+5), to: (x+gw, y+h+5), color: Colors.black, lineWeight: 1)
+//            self.addShape(x: x, y: y+h+5, width: gw, height: 1, shape: "rect", color: Colors.black, fill: false)
             self.addText(x: x, y: y+h+10, text: "\(group.key)", font: PDFonts.body, color: Colors.black, width: gw, alignment: .center)
             group.value.forEach{bar in
                 let barHeight = bar.value * h / max
 //                print(bar.value, barHeight, max)
-                self.addShape(x: x, y: y+h-barHeight, width: w, height: barHeight, shape: "rect", color: UIColor(bar.color), fill: true, radius: 3)
+                self.addShape(x: x, y: y+h-barHeight, width: w, height: barHeight, shape: "rect", color: bar.color, fill: true, radius: 3)
                 self.addText(x: x, y: y+h-barHeight-15, text: bar.value.description, font: PDFonts.caption, color: Colors.black, width: w, alignment: .center)
                 x+=3+w
             }
@@ -428,7 +433,7 @@ class PDF {
         x=startX
         let labels = Dictionary(grouping: data, by: {$0.label}).map({($0.key, $0.value.first?.color ?? .black)})
         labels.forEach{label in
-            self.addShape(x: x, y: y+3, width: 10, height: 10, shape: "rect", color: UIColor(label.1), fill: true, radius: 5)
+            self.addShape(x: x, y: y+3, width: 10, height: 10, shape: "rect", color: label.1, fill: true, radius: 5)
             var sp = label.0.trad().count
             sp = sp >= 5 ? sp*10 : sp == 1 ? 35 : sp*15
             self.addText(x: x+15, y: y, text: label.0.trad(), font: PDFonts.body, color: Colors.black, width: sp)
@@ -636,11 +641,12 @@ class PDF {
                 context.cgContext.fillPath()
             } else{
                 let rect = CGRect(x: x, y: y, width: width, height: height)
-                
-                context.cgContext.setStrokeColor(color.cgColor)
-                context.cgContext.drawPath(using: .stroke)
-                context.cgContext.setLineWidth(radius)
                 context.cgContext.addRect(rect)
+                context.cgContext.setStrokeColor(color.cgColor)
+                context.cgContext.setLineWidth(radius)
+                context.cgContext.drawPath(using: .stroke)
+                
+                
             }
             
         }
@@ -666,7 +672,8 @@ class PDF {
                     el.image!.draw(in: el.rect!)
                 } else if el.type == "shape" {
                     self.drawShape(x: el.x, y: el.y, width: el.width!, height: el.height!, shape: el.shape!, color: el.color!, fill: el.fill, radius: el.radius,  context: context)
-                    context.cgContext.setStrokeColor(UIColor.white.cgColor)
+                    context.cgContext.setStrokeColor(UIColor.clear.cgColor)
+                    context.cgContext.setFillColor(UIColor.clear.cgColor)
                 } else if el.type == "newPage" {
                     context.beginPage()
                 } else {

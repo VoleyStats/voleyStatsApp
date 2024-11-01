@@ -57,13 +57,27 @@ struct ListTeams: View {
                                         }
                                     })
                         }
-                        .confirmationDialog("team.delete.message".trad(), isPresented: $viewModel.deleteDialog, titleVisibility: .visible){
+                        .alert("team.delete.message".trad(), isPresented: $viewModel.deleteDialog){
+                            Button("cancel".trad(), role: .cancel){}
+                            Button("keep.players".trad()){
+                                if viewModel.team().delete(deletePlayers: false){
+                                    viewModel.getAllTeams()
+                                }
+                            }
                             Button("team.delete.title".trad(), role: .destructive){
                                 if viewModel.team().delete(){
                                     viewModel.getAllTeams()
                                 }
                             }
+                            
                         }
+//                        .confirmationDialog("team.delete.message".trad(), isPresented: $viewModel.deleteDialog, titleVisibility: .visible){
+//                            Button("team.delete.title".trad(), role: .destructive){
+//                                if viewModel.team().delete(){
+//                                    viewModel.getAllTeams()
+//                                }
+//                            }
+//                        }
                         
                     }
                     if viewModel.selected == viewModel.allTeams.count{
@@ -141,11 +155,15 @@ struct ListTeams: View {
                         HStack{
                             TabButton(selection: $viewModel.tab, title: "matches".trad(), animation: animation, action: {
                                 viewModel.showTournaments = false
+                                viewModel.tournament = nil
                                 viewModel.min = false
+                                viewModel.getMatchesElements(team: viewModel.team())
                             })
                             TabButton(selection: $viewModel.tab, title: "tournaments".trad(), animation: animation, action: {
                                 viewModel.showTournaments = true
+                                viewModel.league = false
                                 viewModel.min = false
+                                viewModel.getMatchesElements(team: viewModel.team())
                             })
                             TabButton(selection: $viewModel.tab, title: "team.stats".trad(), animation: animation, action: {
                                 viewModel.min = true
@@ -184,7 +202,7 @@ struct ListTeams: View {
         }
         .onAppear{
             viewModel.getAllTeams()
-            viewModel.tab = "matches".trad()
+//            viewModel.tab = "matches".trad()
             if !viewModel.allTeams.isEmpty && viewModel.selected < viewModel.allTeams.count{
 //                viewModel.getScouts(team: viewModel.team())
                 viewModel.getMatchesElements(team: viewModel.team())
@@ -195,7 +213,7 @@ struct ListTeams: View {
         
         .navigationTitle(viewModel.min ? viewModel.team().name : "your.teams".trad())
         .navigationBarTitleDisplayMode(.inline)
-        .environment(\.colorScheme, .dark)
+//        .environment(\.colorScheme, .dark)
         .toolbar{
             ToolbarItem(placement: .primaryAction) {
                 if Auth.auth().currentUser != nil {
@@ -239,11 +257,12 @@ struct ListTeams: View {
                     }.padding(.vertical)
                 }
             }
-            ToolbarItem(placement: .navigationBarLeading){
-                Text(viewModel.df.string(from: ProvisioningProfile.profile()?.expiryDate ?? .now)).font(.caption).onTapGesture {
-                    viewModel.statsFile = Report().generate()
-                }
-            }
+//            ToolbarItem(placement: .navigationBarLeading){
+//                Text(viewModel.df.string(from: ProvisioningProfile.profile()?.expiryDate ?? .now)).font(.caption).onTapGesture {
+//                    viewModel.statsFile = Report().generate()
+//                }
+//                Text(viewModel.profile?.formattedExpiryDate ?? "some error")
+//            }
         }
         .quickLookPreview($viewModel.statsFile)
         .overlay(viewModel.reportLang && (viewModel.matchSelected != nil || !viewModel.reportMatches.isEmpty) ? langChooseModal() : nil)
@@ -252,7 +271,7 @@ struct ListTeams: View {
             Color.swatch.dark.high
         )
         .foregroundColor(.white)
-        
+        .preferredColorScheme(.dark)
         
     }
     

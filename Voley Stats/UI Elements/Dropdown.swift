@@ -129,7 +129,7 @@ struct Dropdown<T:Model>: View {
 //        .opacity(isEnabled ? 1.0 : 0.6)
         .animation(.easeInOut(duration: 0.12), value: isPicking)
 //        .sensoryFeedback(.selection, trigger: selection)
-        .zIndex(1)
+        .zIndex(999)
     }
 }
 

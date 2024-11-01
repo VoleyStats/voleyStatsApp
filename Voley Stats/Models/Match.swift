@@ -4,6 +4,7 @@ import FirebaseFirestore
 import AppIntents
 
 class Match: Model {
+    typealias Expression = SQLite.Expression
 //    var id:Int;
     var opponent:String
     var date:Date
@@ -16,8 +17,9 @@ class Match: Model {
     var tournament:Tournament?
     var code:String
     var live:Bool
+    var pass: Bool
     
-    init(opponent:String, date:Date, location: String, home:Bool, n_sets:Int, n_players:Int, team:Int, league:Bool = false, code: String, live: Bool, tournament:Tournament?, id:Int?){
+    init(opponent:String, date:Date, location: String, home:Bool, n_sets:Int, n_players:Int, team:Int, league:Bool = false, code: String, live: Bool, pass: Bool, tournament:Tournament?, id:Int?){
         self.opponent=opponent
         self.date=date
         self.n_sets=n_sets
@@ -29,6 +31,7 @@ class Match: Model {
         self.tournament=tournament
         self.code = code
         self.live = live
+        self.pass = pass
         super.init(id: id ?? 0)
     }
     static func ==(lhs: Match, rhs: Match) -> Bool {
@@ -56,6 +59,7 @@ class Match: Model {
                     Expression<Bool>("league") <- match.league,
                     Expression<String>("code") <- match.code,
                     Expression<Bool>("live") <- match.live,
+                    Expression<Bool>("pass") <- match.pass,
                     Expression<Int>("id") <- match.id
                 ))
             }else{
@@ -70,7 +74,8 @@ class Match: Model {
                     Expression<Int>("tournament") <- match.tournament?.id ?? 0,
                     Expression<Bool>("league") <- match.league,
                     Expression<String>("code") <- match.code,
-                    Expression<Bool>("live") <- match.live
+                    Expression<Bool>("live") <- match.live,
+                    Expression<Bool>("pass") <- match.pass
                 ))
                 match.id = Int(id)
             }
@@ -99,6 +104,7 @@ class Match: Model {
                 Expression<Bool>("league") <- self.league,
                 Expression<String>("code") <- self.code,
                 Expression<Bool>("live") <- self.live,
+                Expression<Bool>("pass") <- self.pass,
                 Expression<Int>("team") <- self.team
             ])
             if try database.run(update) > 0 {
@@ -186,6 +192,7 @@ class Match: Model {
                     league: match[Expression<Bool>("league")],
                     code: match[Expression<String>("code")],
                     live: match[Expression<Bool>("live")],
+                    pass: match[Expression<Bool>("pass")],
                     tournament: Tournament.find(id: match[Expression<Int>("tournament")]),
                     id: match[Expression<Int>("id")]))
             }
@@ -488,6 +495,7 @@ class Match: Model {
                 league: match[Expression<Bool>("league")],
                 code: match[Expression<String>("code")],
                 live: match[Expression<Bool>("live")],
+                pass: match[Expression<Bool>("pass")],
                 tournament: Tournament.find(id: match[Expression<Int>("tournament")]),
                 id: match[Expression<Int>("id")])
         } catch {
@@ -541,6 +549,7 @@ class Match: Model {
                 league: match[Expression<Bool>("league")],
                 code: match[Expression<String>("code")],
                 live: match[Expression<Bool>("live")],
+                pass: match[Expression<Bool>("pass")],
                 tournament: Tournament.find(id: match[Expression<Int>("tournament")]),
                 id: match[Expression<Int>("id")])
         } catch {

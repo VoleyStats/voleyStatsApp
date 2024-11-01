@@ -21,10 +21,16 @@ struct CaptureHelp: View {
                                     VStack{
                                         Text("capture.explanation".trad()).fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading).padding(.top, 10)
                                         Text("the.score".trad()).font(.title3.weight(.bold)).padding(.top).frame(maxWidth: .infinity, alignment: .leading)
-                                        Text("the.score.explanation.1".trad()).fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
+                                        HStack{
+                                            Text("the.score.explanation.1".trad()).fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
+                                            Image("score").resizable().aspectRatio(contentMode: .fit)
+                                        }
                                         Text("the.score.explanation.2".trad()).fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
                                         Text("current.rotation".trad()).font(.title3.weight(.bold)).padding(.top).frame(maxWidth: .infinity, alignment: .leading)
-                                        Text("current.rotation.explanation.1".trad()).fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
+                                        HStack{
+                                            Text("current.rotation.explanation.1".trad()).fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
+                                            Image("rotation").resizable().aspectRatio(contentMode: .fit)
+                                        }
                                         Text("current.rotation.explanation.2".trad()).fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
                                         Text("servers".trad()).font(.title3.weight(.bold)).padding(.top).frame(maxWidth: .infinity, alignment: .leading)
                                         Text("servers.explanation.1".trad()).fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
@@ -51,6 +57,18 @@ struct CaptureHelp: View {
                                 CollapsibleListElement(expanded: false, title: "point.log".trad()){
                                     VStack{
                                         Text("point.log.explanation".trad()).fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading).padding(.top, 10)
+                                        
+                                        HStack{
+                                            VStack{
+                                                Image("pointLog_list").resizable().aspectRatio(contentMode: .fit)
+                                                Text("point.log".trad())
+                                            }
+                                            VStack{
+                                                Image("pointLog_graph").resizable().aspectRatio(contentMode: .fit)
+                                                Text("game.graph".trad())
+                                            }
+                                        }
+                                        
                                         Text("\("stage".trad())").font(.title3.weight(.bold)).padding(.top).frame(maxWidth: .infinity, alignment: .leading)
                                         Text("\("stage.explanation".trad())").fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
                                         
@@ -66,12 +84,26 @@ struct CaptureHelp: View {
                                         Text("\("action".trad())").font(.title3.weight(.bold)).padding(.top).frame(maxWidth: .infinity, alignment: .leading)
                                         Text("\("action.explanation".trad())").fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
                                         
-                                        Text("\("point.to".trad())").font(.title3.weight(.bold)).padding(.top).frame(maxWidth: .infinity, alignment: .leading)
-                                        Text("\("point.to.explanation".trad())").fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
+//                                        Text("\("point.to".trad())").font(.title3.weight(.bold)).padding(.top).frame(maxWidth: .infinity, alignment: .leading)
+//                                        Text("\("point.to.explanation".trad())").fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
                                         
                                         
                                         Text("\("score".trad())").font(.title3.weight(.bold)).padding(.top).frame(maxWidth: .infinity, alignment: .leading)
                                         Text("\("score.explanation".trad())").fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
+                                    }
+                                }
+                                CollapsibleListElement(expanded: false, title: "fill.stats".trad()){
+                                    VStack{
+                                        Text("fill.stats.explanation".trad()).fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading).padding(.top, 10)
+                                        HStack{
+                                            Text("fill.stats.explanation.1".trad()).fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading).padding(.top, 10)
+                                            Image("fillStats_top").resizable().aspectRatio(contentMode: .fit)
+                                        }
+                                        HStack{
+                                            Text("fill.stats.explanation.2".trad()).fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading).padding(.top, 10)
+                                            Image("fillStats_inGame").resizable().aspectRatio(contentMode: .fit)
+                                        }
+                                        Text("fill.stats.explanation.3".trad()).fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading).padding(.top, 10)
                                     }
                                 }
                             }
@@ -137,8 +169,8 @@ struct CaptureHelp: View {
                                         Text("\("tip".trad())").font(.title3.weight(.bold)).foregroundStyle(.green).padding(.top).frame(maxWidth: .infinity, alignment: .leading)
                                         Text("\("earned.tip".trad())").fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
                                         
-                                        Text("\("dump".trad())").font(.title3.weight(.bold)).foregroundStyle(.green).padding(.top).frame(maxWidth: .infinity, alignment: .leading)
-                                        Text("\("earned.dump".trad())").fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
+                                        Text("\("blockout".trad())").font(.title3.weight(.bold)).foregroundStyle(.green).padding(.top).frame(maxWidth: .infinity, alignment: .leading)
+                                        Text("\("earned.blockout".trad())").fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
                                         
                                         Text("\("downhit".trad())").font(.title3.weight(.bold)).foregroundStyle(.green).padding(.top).frame(maxWidth: .infinity, alignment: .leading)
                                         Text("\("earned.downhit".trad())").fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
@@ -160,8 +192,8 @@ struct CaptureHelp: View {
                                         Text("\("tip".trad())").font(.title3.weight(.bold)).foregroundStyle(Color.swatch.yellow.base).padding(.top).frame(maxWidth: .infinity, alignment: .leading)
                                         Text("\("error.attack".trad())").fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
                                         
-                                        Text("\("dump".trad())").font(.title3.weight(.bold)).foregroundStyle(Color.swatch.yellow.base).padding(.top).frame(maxWidth: .infinity, alignment: .leading)
-                                        Text("\("error.attack".trad())").fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
+//                                        Text("\("dump".trad())").font(.title3.weight(.bold)).foregroundStyle(Color.swatch.yellow.base).padding(.top).frame(maxWidth: .infinity, alignment: .leading)
+//                                        Text("\("error.attack".trad())").fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
                                         
                                         Text("\("downhit".trad())").font(.title3.weight(.bold)).foregroundStyle(Color.swatch.yellow.base).padding(.top).frame(maxWidth: .infinity, alignment: .leading)
                                         Text("\("error.attack".trad())").fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
@@ -219,59 +251,106 @@ struct CaptureHelp: View {
                                     VStack{
                                         Text("stats.general.explanation".trad()).fixedSize(horizontal: false, vertical: true).padding(.vertical, 10).frame(maxWidth: .infinity, alignment: .leading)
                                         Text("their.errors".trad()).fixedSize(horizontal: false, vertical: true).font(.title3.weight(.bold)).padding(.top).frame(maxWidth: .infinity, alignment: .leading)
-                                        Text("\("general.their.errors".trad())").fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
-                                        
-                                        Text("serve.errors".trad()).fixedSize(horizontal: false, vertical: true).font(.title3.weight(.bold)).padding(.top).frame(maxWidth: .infinity, alignment: .leading)
-                                        Text("\("general.serve.errors".trad())").fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
-                                        
-                                        Text("receive.rating".trad()).fixedSize(horizontal: false, vertical: true).font(.title3.weight(.bold)).padding(.top).frame(maxWidth: .infinity, alignment: .leading)
-                                        Text("\("general.receive.rating".trad())").fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
-                                        
-                                        Text("kill.percentage".trad()).fixedSize(horizontal: false, vertical: true).font(.title3.weight(.bold)).padding(.top).frame(maxWidth: .infinity, alignment: .leading)
-                                        Text("\("general.kill.percentage".trad())").fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
-                                        
-                                        Text("general.match.bests".trad()).fixedSize(horizontal: false, vertical: true).padding(.top).frame(maxWidth: .infinity, alignment: .leading)
+                                        HStack{
+                                            Text("\("general.their.errors".trad())").fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
+                                            Image("theirErrors").resizable().aspectRatio(contentMode: .fit)
+                                        }
+                                        Text("actions.in.row".trad()).fixedSize(horizontal: false, vertical: true).font(.title3.weight(.bold)).padding(.top).frame(maxWidth: .infinity, alignment: .leading)
+                                        HStack{
+                                            Text("\("actions.in.row.description".trad())").fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
+                                            VStack{
+                                                Image("earn_row").resizable().aspectRatio(contentMode: .fit)
+                                                Image("error_row").resizable().aspectRatio(contentMode: .fit)
+                                            }
+                                        }
+                                        Text("error.distribution".trad()).fixedSize(horizontal: false, vertical: true).font(.title3.weight(.bold)).padding(.top).frame(maxWidth: .infinity, alignment: .leading)
+                                        HStack{
+                                            Text("\("general.error.distribution".trad())").fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
+                                            Image("errDistribution").resizable().aspectRatio(contentMode: .fit)
+                                        }
+                                        Text("attack.chart".trad()).fixedSize(horizontal: false, vertical: true).font(.title3.weight(.bold)).padding(.top).frame(maxWidth: .infinity, alignment: .leading)
+                                        HStack{
+                                            Text("\("general.attack.chart".trad())").fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
+                                            Image("atkGraph").resizable().aspectRatio(contentMode: .fit)
+                                        }
+                                        Text("attack.distribution".trad()).fixedSize(horizontal: false, vertical: true).font(.title3.weight(.bold)).padding(.top).frame(maxWidth: .infinity, alignment: .leading)
+                                        HStack{
+                                            Text("\("general.attack.distribution".trad())").fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
+                                            Image("atkDistribution").resizable().aspectRatio(contentMode: .fit)
+                                        }
+                                        Text("serve.chart".trad()).fixedSize(horizontal: false, vertical: true).font(.title3.weight(.bold)).padding(.top).frame(maxWidth: .infinity, alignment: .leading)
+                                        HStack{
+                                            Text("\("general.serve.chart".trad())").fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
+                                            Image("srv_chart").resizable().aspectRatio(contentMode: .fit)
+                                        }
+                                        Text("receive.chart".trad()).fixedSize(horizontal: false, vertical: true).font(.title3.weight(.bold)).padding(.top).frame(maxWidth: .infinity, alignment: .leading)
+                                        HStack{
+                                            Text("\("general.receive.chart".trad())").fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
+                                            Image("rcv_graph").resizable().aspectRatio(contentMode: .fit)
+                                        }
                                     }
                                 }
                                 CollapsibleListElement(expanded: false, title: "rotation".trad()){
                                     VStack{
                                         Text("stats.rotation.explanation".trad()).fixedSize(horizontal: false, vertical: true).padding(.vertical, 10).frame(maxWidth: .infinity, alignment: .leading)
+                                        Image("rotation_stats").resizable().aspectRatio(contentMode: .fit)
                                         Text("side.out".trad()).fixedSize(horizontal: false, vertical: true).font(.title3.weight(.bold)).padding(.top).frame(maxWidth: .infinity, alignment: .leading)
                                         Text("side.out.explanation".trad()).fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
                                         Text("break.point".trad()).fixedSize(horizontal: false, vertical: true).font(.title3.weight(.bold)).padding(.top).frame(maxWidth: .infinity, alignment: .leading)
                                         Text("break.point.explanation".trad()).fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
                                     }
                                 }
+//                                CollapsibleListElement(expanded: false, title: "direction.detail".trad()){
+//                                    VStack{
+//                                        Text("direction.detail.explanation".trad()).fixedSize(horizontal: false, vertical: true).padding(.vertical, 10).frame(maxWidth: .infinity, alignment: .leading)
+//                                        
+//                                    }
+//                                }
+//                                CollapsibleListElement(expanded: false, title: "heatmap.detail".trad()){
+//                                    VStack{
+//                                        Text("heatmap.detail.explanation".trad()).fixedSize(horizontal: false, vertical: true).padding(.vertical, 10).frame(maxWidth: .infinity, alignment: .leading)
+//                                        
+//                                    }
+//                                }
                                 CollapsibleListElement(expanded: false, title: "stats.per.area".trad()){
                                     VStack{
                                         Text("area.explanation".trad()).fixedSize(horizontal: false, vertical: true).padding(.vertical, 10).frame(maxWidth: .infinity, alignment: .leading)
                                         Text("\("attack".trad().capitalized)").font(.title3.weight(.bold)).padding(.top).frame(maxWidth: .infinity, alignment: .leading)
                                         Text("\("area.attack.1".trad())").fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
                                         Text("\("area.attack.2".trad())").fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
+                                        Image("atk_stats").resizable().aspectRatio(contentMode: .fit)
                                         
                                         Text("\("block".trad().capitalized)").font(.title3.weight(.bold)).padding(.top).frame(maxWidth: .infinity, alignment: .leading)
                                         Text("\("area.block".trad())").fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
+                                        Image("blk_stats").resizable().aspectRatio(contentMode: .fit)
                                         
                                         Text("\("dig".trad().capitalized)").font(.title3.weight(.bold)).padding(.top).frame(maxWidth: .infinity, alignment: .leading)
                                         Text("\("area.dig".trad())").frame(maxWidth: .infinity, alignment: .leading)
+                                        Image("dig_stats").resizable().aspectRatio(contentMode: .fit)
                                         
                                         Text("\("downhit".trad())").font(.title3.weight(.bold)).padding(.top).frame(maxWidth: .infinity, alignment: .leading)
                                         Text("\("area.downhit".trad())").fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
+                                        Image("dbh_stats").resizable().aspectRatio(contentMode: .fit)
                                         
                                         Text("\("fault".trad())").font(.title3.weight(.bold)).padding(.top).frame(maxWidth: .infinity, alignment: .leading)
                                         Text("\("area.fault".trad())").fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
+                                        Image("fault_stats").resizable().aspectRatio(contentMode: .fit)
                                         
                                         Text("\("free".trad().capitalized)").font(.title3.weight(.bold)).padding(.top).frame(maxWidth: .infinity, alignment: .leading)
                                         Text("\("area.free".trad())").fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
+                                        Image("free_stats").resizable().aspectRatio(contentMode: .fit)
                                         
                                         Text("\("receive".trad().capitalized)").font(.title3.weight(.bold)).padding(.top).frame(maxWidth: .infinity, alignment: .leading)
                                         Text("\("area.receive".trad())").fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
+                                        Image("rcv_stats").resizable().aspectRatio(contentMode: .fit)
                                         
                                         Text("\("serve".trad().capitalized)").font(.title3.weight(.bold)).padding(.top).frame(maxWidth: .infinity, alignment: .leading)
                                         Text("\("area.serve".trad())").fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
+                                        Image("srv_stats").resizable().aspectRatio(contentMode: .fit)
                                         
                                         Text("\("set".trad().capitalized)").font(.title3.weight(.bold)).padding(.top).frame(maxWidth: .infinity, alignment: .leading)
                                         Text("\("area.set".trad())").fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
+                                        Image("set_stats").resizable().aspectRatio(contentMode: .fit)
                                     }
                                 }
                             }

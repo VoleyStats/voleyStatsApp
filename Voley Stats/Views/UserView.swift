@@ -83,8 +83,12 @@ struct UserView: View {
                         }else{
                             HStack{
                                 Text("data.import".trad())
+                                if viewModel.pass{
                                 Image(systemName: "square.and.arrow.down").padding(.horizontal)
-                            }.frame(maxWidth: .infinity)
+                                }else{
+                                    Image(systemName: "lock.fill").padding(.horizontal)
+                                }
+                            }.frame(maxWidth: .infinity).foregroundStyle(viewModel.pass ? .white : .gray)
                         }
                     }.padding().background(.white.opacity(network.isConnected ? 0.1 : 0.05)).clipShape(RoundedRectangle(cornerRadius: 15)).padding().onTapGesture {
                         if network.isConnected{
@@ -99,8 +103,12 @@ struct UserView: View {
                         }else{
                             HStack{
                                 Text("data.export".trad())
-                                Image(systemName: "square.and.arrow.up").padding(.horizontal)
-                            }.frame(maxWidth: .infinity)
+                                if viewModel.pass{
+                                    Image(systemName: "square.and.arrow.up").padding(.horizontal)
+                                }else{
+                                    Image(systemName: "lock.fill").padding(.horizontal)
+                                }
+                            }.frame(maxWidth: .infinity).foregroundStyle(viewModel.pass ? .white : .gray)
                         }
                     }.padding().background(.white.opacity(network.isConnected ? 0.1 : 0.05)).clipShape(RoundedRectangle(cornerRadius: 15)).padding().onTapGesture {
                         if network.isConnected{
@@ -345,6 +353,7 @@ class UserViewModel: ObservableObject{
     @Published var avatar: String
     @Published var availableBackups: [StorageReference] = []
     @Published var pickSeason: Bool = false
+    var pass: Bool = false
 //    @Published var newSeason: Bool = false
     @Published var seasonName: String = "\("season".trad()) \(Date.now.formatted(.dateTime.year()))-\(Calendar.current.date(byAdding: .year, value: 1, to: Date.init())?.formatted(.dateTime.year()) ?? Date.now.formatted(.dateTime.year()))"
     init(){
@@ -353,6 +362,7 @@ class UserViewModel: ObservableObject{
         if a == nil {
             UserDefaults.standard.set(avatar, forKey: "avatar")
         }
+        pass = Team.all().map{$0.pass}.contains(true)
     }
     func makeToast(msg: String, type: ToastType){
         self.msg = msg
@@ -470,6 +480,11 @@ class UserViewModel: ObservableObject{
                 Match.all().forEach{$0.delete()}
                 Tournament.all().forEach{$0.delete()}
                 Rotation.all().forEach{$0.delete()}
+                Team.all().forEach{
+                    $0.seasonEnd = .distantPast
+                    $0.pass = false
+                    $0.update()
+                }
             }else if keepPlayers {
                 Team.all().forEach{$0.delete(deletePlayers: false)}
             }else{

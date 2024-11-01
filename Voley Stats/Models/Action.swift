@@ -176,7 +176,7 @@ let buttons = [
     [
         Action(name:"serve", type: 2, id: 15, area: .serve),
         Action(name:"receive", type: 2, id: 22, area: .receive),
-        Action(name:"set", type: 2, id: 24, area: .set),
+        
         Action(name:"dig", type: 2, id: 23, area: .dig),
         Action(name:"free ball", type: 2, id: 25, area: .dig),
         Action(name:"whose.ball", type: 2, id: 21, area: .dig),
@@ -184,9 +184,10 @@ let buttons = [
     [
         Action(name:"spike", type: 2, id: 16, area: .attack),
         Action(name:"tip", type: 2, id: 17, area: .attack),
-        Action(name:"dump", type: 2, id: 18, area: .attack),
+//        Action(name:"dump", type: 2, id: 18, area: .attack),
         Action(name:"downhit", type: 2, id: 19, area: .attack),
         Action(name:"block", type: 2, id: 20, area: .block),
+        Action(name:"set", type: 2, id: 24, area: .set),
     ],
     [
         Action(name:"net", type: 3, id: 28, area: .fault),
@@ -223,7 +224,7 @@ let buttons = [
 ]
 let actionsByType = [
     "block": [7, 13, 20, 31],
-    "serve":[15, 8, 32, 38, 39, 40, 41],
+    "serve":[15, 8, 32, 39, 40, 41],
     "dig":[23, 5, 21],
     "receive":[1, 2, 3, 4, 22],
     "fault":[28, 29, 30, 31, 32, 33, 34],

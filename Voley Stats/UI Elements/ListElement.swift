@@ -16,6 +16,9 @@ struct ListElement: View{
             
             ZStack{
                 RoundedRectangle(cornerRadius: 15).fill(.white.opacity(0.1))
+//                if match.pass && !team.pass{
+//                    RoundedRectangle(cornerRadius: 15).stroke(.cyan, lineWidth: 1)
+//                }
                 HStack{
                     if viewModel.selectMatches {
                         if viewModel.reportMatches.contains(match) {
@@ -34,7 +37,7 @@ struct ListElement: View{
                     HStack{
                         ForEach(match.sets(), id:\.id){set in
                             ZStack{
-                                Circle().fill(.white).frame(maxWidth: 60, maxHeight: 60)
+                                Circle().fill( .white.opacity(set.first_serve != 0 ? 1 : 0.1)).frame(maxWidth: 60, maxHeight: 60)
                                 if set.first_serve != 0{
                                     NavigationLink(destination: AnyView(StatsView(viewModel: StatsViewModel(team: team, match: match, set: set))))
                                     {
@@ -46,12 +49,12 @@ struct ListElement: View{
                                     NavigationLink(destination: AnyView(SetData(viewModel: SetDataModel(team: team, match: match, set: set))))
                                     {
                                         
-                                        Image(systemName: "arrowtriangle.right.circle").foregroundColor(.black).font(.headline)
+                                        Image(systemName: "arrowtriangle.right.circle").resizable().aspectRatio(contentMode: .fit).frame(maxWidth: 60, maxHeight: 60).foregroundColor(.cyan)//.font(.headline)
                                         
                                         
                                     }
                                 }
-                            }.frame(maxWidth: 60, maxHeight: 60)
+                            }//.frame(maxWidth: 60, maxHeight: 60)
                         }
                         
                     }.frame(maxWidth: .infinity, alignment: .trailing)
@@ -60,14 +63,16 @@ struct ListElement: View{
                         withAnimation{
                             clicked.toggle()
                         }
-                    }.foregroundColor(Color.swatch.cyan.base).frame(width: 40, height: 40)
+                    }.foregroundColor(.white).frame(width: 40, height: 40)
                 }
                 .padding()
                 .alert("match.delete".trad() + " vs " + match.opponent, isPresented: $deleting) {
-                    Button("match.delete".trad(), role: .destructive) {
-                        viewModel.deleteMatch(match: match)
+                    HStack{
+                        Button("match.delete".trad(), role: .destructive) {
+                            viewModel.deleteMatch(match: match)
+                        }
+                        Button("cancel".trad(), role: .cancel) { }
                     }
-                    Button("cancel".trad(), role: .cancel) { }
                 } message: {
                     Text("match.delete.description".trad()).padding()
                 }
@@ -94,11 +99,13 @@ struct ListElement: View{
                             }.padding().frame(maxWidth: .infinity).background(.white.opacity(0.05)).clipShape(RoundedRectangle(cornerRadius: 8))
                         }
                         Button(action:{
-                            viewModel.reportLang.toggle()
+                            if match.pass{
+                                viewModel.reportLang.toggle()
+                            }
                         }){
-                            Image(systemName: "square.and.arrow.up").padding(.trailing)
+                            Image(systemName: match.pass ? "square.and.arrow.up" : "lock.fill").padding(.trailing)
                             Text("export.stats".trad())
-                        }.padding().frame(maxWidth: .infinity).background(.white.opacity(0.05)).clipShape(RoundedRectangle(cornerRadius: 8))
+                        }.padding().frame(maxWidth: .infinity).background(match.pass ? .white.opacity(0.05) : .gray.opacity(0.2)).clipShape(RoundedRectangle(cornerRadius: 8)).foregroundStyle(match.pass ? .white : .gray)
                     }
                     HStack{
 //                        Switch(isOn: $match.live, isOnIcon: Image(systemName: "dot.radiowaves.left.and.right"), isOffIcon: Image(systemName: "network.slash"), buttonColor: .cyan, backgroundColor: .white.opacity(0.1))

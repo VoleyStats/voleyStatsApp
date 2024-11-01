@@ -8,11 +8,38 @@
 import SwiftUI
 import Firebase
 import FirebaseAuth
+import UIKit
 
 class AppDelegate: NSObject, UIApplicationDelegate {
-  func application(_ application: UIApplication,
-                   didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+  func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
     FirebaseApp.configure()
+//      NSSetUncaughtExceptionHandler { exception in
+//              Log.error(with: Thread.callStackSymbols)
+//          }
+//
+//          signal(SIGABRT) { _ in
+//              Log.error(with: Thread.callStackSymbols)
+//          }
+//
+//          signal(SIGILL) { _ in
+//              Log.error(with: Thread.callStackSymbols)
+//          }
+//
+//          signal(SIGSEGV) { _ in
+//              Log.error(with: Thread.callStackSymbols)
+//          }
+//
+//          signal(SIGFPE) { _ in
+//              Log.error(with: Thread.callStackSymbols)
+//          }
+//
+//          signal(SIGBUS) { _ in
+//              Log.error(with: Thread.callStackSymbols)
+//          }
+//
+//          signal(SIGPIPE) { _ in
+//              Log.error(with: Thread.callStackSymbols)
+//          }
     return true
   }
 }
@@ -37,7 +64,7 @@ struct Voley_StatsApp: App {
     }
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView().preferredColorScheme(.dark)
         }
     }
 }

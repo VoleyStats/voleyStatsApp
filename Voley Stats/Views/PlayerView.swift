@@ -22,6 +22,7 @@ struct PlayerView: View {
                 }.padding(.vertical,10).padding(.horizontal, 20).background(.white.opacity(0.1)).clipShape(Capsule())
                 NavigationLink(destination: PlayerData(viewModel: PlayerDataModel(team: Team.find(id: viewModel.player.team), player: viewModel.player))){
                     Image(systemName: "square.and.pencil")
+//                    Text("edit".trad())
                 }.padding(.vertical,10).padding(.horizontal, 20).background(.white.opacity(0.1)).clipShape(Capsule())
             }.frame(maxWidth: .infinity, alignment: .trailing)
             HStack{
@@ -76,7 +77,7 @@ struct PlayerView: View {
                         HStack{
                             if !viewModel.addMeasure && !viewModel.measurements.isEmpty{
                                 Image(systemName: "square.and.pencil").padding(10).padding(.horizontal).background(.white.opacity(0.1)).clipShape(Capsule()).onTapGesture{
-                                    viewModel.selectedMeasure = viewModel.measurements.first
+                                    viewModel.selectedMeasure = viewModel.measurements.last
                                     viewModel.addMeasure.toggle()
                                 }
                             }
@@ -277,9 +278,10 @@ struct PlayerView: View {
 //            .frame(maxHeight: .infinity)
             .onAppear{
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    viewModel.measurements = viewModel.player.measurements()
                     viewModel.playerData = viewModel.player.report()
                     self.data = viewModel.playerData.filter{$0.key != "general"}.map{ ($0.key, $0.value["mark"]!)}.sorted(by: {$0.0 > $1.0})
-//                    print(viewModel.radarData)
+//                    print(self.data)
                     self.fetched = true
                 }
 //                print(rd)
@@ -364,131 +366,6 @@ struct PlayerView: View {
                 }
             }.padding().background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 15)).padding(.horizontal)
             Spacer()
-//            Text("stats".trad().uppercased()).font(.caption).foregroundStyle(.gray).frame(maxWidth: .infinity, alignment: .leading).padding([.horizontal, .top])
-//            ScrollView{
-//                VStack{
-//                    //                HStack{
-//                    VStack{
-//                        HStack{
-//                            Text("serve".trad()).frame(maxWidth: .infinity, alignment: .leading)
-//                            Text("\(String(format: "%.2f", viewModel.playerData["serve"]!["mark"]!))")
-//                        }
-//                        HStack{
-//                            VStack{
-//                                Text("total".trad())
-//                                Text("\(Int(viewModel.playerData["serve"]!["total"]!))")
-//                            }.padding().background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 15))
-//                            VStack{
-//                                Text("ace.short".trad())
-//                                Text("\(Int(viewModel.playerData["serve"]!["ace"]!))")
-//                            }.padding().background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 15))
-//                            VStack{
-//                                Text("++".trad())
-//                                Text("\(Int(viewModel.playerData["serve"]!["++"]!))")
-//                            }.padding().background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 15))
-//                            VStack{
-//                                Text("-".trad())
-//                                Text("\(Int(viewModel.playerData["serve"]!["-"]!))")
-//                            }.padding().background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 15))
-//                            VStack{
-//                                Text("error".trad())
-//                                Text("\(Int(viewModel.playerData["serve"]!["error"]!))")
-//                            }.padding().background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 15))
-//                        }
-//                    }.padding().background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 15))
-//                    VStack{
-//                        HStack{
-//                            Text("receive".trad()).frame(maxWidth: .infinity, alignment: .leading)
-//                            Text("\(String(format: "%.2f", viewModel.playerData["receive"]!["mark"]!))")
-//                        }
-//                        HStack{
-//                            VStack{
-//                                Text("total".trad())
-//                                Text("\(Int(viewModel.playerData["receive"]!["total"]!))")
-//                            }.padding().background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 15))
-//                            VStack{
-//                                Text("++".trad())
-//                                Text("\(Int(viewModel.playerData["receive"]!["++"]!))")
-//                            }.padding().background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 15))
-//                            VStack{
-//                                Text("+".trad())
-//                                Text("\(Int(viewModel.playerData["receive"]!["+"]!))")
-//                            }.padding().background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 15))
-//                            VStack{
-//                                Text("-".trad())
-//                                Text("\(Int(viewModel.playerData["receive"]!["-"]!))")
-//                            }.padding().background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 15))
-//                            VStack{
-//                                Text("error".trad())
-//                                Text("\(Int(viewModel.playerData["receive"]!["error"]!))")
-//                            }.padding().background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 15))
-//                        }
-//                    }.padding().background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 15))
-//                    //                }.padding().background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 15))
-//                    //                HStack{
-//                    VStack{
-//                        HStack{
-//                            Text("attack".trad()).frame(maxWidth: .infinity, alignment: .leading)
-//                            Text("\(String(format: "%.2f", viewModel.playerData["attack"]!["mark"]!))")
-//                        }
-//                        HStack{
-//                            VStack{
-//                                Text("total".trad())
-//                                Text("\(Int(viewModel.playerData["attack"]!["total"]!))")
-//                            }.padding().background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 15))
-//                            VStack{
-//                                Text("kill".trad())
-//                                Text("\(Int(viewModel.playerData["attack"]!["kill"]!))")
-//                            }.padding().background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 15))
-//                            VStack{
-//                                Text("block".trad())
-//                                Text("\(Int(viewModel.playerData["attack"]!["block"]!))")
-//                            }.padding().background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 15))
-//                            VStack{
-//                                Text("error".trad())
-//                                Text("\(Int(viewModel.playerData["attack"]!["error"]!))")
-//                            }.padding().background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 15))
-//                        }
-//                    }.padding().background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 15))
-//                    VStack{
-//                        HStack{
-//                            Text("block".trad()).frame(maxWidth: .infinity, alignment: .leading)
-//                            Text("\(String(format: "%.2f",viewModel.playerData["block"]!["mark"]! ))")
-//                        }
-//                        HStack{
-//                            VStack{
-//                                Text("total".trad())
-//                                Text("\(Int(viewModel.playerData["block"]!["total"]!))")
-//                            }.padding().background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 15))
-//                            VStack{
-//                                Text("point".trad())
-//                                Text("\(Int(viewModel.playerData["block"]!["points"]!))")
-//                            }.padding().background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 15))
-//                            VStack{
-//                                Text("error".trad())
-//                                Text("\(Int(viewModel.playerData["block"]!["error"]!))")
-//                            }.padding().background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 15))
-//                        }
-//                    }.padding().background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 15))
-//                    VStack{
-//                        HStack{
-//                            Text("dig".trad()).frame(maxWidth: .infinity, alignment: .leading)
-//                            Text("\(String(format: "%.2f", viewModel.playerData["dig"]!["mark"]!))")
-//                        }
-//                        HStack{
-//                            VStack{
-//                                Text("total".trad())
-//                                Text("\(Int(viewModel.playerData["dig"]!["total"]!))")
-//                            }.padding().background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 15))
-//                            VStack{
-//                                Text("error".trad())
-//                                Text("\(Int(viewModel.playerData["dig"]!["error"]!))")
-//                            }.padding().background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 15))
-//                        }
-//                    }.padding().background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 15))
-//                    //                }.padding().background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 15))
-//                }
-//            }.padding().background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 15)).padding(.horizontal)
             Text("sections".trad().uppercased()).font(.caption).foregroundStyle(.gray).frame(maxWidth: .infinity, alignment: .leading).padding([.horizontal, .top])
             HStack{
                 VStack{
@@ -496,6 +373,12 @@ struct PlayerView: View {
                     Text("player.measures".trad())
                 }.padding().background(viewModel.showMeasures ? .cyan : .white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 15)).padding(.horizontal).onTapGesture {
                     viewModel.showMeasures.toggle()
+                }
+                VStack{
+                    Image(systemName: "number").font(.largeTitle).foregroundStyle(!viewModel.showTotals ? .cyan : .white).padding()
+                    Text("area.totals".trad())
+                }.padding().background(viewModel.showTotals ? .cyan : .white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 15)).padding(.horizontal).onTapGesture {
+                    viewModel.showTotals.toggle()
                 }
                 VStack{
                     Image(systemName: "text.bubble").font(.largeTitle).foregroundStyle(!viewModel.addFeedback ? .cyan : .white).padding()
@@ -537,6 +420,9 @@ struct PlayerView: View {
                     if viewModel.showMeasures{
                         sections.append(ReportSections.playerMeasures)
                     }
+                    if viewModel.showTotals{
+                        sections.append(ReportSections.areaTotals)
+                    }
                     var match = Match.find(id: viewModel.match)
                     if match != nil{
                         viewModel.startDate = match!.date
@@ -548,6 +434,11 @@ struct PlayerView: View {
                         viewModel.endDate = tournament!.endDate
                     }
                     var dateRange = viewModel.dataRange == 3 ? (viewModel.startDate, viewModel.endDate) : nil
+                    if viewModel.dataRange == 0{
+                        let m = viewModel.team.matches().filter{$0.league}
+                        viewModel.startDate = m.last?.date ?? .now
+                        viewModel.endDate = m.first?.date ?? .now
+                    }
                     viewModel.report = Report(player: viewModel.player, data: viewModel.player.report(match: match, tournament: tournament, dateRange: dateRange), startDate: viewModel.startDate, endDate: viewModel.endDate, feedback: viewModel.feedBack, sections: sections).generate()
                     
                     viewModel.loading = false
@@ -573,6 +464,7 @@ class PlayerViewModel: ObservableObject{
     @Published var tournament: Int = 0
     @Published var addFeedback: Bool = false
     @Published var showMeasures: Bool = false
+    @Published var showTotals: Bool = false
     @Published var loading: Bool = false
     var lang:String = UserDefaults.standard.string(forKey: "locale") ?? "en"
     var player: Player
@@ -585,8 +477,10 @@ class PlayerViewModel: ObservableObject{
     init(player: Player){
         self.player = player
         df.dateFormat = "dd/MM/yyyy"
-        self.measurements = self.player.measurements()
+        
+        
         self.team = Team.find(id: player.team)!
+//        print(measurements.map{$0.date})
 //        self.playerData=[:]
 //        self.radarData=[]
 //        self.playerData = self.player.report()

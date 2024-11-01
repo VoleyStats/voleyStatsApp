@@ -8,16 +8,23 @@ struct MultiMatchStats: View {
     var body: some View {
         
         VStack {
-            HStack{
+            if(!viewModel.matches.allSatisfy{$0.pass}){
+                HStack{
+                    Image(systemName: "lock.fill")
+                    
+                    Text("PDF")
+                        
+                }.padding().background(.gray.opacity(0.2)).clipShape(RoundedRectangle(cornerRadius: 8)).frame(maxWidth: .infinity, alignment: .trailing).padding(.horizontal).foregroundStyle(.gray)
+            }else{
                 Text("PDF")
                     .onTapGesture {
-//                        viewModel.url = PDF().multiMatchReport(team: viewModel.team, matches: viewModel.matches).generate()
                         viewModel.reportLang.toggle()
                     }
                     .quickLookPreview($viewModel.url)
                     .frame(maxWidth: .infinity, alignment: .trailing)
                     .padding(.horizontal)
             }
+            
             GeometryReader { g in
                 ScrollView(.horizontal, showsIndicators: false) {
                 
@@ -72,7 +79,7 @@ struct MultiMatchStats: View {
         }
         .overlay(viewModel.reportLang ? langChooseModal() : nil)
         .background(Color.swatch.dark.high).foregroundColor(.white)
-            .navigationTitle("\("tournament.stats".trad())")
+            .navigationTitle("\("multi.match.stats".trad())")
             .onAppear{
                 viewModel.loading = true
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {

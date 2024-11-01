@@ -2,6 +2,7 @@ import SQLite
 import SwiftUI
 
 class PlayerMeasures: Equatable {
+    typealias Expression = SQLite.Expression
     var id:Int=0;
     var player: Player
     var date: Date

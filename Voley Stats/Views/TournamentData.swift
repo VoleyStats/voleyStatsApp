@@ -27,7 +27,9 @@ struct TournamentData: View {
                     DatePicker("start.date".trad(), selection: $viewModel.startDate).padding(.vertical, 3)
                     DatePicker("end.date".trad(), selection: $viewModel.endDate).padding(.vertical, 3)
                 }.padding().background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8))
-                
+//                Text(viewModel.pass ? "remove pass" : "add pass").padding().background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8)).padding().onTapGesture {
+//                    viewModel.pass.toggle()
+//                }
                 Button(action:{
                     viewModel.onAddButtonClick()
                     if viewModel.back{
@@ -51,6 +53,7 @@ class TournamentDataModel: ObservableObject{
     @Published var startDate:Date = Date()
     @Published var endDate:Date = Date()
     @Published var back:Bool=false
+    @Published var pass:Bool = false
     var team: Team
     var tournament: Tournament? = nil
     
@@ -61,6 +64,7 @@ class TournamentDataModel: ObservableObject{
         startDate = tournament?.startDate ?? Date()
         endDate = tournament?.endDate ?? Date()
         self.tournament = tournament
+        self.pass = tournament?.pass ?? false
     }
     func emptyFields()->Bool{
         return name == "" || location == ""
@@ -71,12 +75,17 @@ class TournamentDataModel: ObservableObject{
             tournament!.location = self.location
             tournament!.startDate = self.startDate
             tournament!.endDate = self.endDate
-            let updated = tournament!.update()
-            if updated {
-                self.back=true
+            if !tournament!.pass && self.pass{
+                tournament!.addPass()
+                self.back = true
+            }else{
+                let updated = tournament!.update()
+                if updated {
+                    self.back=true
+                }
             }
         }else{
-            let newTournament = Tournament(name: self.name, team: self.team, location: self.location, startDate: self.startDate, endDate: self.endDate)
+            let newTournament = Tournament(name: self.name, team: self.team, location: self.location, startDate: self.startDate, endDate: self.endDate, pass: self.team.pass)
             let id = Tournament.create(tournament: newTournament)
             if id != nil {
                 self.back=true

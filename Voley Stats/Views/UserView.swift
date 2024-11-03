@@ -167,6 +167,17 @@ struct UserView: View {
                 }
                 .frame(maxHeight: .infinity, alignment: .top)
             }
+            HStack{
+                Text("buy.pass".trad()).font(.title2).frame(maxWidth: .infinity)//.foregroundStyle(Color.swatch.dark.high)
+                Image(systemName: "ticket.fill").resizable().aspectRatio(contentMode: .fill).rotationEffect(.degrees(-20)).foregroundStyle(.white.opacity(0.5))//.padding()
+            }.padding().frame(height: 100).background(Color(hex: "#ffbf00") ?? .yellow).clipShape(RoundedRectangle(cornerRadius: 8)).padding().onTapGesture{
+                let s = SeasonPass()
+                if s.add(date: .now){
+                    Team.all().forEach{team in
+                        team.addPass()
+                    }
+                }
+            }
         }.background(Color.swatch.dark.high).foregroundStyle(.white)
             .navigationTitle("user.area".trad())
             .toast(show: $viewModel.showToast, Toast(show: $viewModel.showToast, type: viewModel.toastType, message: viewModel.msg))

@@ -479,7 +479,8 @@ struct Lang{
             "in.row":"in a row",
             "player.edit":"Edit player",
             "rotation.qr":"Rotation QR",
-            "game.graph":"Game Graph"
+            "game.graph":"Game Graph",
+            "buy.pass":"Purchase a season pass"
         ],
         "es":[
             "your.teams":"Tus equipos",
@@ -955,7 +956,8 @@ struct Lang{
             "set.preferences":"Ajustes del set",
             "in.row":"seguidos",
             "player.edit":"Editar jugador",
-            "rotation.qr":"QR de la rotación"
+            "rotation.qr":"QR de la rotación",
+            "buy.pass":"Obtener pase de temporada"
         ]
     ]
 }

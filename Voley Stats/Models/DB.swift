@@ -48,6 +48,22 @@ class DB {
             return
         }
         do {
+            try database.run(Table("season_pass").create(ifNotExists: true) {t in
+                t.column(Expression<Int>("id"), primaryKey: .autoincrement)
+                t.column(Expression<Bool>("pass"), defaultValue: false)
+                t.column(Expression<Date>("date_end"))
+            })
+            if try database.scalar(Table("season_pass").count) == 0{
+                try database.run(Table("season_pass").insert(
+                    Expression<Bool>("pass") <- false,
+                    Expression<Date>("date_end") <- .now
+                ))
+            }
+        } catch {
+            print("SEASON_PASS Error: \(error)")
+        }
+        
+        do {
             try database.run(Table("team").create(ifNotExists: true) {t in
                 t.column(Expression<Int>("id"), primaryKey: .autoincrement)
                 t.column(Expression<String>("name"))

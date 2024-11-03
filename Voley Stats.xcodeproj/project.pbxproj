@@ -109,6 +109,9 @@
 		556DB1DC2AFA7D1F00DB11E3 /* Toast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 556DB1DB2AFA7D1F00DB11E3 /* Toast.swift */; };
 		556DB1DE2AFA801C00DB11E3 /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 556DB1DD2AFA801C00DB11E3 /* View.swift */; };
 		5583285D2BD248E9007D1E9A /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5583285C2BD248E9007D1E9A /* Button.swift */; };
+		5584196D2CD61C7A000DF9B9 /* SeasonPass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5584196C2CD61C6E000DF9B9 /* SeasonPass.swift */; };
+		5584196E2CD61C7A000DF9B9 /* SeasonPass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5584196C2CD61C6E000DF9B9 /* SeasonPass.swift */; };
+		558419702CD6432C000DF9B9 /* PresentationSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5584196F2CD6432C000DF9B9 /* PresentationSlider.swift */; };
 		558472EC2BFF25C4008602EC /* EmptyState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 558472EB2BFF25C4008602EC /* EmptyState.swift */; };
 		558472EE2C00E7E7008602EC /* Dropdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 558472ED2C00E7E7008602EC /* Dropdown.swift */; };
 		558472F02C0264F2008602EC /* CategoryGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 558472EF2C0264F2008602EC /* CategoryGroup.swift */; };
@@ -257,6 +260,8 @@
 		556DB1DB2AFA7D1F00DB11E3 /* Toast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Toast.swift; sourceTree = "<group>"; };
 		556DB1DD2AFA801C00DB11E3 /* View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = View.swift; sourceTree = "<group>"; };
 		5583285C2BD248E9007D1E9A /* Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
+		5584196C2CD61C6E000DF9B9 /* SeasonPass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeasonPass.swift; sourceTree = "<group>"; };
+		5584196F2CD6432C000DF9B9 /* PresentationSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationSlider.swift; sourceTree = "<group>"; };
 		558472EB2BFF25C4008602EC /* EmptyState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyState.swift; sourceTree = "<group>"; };
 		558472ED2C00E7E7008602EC /* Dropdown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dropdown.swift; sourceTree = "<group>"; };
 		558472EF2C0264F2008602EC /* CategoryGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryGroup.swift; sourceTree = "<group>"; };
@@ -396,6 +401,7 @@
 		5556E0B029F1431E00D8F7B5 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				5584196C2CD61C6E000DF9B9 /* SeasonPass.swift */,
 				5586EF9B2CA4230500636BAF /* Category.swift */,
 				5556E0B129F1433000D8F7B5 /* Action.swift */,
 				5556E0B329F1433700D8F7B5 /* DB.swift */,
@@ -476,6 +482,7 @@
 				558472F12C05B8EB008602EC /* Switch.swift */,
 				5505DC372C41300D0020CA32 /* DirectionsCourt.swift */,
 				5505DC392C5F82940020CA32 /* DirectionsGraph.swift */,
+				5584196F2CD6432C000DF9B9 /* PresentationSlider.swift */,
 			);
 			path = "UI Elements";
 			sourceTree = "<group>";
@@ -783,6 +790,7 @@
 				5505DBDC2C36F4B30020CA32 /* Player.swift in Sources */,
 				5505DBC52C36F2EE0020CA32 /* StatsDataIntent.swift in Sources */,
 				5505DBE52C36F4DA0020CA32 /* String.swift in Sources */,
+				5584196E2CD61C7A000DF9B9 /* SeasonPass.swift in Sources */,
 				5505DBDB2C36F4B00020CA32 /* Match.swift in Sources */,
 				5586EF9D2CA4232300636BAF /* Category.swift in Sources */,
 			);
@@ -823,6 +831,7 @@
 				550085972AF2813E00668C71 /* Picker.swift in Sources */,
 				552EE4632B2C50B200A3E2E0 /* Polygon.swift in Sources */,
 				5556E0E129F1454C00D8F7B5 /* AttackTable.swift in Sources */,
+				558419702CD6432C000DF9B9 /* PresentationSlider.swift in Sources */,
 				5556E0C829F1438500D8F7B5 /* Team.swift in Sources */,
 				5556E0EF29F1457A00D8F7B5 /* ReceiveTable.swift in Sources */,
 				5537F92F2B516178009BD75E /* Path.swift in Sources */,
@@ -859,6 +868,7 @@
 				5559A6542B8F1D4D0022F97C /* TrainingCapture.swift in Sources */,
 				55CAAE592A6C2D9600045E29 /* LineChart.swift in Sources */,
 				556DB1DE2AFA801C00DB11E3 /* View.swift in Sources */,
+				5584196D2CD61C7A000DF9B9 /* SeasonPass.swift in Sources */,
 				550085992AF2848000668C71 /* Descriptable.swift in Sources */,
 				5556E0EB29F1456F00D8F7B5 /* FreeTable.swift in Sources */,
 				5556E0C429F1437400D8F7B5 /* Set.swift in Sources */,

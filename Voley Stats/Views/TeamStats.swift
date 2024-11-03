@@ -52,9 +52,9 @@ struct TeamStats: View {
                                 Image(systemName: "chart.xyaxis.line").padding().background(.white.opacity(representation == 1 ? 0.1 : 0)).clipShape(RoundedRectangle(cornerRadius: 8)).foregroundStyle(representation == 1 ? .cyan : .white).onTapGesture {
                                     representation = 1
                                 }
-                                Image(systemName: "arrow.up.left.arrow.down.right").padding().background(.white.opacity(representation == 2 ? 0.1 : 0)).clipShape(RoundedRectangle(cornerRadius: 8)).foregroundStyle(representation == 2 ? .cyan : .white).onTapGesture {
-                                    representation = 2
-                                }
+//                                Image(systemName: "arrow.up.left.arrow.down.right").padding().background(.white.opacity(representation == 2 ? 0.1 : 0)).clipShape(RoundedRectangle(cornerRadius: 8)).foregroundStyle(representation == 2 ? .cyan : .white).onTapGesture {
+//                                    representation = 2
+//                                }
                             }.background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8)).padding(.horizontal)
                         }
                         HStack{

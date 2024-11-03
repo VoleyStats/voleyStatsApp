@@ -153,9 +153,9 @@ struct TeamData: View {
                                 }.background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8))
                             }.padding(.bottom)
 //                            Spacer()
-                            Text(viewModel.pass ? "remove pass" : "add pass").padding().background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8)).padding().onTapGesture {
-                                viewModel.pass.toggle()
-                            }
+//                            Text(viewModel.pass ? "remove pass" : "add pass").padding().background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8)).padding().onTapGesture {
+//                                viewModel.pass.toggle()
+//                            }
 //                            Spacer()
                             Button(action:{
                                 if viewModel.onAddButtonClick(){
@@ -241,7 +241,7 @@ class TeamDataModel: ObservableObject{
                     return team!.update()
                 }
             }else{
-                let newTeam = Team(name: name, organization: organization, category: category!.name, gender: gender[genderId], color: color, order: (Team.all().last?.order ?? 0)+1, pass: pass, id: nil)
+                let newTeam = Team(name: name, organization: organization, category: category!.name, gender: gender[genderId], color: color, order: (Team.all().last?.order ?? 0)+1, pass: SeasonPass().active, id: nil)
                 let id = Team.createTeam(team: newTeam)
                 return id != nil
             }

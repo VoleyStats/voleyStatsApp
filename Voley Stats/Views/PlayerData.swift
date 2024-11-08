@@ -93,7 +93,9 @@ struct PlayerData: View {
                         }
                     }){
                         Text("save".trad()).frame(maxWidth: .infinity, alignment: .center)
-                    }.disabled(viewModel.name.isEmpty || viewModel.number == 0).padding().background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8)).foregroundColor((viewModel.name.isEmpty || viewModel.number == 0) ? .gray : .cyan)
+                    }.disabled(viewModel.name.isEmpty || viewModel.number == 0).padding().background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8)).foregroundColor((viewModel.name.isEmpty || viewModel.number == 0) ? .gray : .cyan).onTapGesture {
+                        
+                    }
                 
 //                    Spacer()
 //                    Spacer()
@@ -135,7 +137,7 @@ struct PlayerData: View {
                     Spacer()
                     ScrollView{
                         VStack{
-                            ForEach(viewModel.selectedTeam!.players(), id: \.id){player in
+                            ForEach(viewModel.selectedTeam!.players().filter{!viewModel.team!.players().contains($0)}, id: \.id){player in
                                 HStack{
                                     if viewModel.selectedPlayers.contains(player) {
                                         Image(systemName: "checkmark.circle.fill").padding(.horizontal).font(.title2)
@@ -149,14 +151,19 @@ struct PlayerData: View {
                             }
                         }
                     }
-                    Button(action:{
-                        viewModel.addPlayers()
-                        if viewModel.saved{
-//                                dismiss()
-                        }
-                    }){
-                        Text("add.players".trad())
-                    }.padding().frame(height: 60).frame(maxWidth: .infinity).background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8)).foregroundColor(.cyan).padding()
+                        Text("add.players".trad()).padding().frame(height: 60).frame(maxWidth: .infinity)
+                        .background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8)).foregroundColor(.cyan).padding()
+                        .onTapGesture{
+                            if !viewModel.selectedPlayers.isEmpty{
+                                
+                                
+                                viewModel.addPlayers()
+                                if viewModel.saved{
+                                    presentationMode.wrappedValue.dismiss()
+                                    //                                dismiss()
+                                }
+                            }
+                    }
                 }
                 Spacer()
             }.padding().background(.black).clipShape(RoundedRectangle(cornerRadius: 8)).frame(maxWidth: .infinity, maxHeight:  .infinity).padding() : nil)

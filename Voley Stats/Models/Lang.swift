@@ -480,7 +480,8 @@ struct Lang{
             "player.edit":"Edit player",
             "rotation.qr":"Rotation QR",
             "game.graph":"Game Graph",
-            "buy.pass":"Purchase a season pass"
+            "buy.pass":"Purchase a pass",
+            "feature.for.team.pass":"This is only available for season pass users"
         ],
         "es":[
             "your.teams":"Tus equipos",
@@ -957,7 +958,8 @@ struct Lang{
             "in.row":"seguidos",
             "player.edit":"Editar jugador",
             "rotation.qr":"QR de la rotación",
-            "buy.pass":"Obtener pase de temporada"
+            "buy.pass":"Obtener un pase",
+            "feature.for.team.pass":"Esta función solo esta disponible para usuarios con pase de temporada"
         ]
     ]
 }

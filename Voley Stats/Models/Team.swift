@@ -4,6 +4,7 @@ import AppIntents
 import FirebaseCore
 import FirebaseFirestore
 import FirebaseAuth
+import UniformTypeIdentifiers
 
 class Team: Model {
     typealias Expression = SQLite.Expression
@@ -379,19 +380,19 @@ class Team: Model {
                 for match in (matches.sorted{$0.date < $1.date}){
                     let nquery = query.filter(actions.contains(Expression<Int>("action")) && Expression<Int>("player") != 0 && Expression<Int>("match") == match.id)
                     let stat = try database.scalar(nquery.count)
-                    stats.append(("\(match.opponent)-\(match.date.formatted(date: .numeric, time: .shortened))", Double(stat)))
+                    stats.append(("\(match.opponent)\(!match.home ? " (\u{2708})" : "")", Double(stat)))
                 }
             } else if !tournaments.isEmpty{
                 for match in (tournaments.flatMap{$0.matches()}.sorted{$0.date < $1.date}){
                     let nquery = query.filter(actions.contains(Expression<Int>("action")) && Expression<Int>("player") != 0 && Expression<Int>("match") == match.id)
                     let stat = try database.scalar(nquery.count)
-                    stats.append(("\(match.opponent)-\(match.date.formatted(date: .numeric, time: .shortened))", Double(stat)))
+                    stats.append(("\(match.opponent)\(!match.home ? " (\u{2708})" : "")", Double(stat)))
                 }
             }else if startDate != nil && endDate != nil{
                 for match in (self.matches(startDate: startDate, endDate: endDate).sorted{$0.date < $1.date}){
                     let nquery = query.filter(actions.contains(Expression<Int>("action")) && Expression<Int>("player") != 0 && Expression<Int>("match") == match.id)
                     let stat = try database.scalar(nquery.count)
-                    stats.append(("\(match.opponent)-\(match.date.formatted(date: .numeric, time: .shortened))", Double(stat)))
+                    stats.append(("\(match.opponent)\(!match.home ? " (\u{2708})" : "")", Double(stat)))
                 }
 
 //                        let stat = try database.scalar(query)
@@ -538,6 +539,55 @@ class Team: Model {
             "code":self.code
         ]
     }
+    
+    func createCSVString() -> String {
+        var csvString = "id,name,organization,category,gender,color,order,code,pass,season_end;\n"
+        csvString = csvString.appending("1,\(self.name),\(self.orgnization),\(self.category),\(self.gender),\(self.color),\(self.order),\(self.code),\(self.pass),\(self.seasonEnd);\n")
+        
+        csvString = csvString.appending(":id,name,number,active,team,birthday,position;\n")
+        for player in self.players(){
+            csvString = csvString.appending("\(player.id),\(player.name),\(player.number),\(player.active),1,\(player.getBirthDay()),\(player.position);\n")
+        }
+        csvString = csvString.appending(":id,opponent,location,home,date,n_sets,n_players,team,league,tournament,code,live,pass;\n")
+//        for match in self.matches(){
+        let match = Match.find(id: 124)!
+            csvString = csvString.appending("1,\(match.opponent),\(match.location),\(match.home),\(match.getDate()),\(match.n_sets),\(match.n_players),1,\(match.league),\(match.tournament?.id ?? 0),\(match.code),\(match.live),\(match.pass);\n")
+//        }
+        csvString = csvString.appending(":id,number,first_serve,match,rotation,libero1,libero2,result,score_us,score_them,game_mode,rotation_turns,rotation_number,direction_detail,error_detail,restrict_changes;\n")
+        for set in match.sets(){
+            csvString = csvString.appending("\(set.id),\(set.number),\(set.first_serve),1,\(set.rotation.id),\(set.liberos[0] ?? 0),\(set.liberos[1] ?? 0),\(set.result),\(set.score_us),\(set.score_them),\(set.gameMode),\(set.rotationTurns),\(set.rotationNumber),\(set.directionDetail),\(set.errorDetail),\(set.restrictChanges);\n")
+        }
+        csvString = csvString.appending(":id,match,set,player,rotation,server,action,player_in,to,score_us,score_them,stage,detail,rotation_turns,rotation_count,setter,order,direction;\n")
+        for stat in match.stats(){
+            csvString = csvString.appending("\(stat.id),1,\(stat.set),\(stat.player),\(stat.rotation.id),\(stat.server.id),\(stat.action),\(stat.player_in ?? 0),\(stat.to),\(stat.score_us),\(stat.score_them),\(stat.stage),\"\(stat.detail)\",\(stat.rotationTurns),\(stat.rotationCount),\(stat.setter?.id ?? 0),\(stat.order),\(stat.direction);\n")
+        }
+//        csvString = csvString.appending(":id,name,team,location,date_start,date_end,pass;")
+//        for tournament in self.tournaments(){
+//            csvString = csvString.appending("\(tournament.id),\(tournament.name),\(tournament.team.id),\(tournament.location),\(tournament.getStartDateString()),\(tournament.getEndDateString()),\(tournament.pass);")
+//        }
+//        guard let database = DB.shared.db else {
+//            fatalError("DB error")
+//        }
+//        do {
+//            csvString = csvString.appending(":id,player,team;")
+//            for pt in try database.prepare(Table("player_teams").filter(Expression<Int>("team") == self.id)){
+//                csvString = csvString.appending("\(pt[Expression<Int>("id")]),\(pt[Expression<Int>("player")]),\(pt[Expression<Int>("team")]);")
+//            }
+//        } catch {
+//            print("Exporting Error: \(error)")
+//        }
+        
+        
+        csvString = csvString.appending(":id,name,team,one,two,three,four,five,six;\n")
+        for r in match.rotations(){
+            csvString = csvString.appending("\(r.id),\(r.name ?? ""),1,\(r.one?.id ?? 0),\(r.two?.id ?? 0),\(r.three?.id ?? 0),\(r.four?.id ?? 0),\(r.five?.id ?? 0),\(r.six?.id ?? 0);\n")
+        }
+        UIPasteboard.general.setValue(csvString, forPasteboardType: UTType.plainText.identifier)
+        print(csvString)
+        return csvString
+        
+    }
+    
 }
 
 struct TeamEntity: Equatable, Hashable, AppEntity{

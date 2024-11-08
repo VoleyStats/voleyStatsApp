@@ -14,7 +14,7 @@ struct Login: View {
                     VStack{
                         VStack(alignment: .leading){
                             Text("email".trad()).font(.caption)
-                            TextField("email".trad(), text: $viewModel.email).textFieldStyle(TextFieldDark()).border(viewModel.errorCode == .emailError ? .red : .clear)
+                            TextField("email".trad(), text: $viewModel.email).textFieldStyle(TextFieldDark()).textInputAutocapitalization(.never).border(viewModel.errorCode == .emailError ? .red : .clear)
                             if viewModel.errorCode == .emailError{
                                 Text(viewModel.errorMsg!).font(.caption).foregroundStyle(.red)
                             }
@@ -22,16 +22,16 @@ struct Login: View {
                         if !viewModel.login{
                             VStack(alignment: .leading){
                                 Text("username".trad()).font(.caption)
-                                TextField("username".trad(), text: $viewModel.userName).textFieldStyle(TextFieldDark())
+                                TextField("username".trad(), text: $viewModel.userName).textFieldStyle(TextFieldDark()).textInputAutocapitalization(.never)
                             }.padding(.bottom).padding(.horizontal)
                         }
                         VStack(alignment: .leading){
                             Text("password".trad()).font(.caption)
                             ZStack{
                                 if viewModel.secured {
-                                    SecureField("password".trad(), text: $viewModel.password).textFieldStyle(TextFieldDark()).border(viewModel.errorCode == .passwordError ? .red : .clear)
+                                    SecureField("password".trad(), text: $viewModel.password).textFieldStyle(TextFieldDark()).textInputAutocapitalization(.never).border(viewModel.errorCode == .passwordError ? .red : .clear)
                                 }else{
-                                    TextField("password".trad(), text: $viewModel.password).textFieldStyle(TextFieldDark()).border(viewModel.errorCode == .passwordError ? .red : .clear)
+                                    TextField("password".trad(), text: $viewModel.password).textFieldStyle(TextFieldDark()).textInputAutocapitalization(.never).border(viewModel.errorCode == .passwordError ? .red : .clear)
                                 }
                                 Image(systemName: viewModel.secured ? "eye.slash" : "eye").padding().frame(maxWidth: .infinity, alignment: .trailing).onTapGesture{
                                     viewModel.secured.toggle()
@@ -46,9 +46,9 @@ struct Login: View {
                                 Text("verify.password".trad()).font(.caption)
                                 ZStack{
                                     if viewModel.securedRepeat {
-                                        SecureField("verify.password".trad(), text: $viewModel.passwordRepeat).textFieldStyle(TextFieldDark()).border(viewModel.password != viewModel.passwordRepeat ? .red : .clear)
+                                        SecureField("verify.password".trad(), text: $viewModel.passwordRepeat).textFieldStyle(TextFieldDark()).textInputAutocapitalization(.never).border(viewModel.password != viewModel.passwordRepeat ? .red : .clear)
                                     }else{
-                                        TextField("verify.password".trad(), text: $viewModel.passwordRepeat).textFieldStyle(TextFieldDark()).border(viewModel.password != viewModel.passwordRepeat ? .red : .clear)
+                                        TextField("verify.password".trad(), text: $viewModel.passwordRepeat).textFieldStyle(TextFieldDark()).textInputAutocapitalization(.never).border(viewModel.password != viewModel.passwordRepeat ? .red : .clear)
                                     }
                                     Image(systemName: viewModel.securedRepeat ? "eye.slash" : "eye").padding().frame(maxWidth: .infinity, alignment: .trailing).onTapGesture{
                                         viewModel.securedRepeat.toggle()

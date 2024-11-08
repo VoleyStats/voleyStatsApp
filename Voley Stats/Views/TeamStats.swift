@@ -24,7 +24,7 @@ struct TeamStats: View {
     @State var attackHistory: [(Color, [(String, Double)], String)] = []
     @State var directions: [Stat] = []
     @State var loading: Bool = false
-    @State var league: Bool = false
+    @State var league: Bool = true
     @State var representation: Int = 0
 //    @State var
 
@@ -105,7 +105,7 @@ struct TeamStats: View {
                                 }.padding().frame(maxWidth: .infinity, alignment: .leading)
                             }.zIndex(1)
                             
-                            Toggle("league.matches".trad(), isOn: self.$league).padding().disabled(!tournaments.isEmpty)
+                            Toggle("league.matches".trad(), isOn: self.$league).tint(.cyan).padding().disabled(!tournaments.isEmpty)
                             VStack(alignment: .leading){
                                 Text("date.range".trad().uppercased()).font(.caption).padding(.horizontal)
                                 HStack{
@@ -221,7 +221,7 @@ struct TeamStats: View {
             VStack{
                 Image(systemName: "ticket.fill").resizable().aspectRatio(contentMode: .fit).rotationEffect(.degrees(-20)).frame(width: 200).foregroundStyle(.cyan).padding()
                 Text("feature.for.team.pass".trad()).padding(.top)
-                Text("purchase.pass".trad()).foregroundStyle(.cyan)
+                Text("buy.pass".trad()).foregroundStyle(.cyan)
             }.frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         //.background(RoundedRectangle(cornerRadius: 25.0, style: .continuous).fill(.white.opacity(0.1)))

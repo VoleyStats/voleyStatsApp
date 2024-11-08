@@ -344,25 +344,25 @@ class Report: PDF{
             x=65
             
             if !ps.isEmpty {
-                receiveDetail.append(BarElement(value: rcv.count, color: .gray, group: "Set \(set.number)", label: "total".trad()))
-                receiveDetail.append(BarElement(value: s3, color: .green, group: "Set \(set.number)", label: "#"))
-                receiveDetail.append(BarElement(value: s2, color: .yellow, group: "Set \(set.number)", label: "+"))
-                receiveDetail.append(BarElement(value: s1, color: .orange, group: "Set \(set.number)", label: "-"))
-                receiveDetail.append(BarElement(value: Rerr, color: .red, group: "Set \(set.number)", label: "error".trad()))
+                receiveDetail.append(BarElement(value: rcv.count, color: Colors.gray, group: "Set \(set.number)", label: "total".trad()))
+                receiveDetail.append(BarElement(value: s3, color: Colors.green, group: "Set \(set.number)", label: "#"))
+                receiveDetail.append(BarElement(value: s2, color: Colors.yellow, group: "Set \(set.number)", label: "+"))
+                receiveDetail.append(BarElement(value: s1, color: Colors.orange, group: "Set \(set.number)", label: "-"))
+                receiveDetail.append(BarElement(value: Rerr, color: Colors.red, group: "Set \(set.number)", label: "error".trad()))
                 
-                attackDetail.append(BarElement(value: atk.count, color: .gray, group: "Set \(set.number)", label: "total".trad()))
-                attackDetail.append(BarElement(value: kills.filter{$0.action==9}.count, color: .green, group: "Set \(set.number)", label: "kills".trad()))
+                attackDetail.append(BarElement(value: atk.count, color: Colors.gray, group: "Set \(set.number)", label: "total".trad()))
+                attackDetail.append(BarElement(value: kills.filter{$0.action==9}.count, color: Colors.green, group: "Set \(set.number)", label: "kills".trad()))
                 attackDetail.append(BarElement(value: kills.filter{$0.action==10}.count, color: Colors.green2, group: "Set \(set.number)", label: "tip".trad()))
                 attackDetail.append(BarElement(value: kills.filter{$0.action==11}.count, color: Colors.green3, group: "Set \(set.number)", label: "blockout".trad()))
-                attackDetail.append(BarElement(value: Aerr.filter{$0.detail == "Blocked"}.count, color: .yellow, group: "Set \(set.number)", label: "blocked".trad()))
-                attackDetail.append(BarElement(value: Aerr.filter{$0.detail == "Out"}.count, color: .orange, group: "Set \(set.number)", label: "out".trad()))
-                attackDetail.append(BarElement(value: Aerr.filter{$0.detail == "Net"}.count, color: .red, group: "Set \(set.number)", label: "net".trad()))
+                attackDetail.append(BarElement(value: Aerr.filter{$0.detail == "Blocked"}.count, color: Colors.yellow, group: "Set \(set.number)", label: "blocked".trad()))
+                attackDetail.append(BarElement(value: Aerr.filter{$0.detail == "Out"}.count, color: Colors.orange, group: "Set \(set.number)", label: "out".trad()))
+                attackDetail.append(BarElement(value: Aerr.filter{$0.detail == "Net"}.count, color: Colors.red, group: "Set \(set.number)", label: "net".trad()))
                 
-                serveDetail.append(BarElement(value: serves.count, color: .gray, group: "Set \(set.number)", label: "total".trad()))
-                serveDetail.append(BarElement(value: aces, color: .green, group: "Set \(set.number)", label: "ace".trad()))
-                serveDetail.append(BarElement(value: serves.filter{s in return s.action==39 && s.server.id != 0}.count, color: .yellow, group: "Set \(set.number)", label: "+".trad()))
-                serveDetail.append(BarElement(value: serves.filter{s in return [40,41].contains(s.action) && s.server.id != 0}.count, color: .orange, group: "Set \(set.number)", label: "-".trad()))
-                serveDetail.append(BarElement(value: Serr, color: .red, group: "Set \(set.number)", label: "error".trad()))
+                serveDetail.append(BarElement(value: serves.count, color: Colors.gray, group: "Set \(set.number)", label: "total".trad()))
+                serveDetail.append(BarElement(value: aces, color: Colors.green, group: "Set \(set.number)", label: "ace".trad()))
+                serveDetail.append(BarElement(value: serves.filter{s in return s.action==39 && s.server.id != 0}.count, color: Colors.yellow, group: "Set \(set.number)", label: "+".trad()))
+                serveDetail.append(BarElement(value: serves.filter{s in return [40,41].contains(s.action) && s.server.id != 0}.count, color: Colors.orange, group: "Set \(set.number)", label: "-".trad()))
+                serveDetail.append(BarElement(value: Serr, color: Colors.red, group: "Set \(set.number)", label: "error".trad()))
             
             }
         }

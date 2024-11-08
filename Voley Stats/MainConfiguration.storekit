@@ -1,0 +1,125 @@
+{
+  "appPolicies" : {
+    "eula" : "",
+    "policies" : [
+      {
+        "locale" : "en_US",
+        "policyText" : "",
+        "policyURL" : ""
+      }
+    ]
+  },
+  "identifier" : "F0B45937",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "1.99",
+      "familyShareable" : false,
+      "internalID" : "6737851036",
+      "localizations" : [
+        {
+          "description" : "Desbloquea la app para un partido",
+          "displayName" : "Pase de partido",
+          "locale" : "es_ES"
+        }
+      ],
+      "productID" : "match.pass.full",
+      "referenceName" : "Match pass",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "14.99",
+      "familyShareable" : false,
+      "internalID" : "6737779504",
+      "localizations" : [
+        {
+          "description" : "Desbloquea la app durante una temporada ",
+          "displayName" : "Pase de temporada",
+          "locale" : "es_ES"
+        }
+      ],
+      "productID" : "season.pass.full",
+      "referenceName" : "Season pass",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "6.99",
+      "familyShareable" : false,
+      "internalID" : "6737850628",
+      "localizations" : [
+        {
+          "description" : "Desbloquea la app durante un torneo",
+          "displayName" : "Pase de torneo",
+          "locale" : "es_ES"
+        }
+      ],
+      "productID" : "tournament.pass.full",
+      "referenceName" : "Tournament pass",
+      "type" : "Consumable"
+    }
+  ],
+  "settings" : {
+    "_applicationInternalID" : "6737778450",
+    "_developerTeamID" : "XVP8NP6YVY",
+    "_failTransactionsEnabled" : false,
+    "_lastSynchronizedDate" : 752600713.59182703,
+    "_locale" : "en_US",
+    "_storefront" : "USA",
+    "_storeKitErrors" : [
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Load Products"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Purchase"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Verification"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Store Sync"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Subscription Status"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Transaction"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Manage Subscriptions Sheet"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Refund Request Sheet"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Offer Code Redeem Sheet"
+      }
+    ]
+  },
+  "subscriptionGroups" : [
+
+  ],
+  "version" : {
+    "major" : 4,
+    "minor" : 0
+  }
+}

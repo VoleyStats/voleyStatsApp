@@ -631,7 +631,8 @@ class Match: Model {
             "league":self.league,
             "tournament":Tournament.find(id: self.tournament?.id ?? 0)?.toJSON(),
             "code":self.code,
-            "live":self.live
+            "live":self.live,
+            "pass":self.pass
         ]
     }
 }

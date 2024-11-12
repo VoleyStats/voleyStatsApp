@@ -276,6 +276,38 @@ class Team: Model {
         }
     }
     
+    func opponents(search: String) -> [String]{
+        var opponents: [String] = []
+        do{
+            guard let database = DB.shared.db else {
+                return []
+            }
+            for opponent in try database.prepare(Table("match").filter(Expression<Int>("team")==self.id && Expression<String>("opponent").like("%\(search.lowercased())%")).select(Expression<String>("opponent"))) {
+                opponents.append(opponent[Expression<String>("opponent")])
+            }
+            return opponents
+        } catch {
+            print(error)
+            return []
+        }
+    }
+    
+    func locations(search: String) -> [String]{
+        var locations: [String] = []
+        do{
+            guard let database = DB.shared.db else {
+                return []
+            }
+            for location in try database.prepare(Table("match").filter(Expression<Int>("team")==self.id && Expression<String>("location").like("%\(search.lowercased())%")).select(Expression<String>("location"))) {
+                locations.append(location[Expression<String>("location")])
+            }
+            return locations
+        } catch {
+            print(error)
+            return []
+        }
+    }
+    
     func rotations(match: Match? = nil) -> [Rotation]{
         var rotations: [Rotation] = []
         do{

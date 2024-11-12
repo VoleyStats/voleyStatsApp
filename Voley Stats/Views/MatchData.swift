@@ -23,10 +23,42 @@ struct MatchData: View {
                                 VStack(alignment: .leading){
                                     Text("opponent".trad()).font(.caption)
                                     TextField("opponent".trad(), text: $viewModel.opponent).textFieldStyle(TextFieldDark())
+                                        .onChange(of: viewModel.opponent) {
+                                            if !viewModel.opponent.isEmpty{
+                                                viewModel.showOpponentSuggestion = true
+                                            } else {
+                                                viewModel.showOpponentSuggestion = false
+                                            }
+                                        
+                                        }.popover(isPresented: $viewModel.showOpponentSuggestion, arrowEdge: .top){
+                                            VStack{
+                                                ForEach(viewModel.team.opponents(search: viewModel.opponent), id:\.self){op in
+                                                    Text(op).onTapGesture{
+                                                        viewModel.opponent = op
+                                                    }.padding().frame(maxWidth: .infinity)
+                                                }
+                                            }.padding()
+                                        }
                                 }.padding(.bottom)
                                 VStack(alignment: .leading){
                                     Text("location.court".trad()).font(.caption)
                                     TextField("location.court".trad(), text: $viewModel.location).textFieldStyle(TextFieldDark())
+                                        .onChange(of: viewModel.location) {
+                                            if !viewModel.location.isEmpty{
+                                                viewModel.showLocationSuggestion = true
+                                            } else {
+                                                viewModel.showLocationSuggestion = false
+                                            }
+                                        
+                                        }.popover(isPresented: $viewModel.showLocationSuggestion, arrowEdge: .top){
+                                            VStack{
+                                                ForEach(viewModel.team.locations(search: viewModel.location), id:\.self){op in
+                                                    Text(op).onTapGesture{
+                                                        viewModel.location = op
+                                                    }.padding().frame(maxWidth: .infinity)
+                                                }
+                                            }.padding()
+                                        }
                                 }.padding(.bottom)
                                 VStack(alignment: .leading){
                                     Text("home.away".trad()).font(.caption)
@@ -204,6 +236,8 @@ class MatchDataModel: ObservableObject{
     @Published var sets: [Set] = []
     @Published var resetSet: Bool = false
     @Published var selectedSet: Set? = nil
+    @Published var showOpponentSuggestion: Bool = false
+    @Published var showLocationSuggestion: Bool = false
 //    var code: String
     
     init(team: Team, match: Match?, league: Bool = false, tournament: Tournament? = nil){

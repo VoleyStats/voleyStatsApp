@@ -479,7 +479,9 @@ struct Lang{
             "in.row":"in a row",
             "player.edit":"Edit player",
             "rotation.qr":"Rotation QR",
-            "game.graph":"Game Graph"
+            "game.graph":"Game Graph",
+            "buy.pass":"Purchase a pass",
+            "feature.for.team.pass":"This is only available for season pass users"
         ],
         "es":[
             "your.teams":"Tus equipos",
@@ -955,7 +957,9 @@ struct Lang{
             "set.preferences":"Ajustes del set",
             "in.row":"seguidos",
             "player.edit":"Editar jugador",
-            "rotation.qr":"QR de la rotación"
+            "rotation.qr":"QR de la rotación",
+            "buy.pass":"Obtener un pase",
+            "feature.for.team.pass":"Esta función solo esta disponible para usuarios con pase de temporada"
         ]
     ]
 }

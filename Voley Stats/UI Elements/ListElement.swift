@@ -83,6 +83,7 @@ struct ListElement: View{
 //                }
             }
             .onTapGesture {
+//                print(match.id)
                 action()
                 if !viewModel.selectMatches{
                     clicked.toggle()

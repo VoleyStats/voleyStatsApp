@@ -4,6 +4,8 @@ import FirebaseFirestore
 import FirebaseAuth
 import FirebaseStorage
 import ProvisioningProfile
+import StoreKit
+import OSLog
 
 struct UserView: View {
     @ObservedObject var viewModel: UserViewModel
@@ -167,12 +169,37 @@ struct UserView: View {
                 }
                 .frame(maxHeight: .infinity, alignment: .top)
             }
+            if !SeasonPass().active{
+                HStack{
+                    Text("buy.pass".trad()).font(.title2).frame(maxWidth: .infinity)//.foregroundStyle(Color.swatch.dark.high)
+                    Image(systemName: "ticket.fill").resizable().aspectRatio(contentMode: .fill).rotationEffect(.degrees(-20)).foregroundStyle(.white.opacity(0.5))//.padding()
+                }.padding().frame(height: 100).background(Color(hex: "#ffbf00") ?? .yellow).clipShape(RoundedRectangle(cornerRadius: 8)).padding().onTapGesture{
+                    //                let s = SeasonPass()
+                    //                if s.add(date: .now){
+                    //                    Team.all().forEach{team in
+                    //                        team.addPass()
+                    //                    }
+                    withAnimation{
+                        viewModel.showStore.toggle()
+                    }
+                    //                }
+                }
+            }
         }.background(Color.swatch.dark.high).foregroundStyle(.white)
             .navigationTitle("user.area".trad())
             .toast(show: $viewModel.showToast, Toast(show: $viewModel.showToast, type: viewModel.toastType, message: viewModel.msg))
             .overlay(viewModel.arrangeTeams ? arrangeTeams() : nil)
             .overlay(viewModel.manageSeasons ? addSeason() : nil)
             .overlay(viewModel.pickSeason ? pickSeasonModal() : nil)
+            .overlay(viewModel.newPass ? slidesModal() : nil)
+            .overlay(viewModel.showStore ? storeModal() : nil)
+            .task {
+                do{
+                    try await viewModel.loadProducts()
+                }catch{
+                    print("error")
+                }
+            }
     }
     @ViewBuilder
     func arrangeTeams() ->some View{
@@ -334,6 +361,70 @@ struct UserView: View {
             .padding()
         }
     }
+
+    
+    @ViewBuilder
+    func slidesModal() -> some View {
+            ZStack{
+                Rectangle().fill(Color.swatch.dark.mid.opacity(0.5)).ignoresSafeArea()
+                PresentationSlider(slides:[
+                    Slide(title: "this is a test slide", subtitle: "in this subtitle we will test the slider", image: Image("slide_export")),
+                    Slide(title: "this is the test slide 2", subtitle: "in this subtitle we will test another slider", image: Image("slide_stats")),
+                    Slide(title: "this is the test slide 2", subtitle: "in this subtitle we will test another slider", image: Image("slide_fill")),
+                    Slide(title: "this is the test slide 2", subtitle: "in this subtitle we will test another slider", image: Image("slide_backup"))
+                ], cta_text: "start capturing stats", cta_action: {viewModel.newPass.toggle()}, skip_action: {viewModel.newPass.toggle()}).frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center).padding()
+            }.transition(.move(edge: .bottom))
+    }
+    
+    @ViewBuilder
+    func storeModal() -> some View {
+        ZStack(alignment: .bottom){
+            Rectangle().fill(Color.swatch.dark.mid.opacity(0.5)).ignoresSafeArea()
+            VStack{
+                ZStack{
+                    Text("buy.pass".trad()).font(.title2).padding().frame(maxWidth: .infinity)
+                    Image(systemName: "multiply").font(.title2).padding().frame(maxWidth: .infinity, alignment: .trailing).onTapGesture {
+                        withAnimation{
+                            viewModel.showStore.toggle()
+                        }
+                    }
+                }.padding()
+                
+                ProductView(id: "season.pass.full"){
+//                    ZStack{
+                    Image(systemName: "ticket.fill").resizable().aspectRatio(contentMode: .fit).rotationEffect(.degrees(-20)).foregroundStyle(.cyan).padding().background(.white.opacity(0.1), in: Circle())
+                }.productViewStyle(.large).padding().background(.white.opacity(0.1), in: RoundedRectangle(cornerRadius: 8)).padding()
+                HStack{
+                    ProductView(id: "tournament.pass.full"){
+                        Image(systemName: "ticket.fill").resizable().scaledToFit().foregroundStyle(.cyan).padding()
+                    }.productViewStyle(.compact).padding().background(.white.opacity(0.1), in: RoundedRectangle(cornerRadius: 8)).padding()
+                    ProductView(id: "match.pass.full"){
+                        Image(systemName: "ticket.fill").resizable().scaledToFit().foregroundStyle(.cyan)
+                    }.productViewStyle(.regular).padding().background(.white.opacity(0.1), in: RoundedRectangle(cornerRadius: 8)).padding()
+                }.padding()
+//                StoreView(ids: ["tournament.pass.full", "match.pass.full"])
+//                ForEach(viewModel.passOptions){prod in
+//                    HStack{
+//                        VStack(alignment: .leading){
+//                            Text(prod.displayName).font(.title2)
+//                            Text(prod.description)
+//                        }.padding().frame(maxWidth: .infinity, alignment: .leading)
+//                        Text("\(prod.price)").font(.title).padding(.horizontal)
+//                    }.padding().frame(maxWidth: .infinity, maxHeight: 100).background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8)).padding()
+//                        .onTapGesture {
+//                            Task{
+//                                await viewModel.purchase(prod)
+//                            }
+//                        }
+//                }
+            }.frame(maxWidth: .infinity).background(Color.swatch.dark.high).clipShape(RoundedRectangle(cornerRadius: 8)).padding()
+        }.transition(.move(edge: .bottom))
+            .onInAppPurchaseCompletion{product, result in
+                if case .success(.success(let transaction)) = result{
+                    
+                }
+            }
+    }
 }
 class UserViewModel: ObservableObject{
     @Published var lang: String = UserDefaults.standard.string(forKey: "locale") ?? "en"
@@ -353,7 +444,14 @@ class UserViewModel: ObservableObject{
     @Published var avatar: String
     @Published var availableBackups: [StorageReference] = []
     @Published var pickSeason: Bool = false
+    @Published var newPass: Bool = false
+    @Published var showStore: Bool = false
+    @Published var passOptions: [Product] = []
     var pass: Bool = false
+    private let logger = Logger(
+        subsystem: "Voley Stats",
+        category: "stats store"
+    )
 //    @Published var newSeason: Bool = false
     @Published var seasonName: String = "\("season".trad()) \(Date.now.formatted(.dateTime.year()))-\(Calendar.current.date(byAdding: .year, value: 1, to: Date.init())?.formatted(.dateTime.year()) ?? Date.now.formatted(.dateTime.year()))"
     init(){
@@ -362,8 +460,143 @@ class UserViewModel: ObservableObject{
         if a == nil {
             UserDefaults.standard.set(avatar, forKey: "avatar")
         }
-        pass = Team.all().map{$0.pass}.contains(true)
+//        pass = Team.all().map{$0.pass}.contains(true)
+        
     }
+    
+    func loadProducts() async throws {
+        self.passOptions = try await Product.products(for: ["season.pass.full"])
+    }
+    
+    func process(transaction verificationResult: VerificationResult<StoreKit.Transaction>) async {
+        do {
+            let unsafeTransaction = verificationResult.unsafePayloadValue
+            logger.log("""
+            Processing transaction ID \(unsafeTransaction.id) for \
+            \(unsafeTransaction.productID)
+            """)
+        }
+        
+        let transaction: StoreKit.Transaction
+        switch verificationResult {
+            case .verified(let t):
+                logger.debug("""
+                Transaction ID \(t.id) for \(t.productID) is verified
+                """)
+                transaction = t
+            case .unverified(let t, let error):
+                // Log failure and ignore unverified transactions
+                logger.error("""
+                Transaction ID \(t.id) for \(t.productID) is unverified: \(error)
+                """)
+                return
+        }
+
+        // We only need to handle consumables here. We will check the
+        // subscription status each time before unlocking a premium subscription
+        // feature.
+        if case .consumable = transaction.productType {
+            
+            // The safest practice here is to send the transaction to your
+            // server to validate the JWS and keep a ledger of the bird food
+            // each account is entitled to. Since this is just a demonstration,
+            // we are going to rely on StoreKit's automatic validation and
+            // use SwiftData to keep a ledger of the bird food.
+            
+//            guard let (birdFood, product) = birdFood(for: transaction.productID) else {
+//                logger.fault("""
+//                Attempting to grant access to \(transaction.productID) for \
+//                transaction ID \(transaction.id) but failed to query for
+//                corresponding bird food model.
+//                """)
+//                return
+//            }
+//            
+//            let delta = product.quantity * transaction.purchasedQuantity
+            
+            if transaction.revocationDate == nil, transaction.revocationReason == nil {
+                // SwiftData crashes when we do this, so we'll save this for later
+                //                if birdFood.finishedTransactions.contains(transaction.id) {
+                //                    logger.log("""
+                //                    Ignoring unrevoked transaction ID \(transaction.id) for \
+                //                    \(transaction.productID) because we have already added \
+                //                    \(birdFood.id) for the transaction.
+                //                    """)
+                //                    return
+                //                }
+                
+                // This doesn't appear to actually be updating the model
+//                birdFood.ownedQuantity += delta
+                //                birdFood.finishedTransactions.insert(transaction.id)
+                
+//                logger.log("""
+//                Added \(delta) \(birdFood.id)(s) from transaction ID \
+//                \(transaction.id). New total quantity: \(birdFood.ownedQuantity)
+//                """)
+                
+                // Finish the transaction after granting the user content
+                await transaction.finish()
+                
+                logger.debug("""
+                Finished transaction ID \(transaction.id) for \
+                \(transaction.productID)
+                """)
+            } else {
+//                birdFood.ownedQuantity -= delta
+                
+//                logger.log("""
+//                Removed \(delta) \(birdFood.id)(s) because transaction ID \
+//                \(transaction.id) was revoked due to \
+//                \(transaction.revocationReason?.localizedDescription ?? "unknown"). \
+//                New total quantity: \(birdFood.ownedQuantity).
+//                """)
+            }
+        } else {
+            // We can just finish the transction since we will grant access to
+            // the subscription based on the subscription status.
+            await transaction.finish()
+        }
+        
+//        do {
+//            try modelContext.save()
+//        } catch {
+//            logger.error("Could not save model context: \(error.localizedDescription)")
+//        }
+    }
+    
+    func purchase(_ product: Product) async {
+        do{
+            let result = try await product.purchase()
+            switch result{
+            case .success(let verification):
+//                    print(result)
+//                let transaction = nil //verifyPurchase(verification)
+//                await transaction?.finish()
+                    let s = SeasonPass()
+                    if s.add(date: .now){
+                        Team.all().forEach{team in
+                            team.addPass()
+                        }
+                    }
+                    self.showStore.toggle()
+                    self.newPass.toggle()
+                
+                    self.makeToast(msg: "purchase.success", type: .success)
+                case .pending:
+                    print("purchase pending")
+                    break
+                case .userCancelled:
+                    print("user cancelled")
+                break
+                @unknown default:
+                    print("Failed to purchase the product!")
+                    break
+            }
+        }catch{
+            print("error on purchase")
+        }
+    }
+    
     func makeToast(msg: String, type: ToastType){
         self.msg = msg
         self.toastType = type
@@ -477,18 +710,19 @@ class UserViewModel: ObservableObject{
                 self.saveFirestore()
             }
             if keepTeams{
-                Match.all().forEach{$0.delete()}
-                Tournament.all().forEach{$0.delete()}
-                Rotation.all().forEach{$0.delete()}
+                Match.truncate()
+                Tournament.truncate()
+                Rotation.truncate()
                 Team.all().forEach{
                     $0.seasonEnd = .distantPast
                     $0.pass = false
                     $0.update()
                 }
+                SeasonPass().reset()
             }else if keepPlayers {
                 Team.all().forEach{$0.delete(deletePlayers: false)}
             }else{
-                Team.all().forEach{$0.delete()}
+                DB.truncateDatabase()
             }
             UserDefaults.standard.set(self.seasonName, forKey: "season")
             self.creating.toggle()

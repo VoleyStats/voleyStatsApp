@@ -103,18 +103,7 @@ class Player: Model, Hashable {
                 ])
             }
             if try database.run(update) > 0 {
-                if self.mainTeam{
-//                    DB.saveToFirestore(collection: "player", object: self)
-                }else{
-//                    DB.saveToFirestore(collection: "player_teams", object: [
-//                        "id":self.playerTeam,
-//                        "player":self.id,
-//                        "team":self.team,
-//                        "position":self.position.rawValue,
-//                        "active":self.active,
-//                        "number":self.number
-//                    ])
-                }
+                
                 return true
             }
         } catch {
@@ -123,16 +112,23 @@ class Player: Model, Hashable {
         return false
     }
     
-    func delete() -> Bool{
+    func delete(fromTeam: Bool = false) -> Bool{
         guard let database = DB.shared.db else {
             print("no db")
             return false
         }
         do {
-            try database.run(Table("player_teams").filter(Expression<Int>("player") == self.id).delete())
-            let delete = Table("player").filter(self.id == Expression<Int>("id")).delete()
-            try database.run(delete)
-//            DB.deleteOnFirestore(collection: "player", object: self)
+            try database.run(Table("player_teams").filter(Expression<Int>("player") == self.id && self.team == Expression<Int>("team")).delete())
+            if fromTeam {
+                let delete = Table("player").filter(self.id == Expression<Int>("id")).update([
+                    Expression<Int>("team") <- 0
+                ])
+                try database.run(delete)
+            }else{
+                let delete = Table("player").filter(self.id == Expression<Int>("id") && self.team == Expression<Int>("team")).delete()
+                try database.run(delete)
+            }
+            
             return true
             
         } catch {

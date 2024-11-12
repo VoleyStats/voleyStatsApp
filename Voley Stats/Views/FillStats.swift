@@ -190,7 +190,7 @@ struct FillStats: View {
                                         }.frame(maxHeight: 20).offset(x: -30, y: 23)
                                     }
                             }
-                            if viewModel.nextPoint?.hasDirectionDetail() ?? false{
+                            if false{ //viewModel.nextPoint?.hasDirectionDetail() ?? false{
                                 ZStack{
                                     statb.fill(.blue)
                                     if viewModel.nextPoint?.direction ?? "" == ""{

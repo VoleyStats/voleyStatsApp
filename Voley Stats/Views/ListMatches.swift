@@ -117,13 +117,21 @@ struct ListMatches: View {
                 if matchesEmpty(){
                     EmptyState(icon: Image("court"), msg: "empty.list".trad()){
                         VStack{
-                            if (!viewModel.showTournaments) || (tournamentMatches && viewModel.tournament != nil){
-                                NavigationLink(destination: MatchData(viewModel: MatchDataModel(team: viewModel.team(), match: nil, league: viewModel.league, tournament: viewModel.tournament))){
-                                    Text("create.match".trad()).foregroundStyle(.cyan)
-                                }
-                            }else{
-                                NavigationLink(destination: TournamentData(viewModel: TournamentDataModel(team: viewModel.team(), tournament: nil))){
-                                    Text("create.tournament".trad()).foregroundStyle(.cyan)
+                            if !(viewModel.team().pass && viewModel.team().seasonEnd < .now) {
+                                if viewModel.team().players().count > 3{
+                                    if (!viewModel.showTournaments) || (tournamentMatches && viewModel.tournament != nil){
+                                        NavigationLink(destination: MatchData(viewModel: MatchDataModel(team: viewModel.team(), match: nil, league: viewModel.league, tournament: viewModel.tournament))){
+                                            Text("create.match".trad()).foregroundStyle(.cyan)
+                                        }
+                                    }else{
+                                        NavigationLink(destination: TournamentData(viewModel: TournamentDataModel(team: viewModel.team(), tournament: nil))){
+                                            Text("create.tournament".trad()).foregroundStyle(.cyan)
+                                        }
+                                    }
+                                }else{
+                                        NavigationLink(destination: PlayerData(viewModel: PlayerDataModel(team: viewModel.team(), player: nil))){
+                                            Text("player.add".trad())
+                                        }.foregroundStyle(.cyan)
                                 }
                             }
                         }
@@ -213,8 +221,17 @@ struct ListMatches: View {
                                                     Text("\(t.getStartDateString())-\(t.getEndDateString())").foregroundColor(.gray).font(.caption)
                                                 }.padding(.horizontal).frame(maxWidth: .infinity, alignment: .leading)
                                                 HStack{
-                                                    NavigationLink(destination: MultiMatchStats(viewModel: MultiMatchStatsModel(team: viewModel.team(), matches: t.matches()))){
-                                                        Image(systemName: "chart.bar.fill").padding(.horizontal)
+                                                    if t.pass{
+                                                        NavigationLink(destination: MultiMatchStats(viewModel: MultiMatchStatsModel(team: viewModel.team(), matches: t.matches()))){
+                                                            Image(systemName: "chart.bar.fill").padding(.horizontal)
+                                                        }
+                                                    }else{
+                                                        NavigationLink(destination: UserView(viewModel: UserViewModel())){
+                                                            HStack{
+                                                                Image(systemName: "lock.fill").padding(.trailing)
+                                                                Image(systemName: "chart.bar.fill")
+                                                            }.padding().foregroundStyle(.gray).background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8))
+                                                        }
                                                     }
                                                     NavigationLink(destination: TournamentData(viewModel: TournamentDataModel( team: viewModel.team(), tournament: t))){
                                                         Image(systemName: "square.and.pencil").padding(.horizontal)

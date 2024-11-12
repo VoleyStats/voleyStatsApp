@@ -47,16 +47,9 @@ struct TeamData: View {
                                                 Text("\(player.name)").frame(maxWidth: .infinity, alignment: .leading)
                                                 
                                                 Button(action:{
-                                                    if player.team == viewModel.team!.id {
-                                                        player.team = 0
-                                                        if player.update(){
+                                                    if player.delete(fromTeam: true){
                                                             viewModel.getPlayers()
                                                         }
-                                                    }else{
-                                                        if viewModel.team!.deletePlayer(player: player){
-                                                            viewModel.getPlayers()
-                                                        }
-                                                    }
                                                 }){
                                                     Image(systemName: "multiply")
                                                 }.padding()
@@ -106,23 +99,9 @@ struct TeamData: View {
                                         }.padding(.bottom)
                                         //                                    Spacer()
                                         VStack(alignment: .leading){
-                                            Text("category".trad().uppercased()).font(.caption)
+                                            Text("category".trad()).font(.caption)
                                             Dropdown(selection: $viewModel.category, items: viewModel.categories)
                                         }.padding(.bottom).frame(maxWidth: .infinity, alignment: .leading).zIndex(1)
-                                        //                                    HStack{
-                                        //                                        Text("category".trad()).frame(maxWidth: .infinity, alignment: .leading)
-                                        //                                        Picker(selection: $viewModel.categoryId, label: Text("category".trad())) {
-                                        //                                            Text("pick.one".trad()).tag(0)
-                                        //                                            Text("benjamin".trad()).tag(1)
-                                        //                                            Text("alevin".trad()).tag(2)
-                                        //                                            Text("infantil".trad()).tag(3)
-                                        //                                            Text("cadete".trad()).tag(4)
-                                        //                                            Text("juvenil".trad()).tag(5)
-                                        //                                            Text("junior".trad()).tag(6)
-                                        //                                            Text("senior".trad()).tag(7)
-                                        //                                        }
-                                        //                                    }.padding(.bottom)
-                                        //                                    Spacer()
                                         VStack(alignment: .leading){
                                             Text("gender".trad()).font(.caption)
                                             Picker(selection: $viewModel.genderId, label: Text("gender".trad())) {
@@ -130,40 +109,45 @@ struct TeamData: View {
                                                 Text("female".trad()).tag(2)
                                             }.pickerStyle(.segmented)
                                         }.padding(.bottom)
+                                        
+                                        VStack{
+                                            Text("Color").font(.caption).frame(maxWidth: .infinity, alignment: .leading)
+                                            ScrollView(.horizontal){
+                                                HStack{
+                                                    ForEach(colors, id: \.self){color in
+                                                        ZStack{
+                                                            Circle().strokeBorder(viewModel.color == color ? .white : .clear, lineWidth: 3)
+                                                                .background(Circle().fill(color)).frame(width: 40, height: 40).onTapGesture{
+                                                                    viewModel.color = color
+                                                                }
+                                                            
+                                                        }.padding(.horizontal, 3)
+                                                    }
+                                                }
+                                            }.padding().background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8))
+                                        }.padding(.bottom)
+                                        
                                     }.padding().background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8))
 //                                }.clipped()
                             }.padding(.bottom)
 //                            Spacer()
-                            Section{
-                                VStack{
-                                    Text("Color").font(.caption).padding([.top, .leading]).frame(maxWidth: .infinity, alignment: .leading)
-                                    ScrollView(.horizontal){
-                                        HStack{
-                                            ForEach(colors, id: \.self){color in
-                                                ZStack{
-                                                    Circle().strokeBorder(viewModel.color == color ? .white : .clear, lineWidth: 3)
-                                                        .background(Circle().fill(color)).frame(width: 40, height: 40).onTapGesture{
-                                                            viewModel.color = color
-                                                        }
-                                                    
-                                                }.padding(.horizontal, 3)
-                                            }
-                                        }
-                                    }.padding()
-                                }.background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8))
-                            }.padding(.bottom)
+//                            Section{
+                                
+//                            }.padding(.bottom)
 //                            Spacer()
-                            Text(viewModel.pass ? "remove pass" : "add pass").padding().background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8)).padding().onTapGesture {
-                                viewModel.pass.toggle()
-                            }
+//                            Text(viewModel.pass ? "remove pass" : "add pass").padding().background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8)).padding().onTapGesture {
+//                                viewModel.pass.toggle()
+//                            }
 //                            Spacer()
-                            Button(action:{
+                            
+                            Text("save".trad()).frame(maxWidth: .infinity, alignment: .center)
+                                .disabled(viewModel.emptyFields())
+                                .padding().background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8)).foregroundColor(viewModel.emptyFields() ? .gray : .cyan).onTapGesture {
                                 if viewModel.onAddButtonClick(){
                                     self.presentationMode.wrappedValue.dismiss()
                                 }
-                            }){
-                                Text("save".trad())
-                            }.frame(maxWidth: .infinity, alignment: .center).disabled(viewModel.emptyFields()).padding().background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8)).foregroundColor(viewModel.emptyFields() ? .gray : .cyan)
+                            }
+                            
                             if viewModel.team != nil{
                                 Button(action:{
                                     if viewModel.team!.delete(){
@@ -241,7 +225,7 @@ class TeamDataModel: ObservableObject{
                     return team!.update()
                 }
             }else{
-                let newTeam = Team(name: name, organization: organization, category: category!.name, gender: gender[genderId], color: color, order: (Team.all().last?.order ?? 0)+1, pass: pass, id: nil)
+                let newTeam = Team(name: name, organization: organization, category: category!.name, gender: gender[genderId], color: color, order: (Team.all().last?.order ?? 0)+1, pass: false, id: nil)
                 let id = Team.createTeam(team: newTeam)
                 return id != nil
             }

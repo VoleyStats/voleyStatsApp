@@ -1,9 +1,9 @@
 import PDFKit
 
 struct Colors{
-    static let green = UIColor(red: 0.33, green: 0.78, blue: 0.36, alpha: 1)
-    static let green2 = UIColor(red: 0.33, green: 0.8, blue: 0.36, alpha: 1)
-    static let green3 = UIColor(red: 0.25, green: 0.78, blue: 0.4, alpha: 1)
+    static let green = UIColor(red: 0.3, green: 0.63, blue: 0.3, alpha: 1)
+    static let green2 = UIColor(red: 0.69, green: 0.85, blue: 0.42, alpha: 1)
+    static let green3 = UIColor(red: 0.41, green: 0.5, blue: 0.25, alpha: 1)
     static let orange = UIColor(red: 0.84, green: 0.57, blue: 0.23, alpha: 1)
     static let pink = UIColor(red: 0.77, green: 0.45, blue: 0.83, alpha: 1)
     static let yellow = UIColor(red: 0.97, green: 0.79, blue: 0.29, alpha: 1)

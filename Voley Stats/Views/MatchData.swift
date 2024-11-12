@@ -88,7 +88,7 @@ struct MatchData: View {
                                         Text("6").tag(6)
                                     }.pickerStyle(.segmented)
                                 }
-                                if Auth.auth().currentUser != nil{
+                                if false { //Auth.auth().currentUser != nil{
                                     VStack(alignment: .leading){
                                         Text("share.live".trad()).font(.caption)
 //                                        HStack{

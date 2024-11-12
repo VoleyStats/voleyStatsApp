@@ -39,21 +39,22 @@ struct SetData: View {
                         //                Spacer()
                         rotation().padding(.top)
                             Text("rotation.qr".trad().uppercased()).font(.caption).foregroundColor(.gray).frame(maxWidth: .infinity, alignment: .leading).padding([.horizontal, .top])
-                        HStack(alignment: .center){
-                            VStack(alignment: .leading){
-                                Text("team.code".trad()).font(.caption)
-                                TextField("team.code".trad(), text: $viewModel.teamCode).textFieldStyle(TextFieldDark())
+                        VStack(alignment: .leading){
+                            Text("team.code".trad()).font(.caption)
+                            HStack(alignment: .center){
+                                TextField("team.code".trad(), text: $viewModel.teamCode).textFieldStyle(TextFieldDark()).padding(.trailing)
                                 
-                            }//.padding(.bottom)
-                            Text(viewModel.side).font(.title2).padding(.vertical, 10).padding(.horizontal).background(.white.opacity(0.1)).clipShape(Capsule()).onTapGesture {
-                                viewModel.side = viewModel.side == "A" ? "B" : "A"
-                            }
-                            Image(systemName: "qrcode").font(.title)
-                                .foregroundStyle(viewModel.rotation.filter{$0 != nil}.count == viewModel.match.n_players ? .white : .gray)
-                                .padding(.vertical, 10).padding(.horizontal).background(.white.opacity(0.1)).clipShape(Capsule()).onTapGesture {
-                                if viewModel.rotation.filter{$0 != nil}.count == viewModel.match.n_players{
-                                    viewModel.qrModal.toggle()
+                                //.padding(.bottom)
+                                Text(viewModel.side).font(.title2).padding(.vertical, 10).padding(.horizontal).background(.white.opacity(0.1)).clipShape(Capsule()).onTapGesture {
+                                    viewModel.side = viewModel.side == "A" ? "B" : "A"
                                 }
+                                Image(systemName: "qrcode").font(.title)
+                                    .foregroundStyle(viewModel.rotation.filter{$0 != nil}.count == viewModel.match.n_players ? .white : .gray)
+                                    .padding(.vertical, 10).padding(.horizontal).background(.white.opacity(0.1)).clipShape(Capsule()).onTapGesture {
+                                        if viewModel.rotation.filter{$0 != nil}.count == viewModel.match.n_players{
+                                            viewModel.qrModal.toggle()
+                                        }
+                                    }
                             }
                         }.padding().frame(maxWidth: .infinity).background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8))
                     }
@@ -99,11 +100,12 @@ struct SetData: View {
                 }.frame(maxWidth: .infinity, alignment: .trailing)
             }
             let r = Rotation(team: viewModel.team, one: viewModel.rotation[0], two: viewModel.rotation[1], three: viewModel.rotation[2], four: viewModel.rotation[3], five: viewModel.rotation[4], six: viewModel.rotation[5])
-            r.genrateQR(set: viewModel.set, teamSide: viewModel.side, teamCode: viewModel.teamCode).resizable()
+            r.genrateQR(set: viewModel.set, teamSide: viewModel.side, teamCode: viewModel.teamCode).interpolation(.none).resizable().scaledToFit().padding()
         }.padding()
             .background(.black)
             .clipShape(RoundedRectangle(cornerRadius: 25))
-            .frame(width:500, height: 250)
+//            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .frame(width:500, height: 500)
     }
     
     @ViewBuilder
@@ -259,7 +261,7 @@ class SetDataModel: ObservableObject{
         self.set = set
         self.team = team
         self.players = team.activePlayers()
-        self.teamCode = team.code
+        self.teamCode = team.name.prefix(3).uppercased()
         self.isPlaying = isPlaying
         self._closeModal = closeModal
         self.directionDetail = set.directionDetail

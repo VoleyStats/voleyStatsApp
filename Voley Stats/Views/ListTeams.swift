@@ -266,7 +266,7 @@ struct ListTeams: View {
         }
         .quickLookPreview($viewModel.statsFile)
         .overlay(viewModel.reportLang && (viewModel.matchSelected != nil || !viewModel.reportMatches.isEmpty) ? langChooseModal() : nil)
-
+        
         .background(
             Color.swatch.dark.high
         )

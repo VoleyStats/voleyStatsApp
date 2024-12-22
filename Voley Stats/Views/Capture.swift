@@ -180,6 +180,24 @@ struct Capture: View {
                                 viewModel.saveAction()
                             }
                         }
+                        .gesture(DragGesture()
+                            .onEnded{v in
+                                switch(v.translation.width, v.translation.height) {
+                                        
+                                    case (-200...200, ...0):
+                                        viewModel.player = player
+                                        viewModel.action = Action.find(id: 6)
+                                        viewModel.saveAction()
+//                                    case (-200...200, 0...):
+//                                        print("down")
+                                    default: print("default")
+                                }
+                            })
+                        .onTapGesture(count: 2){
+                            viewModel.player = player
+                            viewModel.action = Action.find(id: 5)
+                            viewModel.saveAction()
+                        }
                         .overlay(Image("Voleibol").scaleEffect(0.01, anchor: .center).opacity(player == viewModel.server ? 1 : 0).padding().offset(x: 40.0, y: -20.0))
                     }
                 }.padding().background(RoundedRectangle(cornerRadius: 8).fill(.white.opacity(0.2))).padding(.trailing, 5).frame(maxWidth: sq*2)

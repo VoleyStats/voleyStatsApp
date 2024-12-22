@@ -180,7 +180,7 @@ class TeamDataModel: ObservableObject{
     @Published var name: String = ""
     @Published var organization: String = ""
     @Published var selectedColor: Int = 0
-    var categories: [Category] = [Category(id: 1, name: "Benjamin"), Category(id: 2, name: "Alevin"), Category(id: 3, name: "Infantil"), Category(id: 4, name: "Cadete"), Category(id: 5, name: "Juvenil"), Category(id: 6, name: "Junior"), Category(id: 7, name: "Senior")]
+    var categories: [Category] = [Category(id: 1, name: "benjamin"), Category(id: 2, name: "alevin"), Category(id: 3, name: "infantil"), Category(id: 4, name: "cadete"), Category(id: 5, name: "juvenil"), Category(id: 6, name: "junior"), Category(id: 7, name: "senior")]
     @Published var category: Category? = nil
 //    @Published var categorySel: [CategoryGroup] = []
     var gender: Array = ["pick.one".trad(), "Male", "Female"]
@@ -200,7 +200,7 @@ class TeamDataModel: ObservableObject{
         category = categories.filter{$0.name == team?.category}.first
         genderId = gender.firstIndex(of: team?.gender ?? "pick.one".trad())!
         color = team?.color ?? .orange
-        pass = team?.pass ?? false
+        pass = team?.pass ?? SeasonPass().active
     }
     func emptyFields() -> Bool{
         return genderId == 0 || category == nil || name.isEmpty || organization.isEmpty
@@ -225,7 +225,7 @@ class TeamDataModel: ObservableObject{
                     return team!.update()
                 }
             }else{
-                let newTeam = Team(name: name, organization: organization, category: category!.name, gender: gender[genderId], color: color, order: (Team.all().last?.order ?? 0)+1, pass: false, id: nil)
+                let newTeam = Team(name: name, organization: organization, category: category!.name, gender: gender[genderId], color: color, order: (Team.all().last?.order ?? 0)+1, pass: pass, seasonEnd: SeasonPass().endDate, id: nil)
                 let id = Team.createTeam(team: newTeam)
                 return id != nil
             }

@@ -360,9 +360,11 @@ class Team: Model {
                 query = query.filter(matches.map{$0.id}.contains(Expression<Int>("match")))
             } else if !tournaments.isEmpty {
                 query = query.filter(tournaments.flatMap{$0.matches()}.map{$0.id}.contains(Expression<Int>("match")))
-            }else if startDate != nil && endDate != nil{
+            }else{
                 query = query.filter(self.matches(startDate: startDate, endDate: endDate).map{$0.id}.contains(Expression<Int>("match")))
             }
+            
+            
             if player != nil {
                 query = query.filter(Expression<Int>("player") == player!.id || Expression<Int>("setter") == player!.id || Expression<Int>("server") == player!.id)
             }

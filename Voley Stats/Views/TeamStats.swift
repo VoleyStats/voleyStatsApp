@@ -250,6 +250,8 @@ struct TeamStats: View {
 //        }
         
         self.teamStats = team.fullStats(startDate: startDate, endDate: endDate, matches: self.matches, tournaments: self.tournaments, player: player)
+        print(startDate, endDate)
+        print(self.team.fullStats(startDate: startDate, endDate: endDate, matches: self.matches, tournaments: self.tournaments, player: player))
         
         self.serveHistory = [
             (.blue, team.historicalStats(startDate: startDate, endDate: endDate, actions: [8], matches: self.matches, tournaments: self.tournaments, player: player), "ace"),

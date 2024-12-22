@@ -38,11 +38,11 @@ struct Dropdown<T:Model>: View {
         // Select Button - Selected item
         HStack {
             if multi {
-                Text(multiSelection.isEmpty ? "pick.one".trad() : multiSelection.map{$0.description}.joined(separator: ", "))
+                Text(multiSelection.isEmpty ? "pick.one".trad() : multiSelection.map{$0.description.trad()}.joined(separator: ", "))
                 //            Text(selection.first?.description ?? "Select")
                     .lineLimit(1)
             }else{
-                Text(selection?.description ?? "pick.one".trad()).lineLimit(1)
+                Text(selection?.description.trad() ?? "pick.one".trad()).lineLimit(1)
             }
 //                .minimumScaleFactor(0.8)
             Spacer()
@@ -86,7 +86,7 @@ struct Dropdown<T:Model>: View {
                                         if self.multiSelection.contains(item) || selection == item{
                                             Image(systemName: "checkmark.circle")//.padding(.trailing)
                                         }
-                                        Text(item.description)
+                                        Text(item.description.trad())
                                             .lineLimit(1)
                                             .minimumScaleFactor(0.7)
                                             .frame(height: buttonHeight)

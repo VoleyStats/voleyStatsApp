@@ -500,9 +500,9 @@ struct UserView: View {
                     }
                     viewModel.showStore.toggle()
                 
-                    viewModel.makeToast(msg: "purchase.success", type: .success)
+                    viewModel.makeToast(msg: "purchase.success".trad(), type: .success)
                 }else{
-                    viewModel.makeToast(msg: "purchase.error", type: .error)
+                    viewModel.makeToast(msg: "purchase.error".trad(), type: .error)
                 }
                 
             }

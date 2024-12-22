@@ -62,6 +62,7 @@
   ],
   "settings" : {
     "_applicationInternalID" : "6737778450",
+    "_askToBuyEnabled" : true,
     "_developerTeamID" : "XVP8NP6YVY",
     "_failTransactionsEnabled" : false,
     "_lastSynchronizedDate" : 752600713.59182703,
@@ -74,12 +75,18 @@
         "name" : "Load Products"
       },
       {
-        "current" : null,
+        "current" : {
+          "index" : 1,
+          "type" : "purchase"
+        },
         "enabled" : false,
         "name" : "Purchase"
       },
       {
-        "current" : null,
+        "current" : {
+          "index" : 0,
+          "type" : "verification"
+        },
         "enabled" : false,
         "name" : "Verification"
       },
@@ -94,7 +101,10 @@
         "name" : "Subscription Status"
       },
       {
-        "current" : null,
+        "current" : {
+          "index" : 3,
+          "type" : "generic"
+        },
         "enabled" : false,
         "name" : "App Transaction"
       },

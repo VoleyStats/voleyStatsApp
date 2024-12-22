@@ -405,14 +405,14 @@ class Player: Model, Hashable {
         let serve2 = serves.filter{s in return s.action==40}.count
         let serve3 = serves.filter{s in return s.action==41}.count
         let Serr = serves.filter{s in return [15, 32].contains(s.action)}.count
-        let serveMark = serveTot == 0 ? 0.00 : Float(serve1/2 + serve2 + 2*serve3 + 3*aces)/Float(serveTot)
+        let serveMark = serveTot == 0 ? 0.00 : (Float(serve1)/2 + Float(serve2) + 2*Float(serve3) + 3*Float(aces))/Float(serveTot)
         let rcv = stats.filter{s in return [1, 2, 3, 4, 22].contains(s.action) && s.player == self.id}
         let Rerr = rcv.filter{s in return s.action==22}.count
         let op = rcv.filter{s in return s.action==1}.count
         let s1 = rcv.filter{s in return s.action==2}.count
         let s2 = rcv.filter{s in return s.action==3}.count
         let s3 = rcv.filter{s in return s.action==4}.count
-        let mark = rcv.count == 0 ? 0.00 : Float(op/2 + s1 + 2*s2 + 3*s3)/Float(rcv.count)
+        let mark = rcv.count == 0 ? 0.00 : (Float(op)/2 + Float(s1) + 2*Float(s2) + 3*Float(s3))/Float(rcv.count)
         let atk = stats.filter{s in return [6, 9, 10, 11, 16, 17, 18, 34].contains(s.action) && s.player == self.id}
         let Aerr = atk.filter{s in return [16, 17, 18, 19].contains(s.action) && s.detail.lowercased() != "block"}.count
         let blocked = atk.filter{s in return [16, 17, 18, 19].contains(s.action) && s.detail.lowercased() == "block"}.count

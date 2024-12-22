@@ -224,7 +224,7 @@ class Report: PDF{
                 let s1 = rcv.filter{s in return s.action==2}.count
                 let s2 = rcv.filter{s in return s.action==3}.count
                 let s3 = rcv.filter{s in return s.action==4}.count
-                let mark = rcv.count == 0 ? "." : String(format: "%.2f", Float(op/2 + s1 + 2*s2 + 3*s3)/Float(rcv.count))
+                let mark = rcv.count == 0 ? "." : String(format: "%.2f", (Float(op)/2 + Float(s1) + 2*Float(s2) + 3*Float(s3))/Float(rcv.count))
                 addText(x: x, y: y, text: mark, font: self.fonts["bodyBold"]!, color:UIColor.black, width: 45, alignment: .center)
                 x+=45
                 
@@ -327,7 +327,7 @@ class Report: PDF{
             let s1 = rcv.filter{s in return s.action==2}.count
             let s2 = rcv.filter{s in return s.action==3}.count
             let s3 = rcv.filter{s in return s.action==4}.count
-            let mark = rcv.count == 0 ? "." : String(format: "%.2f", Float(op/2 + s1 + 2*s2 + 3*s3)/Float(rcv.count))
+            let mark = rcv.count == 0 ? "." : String(format: "%.2f", (Float(op)/2 + Float(s1) + 2*Float(s2) + 3*Float(s3))/Float(rcv.count))
             addText(x: x, y: y, text: mark, font: self.fonts["bodyBold"]!, color:UIColor.black, width: 45, alignment: .center)
             x+=45
             
@@ -421,7 +421,7 @@ class Report: PDF{
         let s1 = rcv.filter{s in return s.action==2}.count
         let s2 = rcv.filter{s in return s.action==3}.count
         let s3 = rcv.filter{s in return s.action==4}.count
-        let mark = rcv.count == 0 ? "." : String(format: "%.2f", Float(op/2 + s1 + 2*s2 + 3*s3)/Float(rcv.count))
+        let mark = rcv.count == 0 ? "." : String(format: "%.2f", (Float(op)/2 + Float(s1) + 2*Float(s2) + 3*Float(s3))/Float(rcv.count))
         addText(x: x, y: y, text: mark, font: self.fonts["bodyBold"]!, color:UIColor.black, width: 45, alignment: .center)
         x+=45
         
@@ -653,7 +653,7 @@ class Report: PDF{
                 let s1 = rcv.filter{s in return s.action==2}.count
                 let s2 = rcv.filter{s in return s.action==3}.count
                 let s3 = rcv.filter{s in return s.action==4}.count
-                let mark = rcv.count == 0 ? "." : String(format: "%.2f", Float(op/2 + s1 + 2*s2 + 3*s3)/Float(rcv.count))
+                let mark = rcv.count == 0 ? "." : String(format: "%.2f", (Float(op)/2 + Float(s1) + 2*Float(s2) + 3*Float(s3))/Float(rcv.count))
                 addText(x: x, y: y, text: mark, font: self.fonts["bodyBold"]!, color:UIColor.black, width: 45, alignment: .center)
                 x+=45
                 
@@ -751,7 +751,7 @@ class Report: PDF{
         let s1 = rcv.filter{s in return s.action==2}.count
         let s2 = rcv.filter{s in return s.action==3}.count
         let s3 = rcv.filter{s in return s.action==4}.count
-        let mark = rcv.count == 0 ? "." : String(format: "%.2f", Float(op/2 + s1 + 2*s2 + 3*s3)/Float(rcv.count))
+        let mark = rcv.count == 0 ? "." : String(format: "%.2f", (Float(op)/2 + Float(s1) + 2*Float(s2) + 3*Float(s3))/Float(rcv.count))
         addText(x: x, y: y, text: mark, font: self.fonts["bodyBold"]!, color:UIColor.black, width: 45, alignment: .center)
         x+=45
         
@@ -940,7 +940,7 @@ class Report: PDF{
                 let s1 = rcv.filter{s in return s.action==2}.count
                 let s2 = rcv.filter{s in return s.action==3}.count
                 let s3 = rcv.filter{s in return s.action==4}.count
-                let mark = rcv.count == 0 ? "." : String(format: "%.2f", Float(op/2 + s1 + 2*s2 + 3*s3)/Float(rcv.count))
+                let mark = rcv.count == 0 ? "." : String(format: "%.2f", (Float(op)/2 + Float(s1) + 2*Float(s2) + 3*Float(s3))/Float(rcv.count))
                 addText(x: x, y: y, text: mark, font: self.fonts["bodyBold"]!, color:UIColor.black, width: 45, alignment: .center)
                 x+=45
                 
@@ -1028,7 +1028,7 @@ class Report: PDF{
         let s1 = rcv.filter{s in return s.action==2}.count
         let s2 = rcv.filter{s in return s.action==3}.count
         let s3 = rcv.filter{s in return s.action==4}.count
-        let mark = rcv.count == 0 ? "." : String(format: "%.2f", Float(op/2 + s1 + 2*s2 + 3*s3)/Float(rcv.count))
+        let mark = rcv.count == 0 ? "." : String(format: "%.2f", (Float(op)/2 + Float(s1) + 2*Float(s2) + 3*Float(s3))/Float(rcv.count))
         addText(x: x, y: y, text: mark, font: self.fonts["bodyBold"]!, color:UIColor.black, width: 45, alignment: .center)
         x+=45
         

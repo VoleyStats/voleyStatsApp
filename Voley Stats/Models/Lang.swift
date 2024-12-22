@@ -481,7 +481,11 @@ struct Lang{
             "rotation.qr":"Rotation QR",
             "game.graph":"Game Graph",
             "buy.pass":"Purchase a pass",
-            "feature.for.team.pass":"This is only available for season pass users"
+            "feature.for.team.pass":"This is only available for season pass users",
+            "purchase.success":"Puchase succesful",
+            "purchase.error":"Something went wrong, try again later",
+            "pick.pass.target":"Pick the pass target",
+            "add.pass":"Apply pass",
         ],
         "es":[
             "your.teams":"Tus equipos",
@@ -959,7 +963,11 @@ struct Lang{
             "player.edit":"Editar jugador",
             "rotation.qr":"QR de la rotación",
             "buy.pass":"Obtener un pase",
-            "feature.for.team.pass":"Esta función solo esta disponible para usuarios con pase de temporada"
+            "feature.for.team.pass":"Esta función solo esta disponible para usuarios con pase de temporada",
+            "purchase.success":"Compra realizada correctamente",
+            "purchase.error":"Algo salió mal, intentelo más tarde",
+            "pick.pass.target":"Seleccione donde aplicar el pase",
+            "add.pass":"Aplicar pase",
         ]
     ]
 }

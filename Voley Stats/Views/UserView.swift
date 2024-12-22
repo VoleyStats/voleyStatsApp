@@ -187,19 +187,15 @@ struct UserView: View {
             }
         }.background(Color.swatch.dark.high).foregroundStyle(.white)
             .navigationTitle("user.area".trad())
-            .toast(show: $viewModel.showToast, Toast(show: $viewModel.showToast, type: viewModel.toastType, message: viewModel.msg))
+            
             .overlay(viewModel.arrangeTeams ? arrangeTeams() : nil)
             .overlay(viewModel.manageSeasons ? addSeason() : nil)
             .overlay(viewModel.pickSeason ? pickSeasonModal() : nil)
             .overlay(viewModel.newPass ? slidesModal() : nil)
             .overlay(viewModel.showStore ? storeModal() : nil)
-            .task {
-                do{
-                    try await viewModel.loadProducts()
-                }catch{
-                    print("error")
-                }
-            }
+            .overlay(viewModel.chooseTarget ? passTargetModal() : nil)
+            .toast(show: $viewModel.showToast, Toast(show: $viewModel.showToast, type: viewModel.toastType, message: viewModel.msg))
+            
     }
     @ViewBuilder
     func arrangeTeams() ->some View{
@@ -377,6 +373,74 @@ struct UserView: View {
     }
     
     @ViewBuilder
+    func passTargetModal() -> some View {
+        ZStack{
+            Rectangle().fill(Color.swatch.dark.mid.opacity(0.7)).ignoresSafeArea()
+            VStack{
+                ZStack{
+                    Text("pick.pass.target".trad()).font(.title2).padding().frame(maxWidth: .infinity)
+                    Image(systemName: "multiply").font(.title2).padding().frame(maxWidth: .infinity, alignment: .trailing).onTapGesture {
+                        withAnimation{
+                            viewModel.chooseTarget.toggle()
+                        }
+                    }
+                }.padding()
+                VStack{
+                    ForEach(viewModel.teams, id:\.id){team in
+                        VStack{
+                            Text(team.name.uppercased()).foregroundStyle(.gray).frame(maxWidth: .infinity, alignment: .leading)
+                            if viewModel.passTarget == "tournament"{
+                                ForEach(team.tournaments().filter{$0.pass == false}, id:\.id){tournament in
+                                    HStack{
+                                        Image(systemName: viewModel.selectedMatch == tournament ? "circle.fill" : "circle").padding(.horizontal)
+                                        VStack{
+                                            Text(tournament.name)
+                                            Text("\(tournament.getStartDateString())-\(tournament.getEndDateString())")
+                                        }
+                                    }.padding().frame(maxWidth: .infinity, alignment: .leading).background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8)).onTapGesture{
+                                        viewModel.selectedTournament = tournament
+                                    }
+                                }
+                            }else{
+                                ForEach(team.matches().filter{$0.pass == false}, id:\.id){match in
+                                    HStack{
+                                        Image(systemName: viewModel.selectedMatch == match ? "circle.fill" : "circle").padding(.horizontal)
+                                        VStack{
+                                            Text(match.opponent)
+                                            Text(match.date.formatted(.dateTime)).font(.subheadline)
+                                        }
+                                    }.padding().frame(maxWidth: .infinity, alignment: .leading).background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8)).onTapGesture{
+                                        viewModel.selectedMatch = match
+                                    }
+                                }
+                            }
+                        }.padding()
+                    }
+                }
+                Text("add.pass".trad()).padding().frame(maxWidth: .infinity).foregroundStyle(viewModel.selectedMatch != nil || viewModel.selectedTournament != nil ? .cyan : .gray).background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8)).onTapGesture{
+                    if viewModel.selectedTournament != nil{
+                        viewModel.selectedTournament!.addPass()
+                        withAnimation{
+                            viewModel.chooseTarget.toggle()
+                            viewModel.newPass.toggle()
+                        }
+                        viewModel.selectedTournament = nil
+                    }
+                    if viewModel.selectedMatch != nil{
+                        viewModel.selectedMatch!.pass = true
+                        viewModel.selectedMatch!.update()
+                        withAnimation{
+                            viewModel.chooseTarget.toggle()
+                            viewModel.newPass.toggle()
+                        }
+                        viewModel.selectedMatch = nil
+                    }
+                }
+            }.padding().frame(maxWidth: .infinity).background(Color.swatch.dark.high).clipShape(RoundedRectangle(cornerRadius: 8)).padding()
+        }
+    }
+    
+    @ViewBuilder
     func storeModal() -> some View {
         ZStack(alignment: .bottom){
             Rectangle().fill(Color.swatch.dark.mid.opacity(0.5)).ignoresSafeArea()
@@ -390,40 +454,59 @@ struct UserView: View {
                     }
                 }.padding()
                 
-                ProductView(id: "season.pass.full"){
-//                    ZStack{
-                    Image(systemName: "ticket.fill").resizable().aspectRatio(contentMode: .fit).rotationEffect(.degrees(-20)).foregroundStyle(.cyan).padding().background(.white.opacity(0.1), in: Circle())
-                }.productViewStyle(.large).padding().background(.white.opacity(0.1), in: RoundedRectangle(cornerRadius: 8)).padding()
-                HStack{
-                    ProductView(id: "tournament.pass.full"){
-                        Image(systemName: "ticket.fill").resizable().scaledToFit().foregroundStyle(.cyan).padding()
-                    }.productViewStyle(.compact).padding().background(.white.opacity(0.1), in: RoundedRectangle(cornerRadius: 8)).padding()
-                    ProductView(id: "match.pass.full"){
-                        Image(systemName: "ticket.fill").resizable().scaledToFit().foregroundStyle(.cyan)
-                    }.productViewStyle(.regular).padding().background(.white.opacity(0.1), in: RoundedRectangle(cornerRadius: 8)).padding()
-                }.padding()
-//                StoreView(ids: ["tournament.pass.full", "match.pass.full"])
-//                ForEach(viewModel.passOptions){prod in
-//                    HStack{
-//                        VStack(alignment: .leading){
-//                            Text(prod.displayName).font(.title2)
-//                            Text(prod.description)
-//                        }.padding().frame(maxWidth: .infinity, alignment: .leading)
-//                        Text("\(prod.price)").font(.title).padding(.horizontal)
-//                    }.padding().frame(maxWidth: .infinity, maxHeight: 100).background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8)).padding()
-//                        .onTapGesture {
-//                            Task{
-//                                await viewModel.purchase(prod)
-//                            }
-//                        }
+//                ForEach(viewModel.productIds, id: \.0){id in
+//                    ProductView(id: id.0){
+//                        Image(systemName: id.1).resizable().scaledToFit().foregroundStyle(.cyan).padding(.horizontal)
+//                    }.productViewStyle(.compact).padding().background(.white.opacity(0.1), in: RoundedRectangle(cornerRadius: 8)).padding()
 //                }
+                StoreView(ids: viewModel.productIds.map(\.0))
+                    .storeButton(.visible, for: .redeemCode, .policies)
+                    .productViewStyle(.compact)
+                    .storeButton(.hidden, for: .cancellation)
+//                ProductView(id: "season.pass.full"){
+////                    ZStack{
+//                    Image(systemName: "ticket.fill").resizable().aspectRatio(contentMode: .fit).rotationEffect(.degrees(-20)).foregroundStyle(.cyan).padding().background(.white.opacity(0.1), in: Circle())
+//                }.productViewStyle(.large).padding().background(.white.opacity(0.1), in: RoundedRectangle(cornerRadius: 8)).padding()
+//                HStack{
+//                    if (viewModel.teams.flatMap{$0.tournaments().filter{$0.pass == false}}.count > 0){
+//                        ProductView(id: "tournament.pass.full"){
+//                            Image(systemName: "ticket.fill").resizable().scaledToFit().foregroundStyle(.cyan).padding()
+//                        }.productViewStyle(.compact).padding().background(.white.opacity(0.1), in: RoundedRectangle(cornerRadius: 8)).padding()
+//                    }
+//                    if (viewModel.teams.flatMap{$0.matches().filter{$0.pass == false}}.count > 0){
+//                        ProductView(id: "match.pass.full"){
+//                            Image(systemName: "ticket.fill").resizable().scaledToFit().foregroundStyle(.cyan)
+//                        }.productViewStyle(.compact).padding().background(.white.opacity(0.1), in: RoundedRectangle(cornerRadius: 8)).padding()
+//                    }
+//                }.padding()
+//                StoreView(ids: ["tournament.pass.full", "match.pass.full"])
             }.frame(maxWidth: .infinity).background(Color.swatch.dark.high).clipShape(RoundedRectangle(cornerRadius: 8)).padding()
         }.transition(.move(edge: .bottom))
             .onInAppPurchaseCompletion{product, result in
+                print(result)
                 if case .success(.success(let transaction)) = result{
-                    
+                    if product.id == "season.pass.full"{
+                        let s = SeasonPass()
+                        if s.add(date: .now){
+                            viewModel.teams.forEach{team in
+                                team.addPass()
+                            }
+                        }
+                        
+                        viewModel.newPass.toggle()
+                    }else{
+                        viewModel.passTarget = String(product.id.split(separator: ".").first!)
+                        viewModel.chooseTarget.toggle()
+                    }
+                    viewModel.showStore.toggle()
+                
+                    viewModel.makeToast(msg: "purchase.success", type: .success)
+                }else{
+                    viewModel.makeToast(msg: "purchase.error", type: .error)
                 }
+                
             }
+            
     }
 }
 class UserViewModel: ObservableObject{
@@ -446,8 +529,12 @@ class UserViewModel: ObservableObject{
     @Published var pickSeason: Bool = false
     @Published var newPass: Bool = false
     @Published var showStore: Bool = false
-    @Published var passOptions: [Product] = []
+    @Published var chooseTarget: Bool = false
+    @Published var passTarget: String = "match"
+    @Published var selectedMatch: Match? = nil
+    @Published var selectedTournament: Tournament? = nil
     var pass: Bool = false
+    var productIds: [(String, String)] = [("season.pass.full", "ticket.fill")]
     private let logger = Logger(
         subsystem: "Voley Stats",
         category: "stats store"
@@ -460,13 +547,16 @@ class UserViewModel: ObservableObject{
         if a == nil {
             UserDefaults.standard.set(avatar, forKey: "avatar")
         }
-//        pass = Team.all().map{$0.pass}.contains(true)
+        if (teams.flatMap{$0.tournaments().filter{!$0.pass}}.count > 0){
+            productIds.append(("tournament.pass.full", "trophy.fill"))
+        }
+        if(teams.flatMap{$0.matches().filter{!$0.pass}}.count > 0){
+            productIds.append(("match.pass.full", "ecg.text.page.fill"))
+        }
+        
         
     }
     
-    func loadProducts() async throws {
-        self.passOptions = try await Product.products(for: ["season.pass.full"])
-    }
     
     func process(transaction verificationResult: VerificationResult<StoreKit.Transaction>) async {
         do {
@@ -562,39 +652,6 @@ class UserViewModel: ObservableObject{
 //        } catch {
 //            logger.error("Could not save model context: \(error.localizedDescription)")
 //        }
-    }
-    
-    func purchase(_ product: Product) async {
-        do{
-            let result = try await product.purchase()
-            switch result{
-            case .success(let verification):
-//                    print(result)
-//                let transaction = nil //verifyPurchase(verification)
-//                await transaction?.finish()
-                    let s = SeasonPass()
-                    if s.add(date: .now){
-                        Team.all().forEach{team in
-                            team.addPass()
-                        }
-                    }
-                    self.showStore.toggle()
-                    self.newPass.toggle()
-                
-                    self.makeToast(msg: "purchase.success", type: .success)
-                case .pending:
-                    print("purchase pending")
-                    break
-                case .userCancelled:
-                    print("user cancelled")
-                break
-                @unknown default:
-                    print("Failed to purchase the product!")
-                    break
-            }
-        }catch{
-            print("error on purchase")
-        }
     }
     
     func makeToast(msg: String, type: ToastType){

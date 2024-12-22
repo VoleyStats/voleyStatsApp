@@ -143,6 +143,10 @@ struct FillStats: View {
 //                                            print(viewModel.nextPoint?.player)
 //                                            viewModel.nextPoint = viewModel.nextPoint!
                                             viewModel.clear()
+                                            let ac = Action.find(id: viewModel.nextPoint!.action)!
+                                            if viewModel.pointTo(action: ac, player: viewModel.nextPoint!.player) != viewModel.nextPoint!.to{
+                                                viewModel.showActions.toggle()
+                                            }
                                         }
                                     }
                                 }
@@ -417,7 +421,7 @@ struct FillStats: View {
                                                         Text("\(nextAction?.name.trad().capitalized ?? "action".trad())").padding()
                                                     }
                                                     HStack{
-                                                        if viewModel.nextStat?.hasDirectionDetail() ?? false{
+                                                        if false { //viewModel.nextStat?.hasDirectionDetail() ?? false{
                                                             ZStack{
                                                                 statb.fill(.blue)
                                                                 if viewModel.nextStat?.direction ?? "" == ""{
@@ -650,19 +654,77 @@ struct FillStats: View {
                     }.frame(maxWidth: .infinity, alignment: .trailing)
                     Text("actions".trad()).font(.title2).frame(maxWidth: .infinity)
                 }.padding()
-                
-                LazyVGrid(columns: [GridItem](repeating: GridItem(), count: 4)){
-                    let ac = Action.find(id: viewModel.nextPoint!.action)!
-                    ForEach(Action.getByType(type: ac.type), id:\.id){action in
-                        Text("\(action.name.trad().capitalized)").padding().frame(maxWidth: .infinity, maxHeight: .infinity).background(ac.color()).clipShape(RoundedRectangle(cornerRadius: 8)).onTapGesture {
-                            viewModel.nextPoint!.action = action.id
-                            if viewModel.nextPoint!.update() {
-                                viewModel.showActions.toggle()
+                let ac = Action.find(id: viewModel.nextPoint!.action)!
+                let to = viewModel.pointTo(action: ac, player: viewModel.nextPoint!.player)
+                if to == viewModel.nextPoint!.to{
+                    if [2,3].contains(ac.type){
+                        LazyVGrid(columns: [GridItem](repeating: GridItem(), count: 4)){
+                            ForEach(Action.getByType(type: 2), id:\.id){action in
+                                Text("\(action.name.trad().capitalized)").padding().frame(maxWidth: .infinity, maxHeight: .infinity).background(Color(hex: "f2ac0a") ?? .yellow).clipShape(RoundedRectangle(cornerRadius: 8)).onTapGesture {
+                                    viewModel.nextPoint!.action = action.id
+                                    if viewModel.nextPoint!.update() {
+                                        viewModel.showActions.toggle()
+                                    }
+                                }
                             }
-                        }
+                        }.padding()
+                        LazyVGrid(columns: [GridItem](repeating: GridItem(), count: 4)){
+                            ForEach(Action.getByType(type: 3), id:\.id){action in
+                                Text("\(action.name.trad().capitalized)").padding().frame(maxWidth: .infinity, maxHeight: .infinity).background(Color(hex: "DC3535") ?? .red).clipShape(RoundedRectangle(cornerRadius: 8)).onTapGesture {
+                                    viewModel.nextPoint!.action = action.id
+                                    if viewModel.nextPoint!.update() {
+                                        viewModel.showActions.toggle()
+                                    }
+                                }
+                            }
+                        }.padding()
+                    }else{
+                        LazyVGrid(columns: [GridItem](repeating: GridItem(), count: 4)){
+                            ForEach(Action.getByType(type: 1), id:\.id){action in
+                                Text("\(action.name.trad().capitalized)").padding().frame(maxWidth: .infinity, maxHeight: .infinity).background(Color(hex: "6ECB63") ?? .green).clipShape(RoundedRectangle(cornerRadius: 8)).onTapGesture {
+                                    viewModel.nextPoint!.action = action.id
+                                    if viewModel.nextPoint!.update() {
+                                        viewModel.showActions.toggle()
+                                    }
+                                }
+                            }
+                        }.padding()
                     }
-                }.padding()
-                
+                }else{
+                    if [2,3].contains(ac.type){
+                        LazyVGrid(columns: [GridItem](repeating: GridItem(), count: 4)){
+                            ForEach(Action.getByType(type: 1), id:\.id){action in
+                                Text("\(action.name.trad().capitalized)").padding().frame(maxWidth: .infinity, maxHeight: .infinity).background(Color(hex: "6ECB63") ?? .green).clipShape(RoundedRectangle(cornerRadius: 8)).onTapGesture {
+                                    viewModel.nextPoint!.action = action.id
+                                    if viewModel.nextPoint!.update() {
+                                        viewModel.showActions.toggle()
+                                    }
+                                }
+                            }
+                        }.padding()
+                    }else{
+                        LazyVGrid(columns: [GridItem](repeating: GridItem(), count: 4)){
+                            ForEach(Action.getByType(type: 2), id:\.id){action in
+                                Text("\(action.name.trad().capitalized)").padding().frame(maxWidth: .infinity, maxHeight: .infinity).background(Color(hex: "f2ac0a") ?? .yellow).clipShape(RoundedRectangle(cornerRadius: 8)).onTapGesture {
+                                    viewModel.nextPoint!.action = action.id
+                                    if viewModel.nextPoint!.update() {
+                                        viewModel.showActions.toggle()
+                                    }
+                                }
+                            }
+                        }.padding()
+                        LazyVGrid(columns: [GridItem](repeating: GridItem(), count: 4)){
+                            ForEach(Action.getByType(type: 3), id:\.id){action in
+                                Text("\(action.name.trad().capitalized)").padding().frame(maxWidth: .infinity, maxHeight: .infinity).background(Color(hex: "DC3535") ?? .red).clipShape(RoundedRectangle(cornerRadius: 8)).onTapGesture {
+                                    viewModel.nextPoint!.action = action.id
+                                    if viewModel.nextPoint!.update() {
+                                        viewModel.showActions.toggle()
+                                    }
+                                }
+                            }
+                        }.padding()
+                    }
+                }
             }.padding()
             .foregroundColor(.white)
             .background(.black.opacity(0.9))
@@ -929,23 +991,22 @@ class FillStatsModel: ObservableObject{
 ////        print(players.map{$0.number})
 //        return players
 //    }
-    func pointTo() -> (String, Int)?{
-        if [2,3].contains(action?.type ?? nil) {
-            if player?.id == 0 {
-                return ("us", 1)
+
+    func pointTo(action: Action, player: Int) -> Int{
+        if [2,3].contains(action.type) {
+            if player == 0 {
+                return 1
             }else{
-                return ("them",2)
+                return 2
             }
-        }else if action?.type ?? nil == 1 {
-            if player?.id == 0 {
-                return ("them", 2)
+        }else if action.type == 1 {
+            if player == 0 {
+                return 2
             }else{
-                return ("us", 1)
+                return 1
             }
-        }else if action?.type == 0{
-            return ("none", 0)
-        }else {
-            return nil
+        }else{
+            return 0
         }
     }
     func saveAction() {

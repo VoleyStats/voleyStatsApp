@@ -151,9 +151,13 @@ struct Capture: View {
                                     Text("setter").font(.caption)
                                 }
                             }.foregroundColor(.white).font(Font.body)
-                        }.onTapGesture {
-                            viewModel.player = player
                         }
+                        .highPriorityGesture(TapGesture().onEnded{ _ in
+                            viewModel.player = player
+                        })
+//                        .onTapGesture {
+//                            viewModel.player = player
+//                        }
                         .gesture(DragGesture()
                             .onEnded{v in
                                 switch(v.translation.width, v.translation.height) {
@@ -161,7 +165,9 @@ struct Capture: View {
                                     case (-200...200, ...0):
                                         viewModel.player = player
                                         viewModel.action = Action.find(id: 6)
-                                        viewModel.saveAction()
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                                            viewModel.saveAction()
+                                        }
 //                                    case (-200...200, 0...):
 //                                        print("down")
                                     default: print("default")
@@ -170,7 +176,9 @@ struct Capture: View {
                         .onTapGesture(count: 2){
                             viewModel.player = player
                             viewModel.action = Action.find(id: 5)
-                            viewModel.saveAction()
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                                viewModel.saveAction()
+                            }
                         }
                         .overlay(Image("Voleibol").scaleEffect(0.01, anchor: .center).opacity(player == viewModel.server ? 1 : 0).padding().offset(x: 40.0, y: -20.0))
                     }

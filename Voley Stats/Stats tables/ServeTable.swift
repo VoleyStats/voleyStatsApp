@@ -81,12 +81,12 @@ struct ServeTable: View {
         }
     }
     func getTotals(stat: [Stat])->(Int, Int, Int, Int, Float){
-        let s2 = stat.filter{s in return s.action==39}.count
+        let s2 = stat.filter{s in return s.action==41}.count
         let s1 = stat.filter{s in return s.action==40}.count
-        let op = stat.filter{s in return s.action==41}.count
+        let op = stat.filter{s in return s.action==39}.count
         let s3 = stat.filter{s in return s.action==8}.count
         let total = stat.count
-        let mk = total > 0 ? Float(op/2 + s1 + 2*s2 + 3*s3)/Float(total) : 0
+        let mk = total > 0 ? (Float(op)/2 + Float(s1) + 2*Float(s2) + 3*Float(s3))/Float(total) : 0
         return (op, s1, s2, s3, mk)
     }
 }

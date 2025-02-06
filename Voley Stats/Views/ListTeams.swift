@@ -151,7 +151,7 @@ struct ListTeams: View {
                 })
             } else {
                 VStack{
-                    if !viewModel.allTeams.isEmpty{
+                    if !viewModel.allTeams.isEmpty && viewModel.selected < viewModel.allTeams.count{
                         HStack{
                             TabButton(selection: $viewModel.tab, title: "matches".trad(), animation: animation, action: {
                                 viewModel.showTournaments = false

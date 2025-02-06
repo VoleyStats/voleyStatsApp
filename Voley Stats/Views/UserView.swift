@@ -85,12 +85,12 @@ struct UserView: View {
                         }else{
                             HStack{
                                 Text("data.import".trad())
-                                if viewModel.pass{
+//                                if viewModel.pass{
                                 Image(systemName: "square.and.arrow.down").padding(.horizontal)
-                                }else{
-                                    Image(systemName: "lock.fill").padding(.horizontal)
-                                }
-                            }.frame(maxWidth: .infinity).foregroundStyle(viewModel.pass ? .white : .gray)
+//                                }else{
+//                                    Image(systemName: "lock.fill").padding(.horizontal)
+//                                }
+                            }.frame(maxWidth: .infinity).foregroundStyle(.white)
                         }
                     }.padding().background(.white.opacity(network.isConnected ? 0.1 : 0.05)).clipShape(RoundedRectangle(cornerRadius: 15)).padding().onTapGesture {
                         if network.isConnected{
@@ -113,7 +113,7 @@ struct UserView: View {
                             }.frame(maxWidth: .infinity).foregroundStyle(viewModel.pass ? .white : .gray)
                         }
                     }.padding().background(.white.opacity(network.isConnected ? 0.1 : 0.05)).clipShape(RoundedRectangle(cornerRadius: 15)).padding().onTapGesture {
-                        if network.isConnected{
+                        if network.isConnected && viewModel.pass{
                             viewModel.saving.toggle()
                             viewModel.saveFirestore()
                         }
@@ -166,6 +166,11 @@ struct UserView: View {
                             dismiss()
                         }
                     }.disabled(!network.isConnected)
+                    Text("delete.account".trad()).onTapGesture{
+                        if network.isConnected{
+                            viewModel.deleteAccount.toggle()
+                        }
+                    }.font(.footnote).frame(maxWidth: .infinity, alignment: .leading).foregroundStyle(.gray).padding(.horizontal)
                 }
                 .frame(maxHeight: .infinity, alignment: .top)
             }
@@ -184,6 +189,11 @@ struct UserView: View {
                     }
                     //                }
                 }
+            }else{
+                HStack{
+                    Text("\("active.pass.until".trad()): \(SeasonPass().endDate.formatted(date: .numeric, time: .omitted))").font(.title2).frame(maxWidth: .infinity)//.foregroundStyle(Color.swatch.dark.high)
+                    Image(systemName: "ticket.fill").resizable().aspectRatio(contentMode: .fill).rotationEffect(.degrees(-20)).foregroundStyle(.white.opacity(0.5))//.padding()
+                }.padding().frame(height: 100).background(Color(hex: "#ffbf00") ?? .yellow).clipShape(RoundedRectangle(cornerRadius: 8)).padding()
             }
         }.background(Color.swatch.dark.high).foregroundStyle(.white)
             .navigationTitle("user.area".trad())
@@ -194,6 +204,7 @@ struct UserView: View {
             .overlay(viewModel.newPass ? slidesModal() : nil)
             .overlay(viewModel.showStore ? storeModal() : nil)
             .overlay(viewModel.chooseTarget ? passTargetModal() : nil)
+            .overlay(viewModel.deleteAccount ? deleteAccountModal() : nil)
             .toast(show: $viewModel.showToast, Toast(show: $viewModel.showToast, type: viewModel.toastType, message: viewModel.msg))
             
     }
@@ -508,6 +519,65 @@ struct UserView: View {
             }
             
     }
+    
+    @ViewBuilder
+    func deleteAccountModal() -> some View {
+        ZStack{
+            Rectangle().fill(Color.swatch.dark.mid.opacity(0.7)).ignoresSafeArea()
+            VStack{
+                ZStack{
+                    Text("delete.account".trad()).font(.title2).padding().frame(maxWidth: .infinity)
+                    Image(systemName: "multiply").font(.title2).padding().frame(maxWidth: .infinity, alignment: .trailing).onTapGesture {
+                        withAnimation{
+                            viewModel.deleteAccount.toggle()
+                        }
+                    }
+                }
+                Text("delete.account.message".trad()).padding(.bottom)
+                
+                VStack{
+                    Text("delete.account.password".trad()).frame(maxWidth: .infinity, alignment: .leading)
+                    ZStack{
+                        if viewModel.secured {
+                            SecureField("password".trad(), text: $viewModel.password).textFieldStyle(TextFieldDark()).textInputAutocapitalization(.never)
+                        }else{
+                            TextField("password".trad(), text: $viewModel.password).textFieldStyle(TextFieldDark()).textInputAutocapitalization(.never)
+                        }
+                        Image(systemName: viewModel.secured ? "eye.slash" : "eye").padding().frame(maxWidth: .infinity, alignment: .trailing).onTapGesture{
+                            viewModel.secured.toggle()
+                        }
+                    }
+                }.padding()
+                HStack{
+                    Text("cancel".trad()).padding().frame(maxWidth: .infinity).foregroundStyle(.cyan).background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8)).onTapGesture{
+                        viewModel.deleteAccount.toggle()
+                    }
+                    Text("delete".trad()).padding().frame(maxWidth: .infinity).foregroundStyle(.red).background(.red.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8)).onTapGesture{
+                        if network.isConnected{
+                            let user = Auth.auth().currentUser!
+                            var credential: AuthCredential = EmailAuthProvider.credential(withEmail: user.email!, password: viewModel.password)
+                            user.reauthenticate(with: credential){auth, error in
+                                if error == nil{
+                                    user.delete{error in
+                                        if let error = error{
+                                            viewModel.makeToast(msg: "delete.account.error".trad(), type: .error)
+                                        }else{
+                                            viewModel.makeToast(msg: "delete.account.success".trad(), type: .success)
+                                        }
+                                        viewModel.deleteAccount.toggle()
+                                        dismiss()
+                                    }
+                                }
+                                
+                            }
+                            
+                            
+                        }
+                    }
+                }
+            }.padding().frame(maxWidth: .infinity).background(Color.swatch.dark.high).clipShape(RoundedRectangle(cornerRadius: 8)).padding()
+        }
+    }
 }
 class UserViewModel: ObservableObject{
     @Published var lang: String = UserDefaults.standard.string(forKey: "locale") ?? "en"
@@ -533,6 +603,9 @@ class UserViewModel: ObservableObject{
     @Published var passTarget: String = "match"
     @Published var selectedMatch: Match? = nil
     @Published var selectedTournament: Tournament? = nil
+    @Published var deleteAccount: Bool = false
+    @Published var secured: Bool = true
+    @Published var password: String = ""
     var pass: Bool = false
     var productIds: [(String, String)] = [("season.pass.full", "ticket.fill")]
     private let logger = Logger(
@@ -547,12 +620,12 @@ class UserViewModel: ObservableObject{
         if a == nil {
             UserDefaults.standard.set(avatar, forKey: "avatar")
         }
-        if (teams.flatMap{$0.tournaments().filter{!$0.pass}}.count > 0){
-            productIds.append(("tournament.pass.full", "trophy.fill"))
-        }
-        if(teams.flatMap{$0.matches().filter{!$0.pass}}.count > 0){
-            productIds.append(("match.pass.full", "ecg.text.page.fill"))
-        }
+//        if (teams.flatMap{$0.tournaments().filter{!$0.pass}}.count > 0){
+//            productIds.append(("tournament.pass.full", "trophy.fill"))
+//        }
+//        if(teams.flatMap{$0.matches().filter{!$0.pass}}.count > 0){
+//            productIds.append(("match.pass.full", "ecg.text.page.fill"))
+//        }
         
         
     }

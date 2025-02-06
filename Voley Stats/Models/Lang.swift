@@ -486,6 +486,18 @@ struct Lang{
             "purchase.error":"Something went wrong, try again later",
             "pick.pass.target":"Pick the pass target",
             "add.pass":"Apply pass",
+            "password.match":"Password does not match",
+            "delete.account":"Delete account",
+            "delete.account.message":"Deleting your account will erase all your data",
+            "delete.account.success":"Account deleted successfully",
+            "delete.account.error":"Something went wrong, try again later",
+            "delete.account.login.again":"Log in and try again",
+            "delete.account.password":"Enter your password again to delete account",
+            "active.pass.until":"Active pass until",
+            "unknown.error":"An unknown error occurred, try again later.",
+            "email.in.use":"Email already in use",
+            "email.format":"Invalid email format",
+            "password.weak":"Weak password, use at least 6 characters"
         ],
         "es":[
             "your.teams":"Tus equipos",
@@ -968,6 +980,18 @@ struct Lang{
             "purchase.error":"Algo salió mal, intentelo más tarde",
             "pick.pass.target":"Seleccione donde aplicar el pase",
             "add.pass":"Aplicar pase",
+            "password.match":"LAs contraseñas no coinciden",
+            "delete.account":"Eliminar cuenta",
+            "delete.account.message":"Eliminar tu cuenta, elimina todos los datos asociados y no se podran recuperar.",
+            "delete.account.success":"Cuenta eliminada",
+            "delete.account.error":"Algo salió mal, intentelo más tarde",
+            "delete.account.login.again":"Inicia sesión e intentalo de nuevo.",
+            "delete.account.password":"Introduce tu contraseña para eliminar la cuenta",
+            "active.pass.until":"Pase activo hasta",
+            "unknown.error":"Ha ocurrido un error, intentelo de nuevo más tarde.",
+            "email.in.use":"El email ya está en uso",
+            "email.format":"Formato de email incorrecto",
+            "password.weak":"La contraseña es muy débil, debe tener al menos 6 caracteres"
         ]
     ]
 }

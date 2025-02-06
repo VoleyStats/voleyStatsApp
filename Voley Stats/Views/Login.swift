@@ -59,17 +59,23 @@ struct Login: View {
                                 }
                             }.padding(.top).padding(.horizontal)
                         }
+                        if viewModel.errorCode == .unknownError{
+                            Text(viewModel.errorMsg!).font(.footnote).foregroundStyle(.red)
+                        }
                         
                     }
 //                    .padding().background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8))
                 }.padding(.bottom)
                 Button(action:{
                     viewModel.saving.toggle()
+//                    viewModel.errorCode = nil
+//                    viewModel.errorMsg = nil
                     if viewModel.login{
                         Auth.auth().signIn(withEmail: viewModel.email.lowercased(), password: viewModel.password){ res, err in
-                            if err != nil {
-                                let errorCode = AuthErrorCode(_nsError: err! as NSError).code
+                            if let err = err as NSError? {
+                                let errorCode = AuthErrorCode.Code(rawValue: err.code)!
                                 viewModel.checkError(code: errorCode)
+                                viewModel.saving.toggle()
                             }
                             if res != nil {
                                 
@@ -79,17 +85,19 @@ struct Login: View {
                     }else{
                         if viewModel.password == viewModel.passwordRepeat{
                             Auth.auth().createUser(withEmail: viewModel.email, password: viewModel.password){ res, err in
-                                if err != nil {
-                                    let errorCode = AuthErrorCode(_nsError: err! as NSError).code
+                                if let err = err as NSError? {
+                                    let errorCode = AuthErrorCode.Code(rawValue: err.code)!
                                     viewModel.checkError(code: errorCode)
+                                    viewModel.saving.toggle()
                                 }
                                 if res != nil {
                                     let changereq = Auth.auth().currentUser?.createProfileChangeRequest()
                                     changereq?.displayName = viewModel.userName
                                     changereq?.commitChanges{error in
-                                        if error != nil{
-                                            let errorCode = AuthErrorCode(_nsError: err! as NSError).code
-                                            viewModel.checkError(code: errorCode)
+                                        if let error = error as NSError?{
+                                            let errCode = AuthErrorCode.Code(rawValue: error.code)!
+                                            viewModel.checkError(code: errCode)
+                                            viewModel.saving.toggle()
                                         }else {
                                             UserDefaults.standard.set(String(UnicodeScalar(Array(0x1F300...0x1F3F0).randomElement()!)!), forKey: "avatar")
                                             self.presentationMode.wrappedValue.dismiss()
@@ -165,6 +173,9 @@ class LoginModel: ObservableObject{
         case AuthErrorCode.invalidEmail:
             self.errorCode = .emailError
             self.errorMsg = "email.format".trad()
+        case AuthErrorCode.weakPassword:
+            self.errorCode = .passwordError
+            self.errorMsg = "password.weak".trad()
         default:
             self.errorCode = .unknownError
             self.errorMsg = "unknown.error".trad()

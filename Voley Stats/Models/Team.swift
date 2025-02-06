@@ -414,19 +414,19 @@ class Team: Model {
                 for match in (matches.sorted{$0.date < $1.date}){
                     let nquery = query.filter(actions.contains(Expression<Int>("action")) && Expression<Int>("player") != 0 && Expression<Int>("match") == match.id)
                     let stat = try database.scalar(nquery.count)
-                    stats.append(("\(match.opponent)\(!match.home ? " (\u{2708})" : "")", Double(stat)))
+                    stats.append(("\(match.opponent) \(match.date.formatted(date: .numeric, time: .omitted))", Double(stat)))//\(!match.home ? " (\u{2708})" : "")", Double(stat)))
                 }
             } else if !tournaments.isEmpty{
                 for match in (tournaments.flatMap{$0.matches()}.sorted{$0.date < $1.date}){
                     let nquery = query.filter(actions.contains(Expression<Int>("action")) && Expression<Int>("player") != 0 && Expression<Int>("match") == match.id)
                     let stat = try database.scalar(nquery.count)
-                    stats.append(("\(match.opponent)\(!match.home ? " (\u{2708})" : "")", Double(stat)))
+                    stats.append(("\(match.opponent) \(match.date.formatted(date: .numeric, time: .omitted))", Double(stat)))//\(!match.home ? " (\u{2708})" : "")", Double(stat)))
                 }
             }else if startDate != nil && endDate != nil{
                 for match in (self.matches(startDate: startDate, endDate: endDate).sorted{$0.date < $1.date}){
                     let nquery = query.filter(actions.contains(Expression<Int>("action")) && Expression<Int>("player") != 0 && Expression<Int>("match") == match.id)
                     let stat = try database.scalar(nquery.count)
-                    stats.append(("\(match.opponent)\(!match.home ? " (\u{2708})" : "")", Double(stat)))
+                    stats.append(("\(match.opponent) \(match.date.formatted(date: .numeric, time: .omitted))", Double(stat)))//\(!match.home ? " (\u{2708})" : "")", Double(stat)))
                 }
 
 //                        let stat = try database.scalar(query)

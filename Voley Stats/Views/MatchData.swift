@@ -218,8 +218,8 @@ class MatchDataModel: ObservableObject{
     @Published var opponent: String = ""
     @Published var date: Date = Date()
     @Published var team: Team
-    @Published var n_sets: Int = 3
-    @Published var n_players: Int = 4
+    @Published var n_sets: Int = 5
+    @Published var n_players: Int = 6
     @Published var showAlert: Bool = false
     @Published var location: String = ""
     @Published var home: Bool = true

@@ -988,7 +988,7 @@ class CaptureModel: ObservableObject{
                 rotationCount = removed.rotationCount
                 rotationTurns = removed.rotationTurns
                 self.action = Action.find(id: removed.action)
-                self.player = Player.find(id: removed.player)
+                self.player = Player.find(id: removed.player) ?? Player()
                 lineupPlayers = self.players()
                 setter = rotation.getSetter(gameMode: set.gameMode, rotationTurns: rotationTurns)
                 self.order = lastStat!.order + 1

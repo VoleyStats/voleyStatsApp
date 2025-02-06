@@ -339,15 +339,22 @@ class Rotation: Model {
     }
     func checkSetters(gameMode: String, rotationTurns: Int)->Bool{
         let rotation = self.get(rotate: rotationTurns)
-        let front = [rotation[1],rotation[2],rotation[3]].filter{$0?.position == .setter}.count
-        let back = [rotation[0],rotation[4],rotation[5]].filter{$0?.position == .setter}.count
         if gameMode == "5-1"{
-            return front+back >= 1
+            return rotation.filter{$0?.position == .setter}.count >= 1
         }else if gameMode == "6-2" || gameMode == "4-2"{
-            return back >= 1 && front >= 1
+            if rotation[1]?.position == .setter && rotation[4]?.position == .setter{
+                return true
+            }
+            if rotation[2]?.position == .setter && rotation[5]?.position == .setter{
+                return true
+            }
+            if rotation[3]?.position == .setter && rotation[0]?.position == .setter{
+                return true
+            }
         }else{
             return true
         }
+        return false
     }
     func getSetter(gameMode: String, rotationTurns: Int) -> Player{
         let rotation = self.get(rotate: rotationTurns)
@@ -355,9 +362,29 @@ class Rotation: Model {
         case "6-6":
             return self.four == nil ? rotation[1]! : rotation[2]!
         case "4-2":
-            return [rotation[1], rotation[2], rotation[3]].filter{$0?.position == .setter}.first!!
+            if rotation[1]?.position == .setter && rotation[4]?.position == .setter{
+                return rotation[1]!
+            }
+            if rotation[2]?.position == .setter && rotation[5]?.position == .setter{
+                return rotation[2]!
+            }
+            if rotation[3]?.position == .setter && rotation[0]?.position == .setter{
+                return rotation[3]!
+            }
+            return self.two!
+//            return [rotation[1], rotation[2], rotation[3]].filter{$0?.position == .setter}.first!!
         case "6-2":
-            return [rotation[0], rotation[4], rotation[5]].filter{$0?.position == .setter}.first!!
+            if rotation[1]?.position == .setter && rotation[4]?.position == .setter{
+                return rotation[4]!
+            }
+            if rotation[2]?.position == .setter && rotation[5]?.position == .setter{
+                return rotation[5]!
+            }
+            if rotation[3]?.position == .setter && rotation[0]?.position == .setter{
+                return rotation[0]!
+            }
+            return self.two!
+//            return [rotation[0], rotation[4], rotation[5]].filter{$0?.position == .setter}.first!!
         case "5-1":
             return rotation.filter{$0?.position == .setter}.first!!
         default:

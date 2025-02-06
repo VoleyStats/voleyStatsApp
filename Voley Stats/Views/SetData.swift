@@ -73,11 +73,12 @@ struct SetData: View {
                     NavigationLink(destination: StatsView(viewModel: StatsViewModel(team: viewModel.team, match: viewModel.match, set: viewModel.set)), isActive: $viewModel.saved){
                         Button(action:{
                             //                        self.presentationMode.wrappedValue.dismiss()
-                            viewModel.onAddButtonClick()
-                            
+                            if viewModel.validate(){
+                                viewModel.onAddButtonClick()
+                            }
                         }){
                             Text("save".trad()).frame(maxWidth: .infinity, alignment: .center)
-                        }.disabled(viewModel.validate()).padding().background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8)).foregroundColor(viewModel.validate() ? .gray : .cyan)
+                        }.padding().background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8)).foregroundColor(viewModel.validate() ? .gray : .cyan)
                     }.padding(.top)
                 }.padding()
             }
@@ -200,18 +201,21 @@ struct SetData: View {
                 }.pickerStyle(.segmented).padding(.bottom)
                 Text("rotation".trad()).font(.caption).frame(maxWidth: .infinity, alignment: .leading).padding(.horizontal)
                 VStack{
-                        Court(rotation: $viewModel.rotation, numberPlayers: viewModel.match.n_players, showName: true, editable: true, teamPlayers: viewModel.players.filter{$0.position != .libero})
-                        HStack{
-                            Image(systemName: "backward.fill").frame(maxWidth:.infinity, maxHeight: .infinity).background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8)).onTapGesture {
-                                viewModel.rotate(inverse: true)
-                            }
-                            Text("clear".trad()).frame(maxWidth:.infinity, maxHeight: .infinity).background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8)).onTapGesture {
-                                viewModel.rotation = [nil, nil, nil, nil, nil, nil]
-                            }
-                            Image(systemName: "forward.fill").frame(maxWidth:.infinity, maxHeight: .infinity).background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8)).onTapGesture {
-                                viewModel.rotate(inverse: false)
-                            }
-                        }.frame(width: 300, height: 50)
+                    Court(rotation: $viewModel.rotation, numberPlayers: viewModel.match.n_players, showName: true, editable: true, teamPlayers: viewModel.players.filter{$0.position != .libero})
+                    HStack{
+                        Image(systemName: "backward.fill").frame(maxWidth:.infinity, maxHeight: .infinity).background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8)).onTapGesture {
+                            viewModel.rotate(inverse: true)
+                        }
+                        Text("clear".trad()).frame(maxWidth:.infinity, maxHeight: .infinity).background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8)).onTapGesture {
+                            viewModel.rotation = [nil, nil, nil, nil, nil, nil]
+                        }
+                        Image(systemName: "forward.fill").frame(maxWidth:.infinity, maxHeight: .infinity).background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8)).onTapGesture {
+                            viewModel.rotate(inverse: false)
+                        }
+                    }.frame(width: 300, height: 50)
+                    if (viewModel.rotation.filter{p in p != nil}.count == viewModel.match.n_players && !viewModel.checkSetters()){
+                        Text("not.enough.setters".trad()).font(.caption).foregroundColor(.red).padding()
+                    }
                     HStack{
                         ForEach(viewModel.match.sets(), id:\.id){set in
                             Text("Set \(set.number)").foregroundStyle(set.first_serve != 0 ? .cyan : .gray).padding().background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8)).onTapGesture {
@@ -273,7 +277,26 @@ class SetDataModel: ObservableObject{
         self.rotation = set.rotation.get(rotate: set.rotationTurns)
     }
     func validate()->Bool{
-        return first_serve==0 || rotation.filter{p in p != nil}.count < match.n_players
+        return first_serve==0 || rotation.filter{p in p != nil}.count < match.n_players || !checkSetters()
+    }
+    
+    func checkSetters()->Bool{
+        if gameMode == "5-1"{
+            return rotation.filter{$0?.position == .setter}.count >= 1
+        }else if gameMode == "6-2" || gameMode == "4-2"{
+            if rotation[1]?.position == .setter && rotation[4]?.position == .setter{
+                return true
+            }
+            if rotation[2]?.position == .setter && rotation[5]?.position == .setter{
+                return true
+            }
+            if rotation[3]?.position == .setter && rotation[0]?.position == .setter{
+                return true
+            }
+        }else{
+            return true
+        }
+        return false
     }
     
     func rotate(inverse: Bool = false){

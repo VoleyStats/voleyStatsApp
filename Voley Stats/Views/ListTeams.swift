@@ -318,6 +318,7 @@ class ListTeamsModel: ObservableObject{
     let df = DateFormatter()
     
     init(){
+        print(SeasonPass().active, SeasonPass().endDate.formatted(date: .numeric, time: .omitted))
         self.getAllTeams()
         df.dateFormat = "dd/MM/yyyy"
         if !self.allTeams.isEmpty && self.selected < self.allTeams.count{

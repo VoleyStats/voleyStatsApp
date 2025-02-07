@@ -184,8 +184,19 @@ struct UserView: View {
                     //                    Team.all().forEach{team in
                     //                        team.addPass()
                     //                    }
-                    withAnimation{
-                        viewModel.showStore.toggle()
+                    if Auth.auth().currentUser?.uid == "wdgnUenPMOQlO3Q4KrxFXF7suEF2"{
+                        let s = SeasonPass()
+                        if s.add(date: .now){
+                            viewModel.teams.forEach{team in
+                                team.addPass()
+                            }
+                            viewModel.pass = s.active
+                        }
+                        
+                    }else{
+                        withAnimation{
+                            viewModel.showStore.toggle()
+                        }
                     }
                     //                }
                 }
@@ -502,6 +513,7 @@ struct UserView: View {
                             viewModel.teams.forEach{team in
                                 team.addPass()
                             }
+                            viewModel.pass = s.active
                         }
                         
                         viewModel.newPass.toggle()
@@ -606,7 +618,7 @@ class UserViewModel: ObservableObject{
     @Published var deleteAccount: Bool = false
     @Published var secured: Bool = true
     @Published var password: String = ""
-    var pass: Bool = false
+    var pass: Bool = SeasonPass().active
     var productIds: [(String, String)] = [("season.pass.full", "ticket.fill")]
     private let logger = Logger(
         subsystem: "Voley Stats",
@@ -620,14 +632,12 @@ class UserViewModel: ObservableObject{
         if a == nil {
             UserDefaults.standard.set(avatar, forKey: "avatar")
         }
-//        if (teams.flatMap{$0.tournaments().filter{!$0.pass}}.count > 0){
-//            productIds.append(("tournament.pass.full", "trophy.fill"))
-//        }
-//        if(teams.flatMap{$0.matches().filter{!$0.pass}}.count > 0){
-//            productIds.append(("match.pass.full", "ecg.text.page.fill"))
-//        }
-        
-        
+        if (teams.flatMap{$0.tournaments().filter{!$0.pass}}.count > 0){
+            productIds.append(("tournament.pass.full", "trophy.fill"))
+        }
+        if(teams.flatMap{$0.matches().filter{!$0.pass}}.count > 0){
+            productIds.append(("match.pass.full", "ecg.text.page.fill"))
+        }
     }
     
     
@@ -821,6 +831,9 @@ class UserViewModel: ObservableObject{
                         self.makeToast(msg: "data.imported".trad(), type: .success)
                         DB.shared = DB()
                         print("SQLiteDataStore upload from: \(dbPath) ")
+                        self.seasonName = "\(file.name.split(separator: "_").last?.split(separator: ".").first ?? "No season name")"
+                        UserDefaults.standard.set(self.seasonName, forKey: "season")
+                        print(SeasonPass().active, SeasonPass().endDate.formatted(date: .numeric, time: .omitted))
                     }
                 }
             

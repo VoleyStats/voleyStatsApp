@@ -38,9 +38,9 @@ struct TeamCard: View{
         }
         .clipped()
         .frame(height: 200)
-        .overlay(Image(systemName: "multiply").onTapGesture {
-            deleteTap()
-        }.padding(), alignment: .topTrailing)
+//        .overlay(Image(systemName: "multiply").onTapGesture {
+//            deleteTap()
+//        }.padding(), alignment: .topTrailing)
         
         .padding()
         

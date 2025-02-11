@@ -73,7 +73,9 @@ struct SetData: View {
                     NavigationLink(destination: StatsView(viewModel: StatsViewModel(team: viewModel.team, match: viewModel.match, set: viewModel.set)), isActive: $viewModel.saved){
                         Button(action:{
                             //                        self.presentationMode.wrappedValue.dismiss()
-                            if viewModel.validate(){
+                            print("outside")
+                            if !viewModel.validate(){
+                                print("inside")
                                 viewModel.onAddButtonClick()
                             }
                         }){

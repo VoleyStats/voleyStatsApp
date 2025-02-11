@@ -390,6 +390,7 @@ struct Capture: View {
                 Text("modify.rotation".trad()).font(.title2).frame(maxWidth: .infinity, alignment: .center)
                 Button(action:{
                     viewModel.rotation = viewModel.lastStat?.rotation ?? viewModel.set.rotation
+                    viewModel.rotationArray = viewModel.rotation.get(rotate: viewModel.rotationTurns)
                     viewModel.showRotation.toggle()
                     
                 }){
@@ -823,16 +824,22 @@ class CaptureModel: ObservableObject{
     }
     
     func checkSetters()->Bool{
-        let rotation = self.rotation.get(rotate: self.rotationTurns)
-        let front = [rotation[1],rotation[2],rotation[3]].filter{$0?.position == .setter}.count
-        let back = [rotation[0],rotation[4],rotation[5]].filter{$0?.position == .setter}.count
         if gameMode == "5-1"{
-            return front+back >= 1
+            return rotationArray.filter{$0?.position == .setter}.count >= 1
         }else if gameMode == "6-2" || gameMode == "4-2"{
-            return back == 1 && front == 1
+            if rotationArray[1]?.position == .setter && rotationArray[4]?.position == .setter{
+                return true
+            }
+            if rotationArray[2]?.position == .setter && rotationArray[5]?.position == .setter{
+                return true
+            }
+            if rotationArray[3]?.position == .setter && rotationArray[0]?.position == .setter{
+                return true
+            }
         }else{
             return true
         }
+        return false
     }
     func makeToast(type: ToastType, message: String){
         self.message = message

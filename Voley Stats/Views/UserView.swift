@@ -386,11 +386,11 @@ struct UserView: View {
             ZStack{
                 Rectangle().fill(Color.swatch.dark.mid.opacity(0.5)).ignoresSafeArea()
                 PresentationSlider(slides:[
-                    Slide(title: "this is a test slide", subtitle: "in this subtitle we will test the slider", image: Image("slide_export")),
-                    Slide(title: "this is the test slide 2", subtitle: "in this subtitle we will test another slider", image: Image("slide_stats")),
-                    Slide(title: "this is the test slide 2", subtitle: "in this subtitle we will test another slider", image: Image("slide_fill")),
-                    Slide(title: "this is the test slide 2", subtitle: "in this subtitle we will test another slider", image: Image("slide_backup"))
-                ], cta_text: "start capturing stats", cta_action: {viewModel.newPass.toggle()}, skip_action: {viewModel.newPass.toggle()}).frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center).padding()
+                    Slide(title: "slide.export.title".trad(), subtitle: "slide.export.text".trad(), image: Image("slide_export")),
+                    Slide(title: "slide.stats.title".trad(), subtitle: "slide.stats.text".trad().trad(), image: Image("slide_stats")),
+                    Slide(title: "slide.fill.title".trad(), subtitle: "slide.fill.text".trad(), image: Image("slide_fill")),
+                    Slide(title: "slide.backup.title".trad(), subtitle: "slide.backup.text", image: Image("slide_backup"))
+                ], cta_text: "start.capturing".trad(), cta_action: {viewModel.newPass.toggle()}, skip_action: {viewModel.newPass.toggle()}).frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center).padding()
             }.transition(.move(edge: .bottom))
     }
     
@@ -833,7 +833,7 @@ class UserViewModel: ObservableObject{
                         print("SQLiteDataStore upload from: \(dbPath) ")
                         self.seasonName = "\(file.name.split(separator: "_").last?.split(separator: ".").first ?? "No season name")"
                         UserDefaults.standard.set(self.seasonName, forKey: "season")
-                        print(SeasonPass().active, SeasonPass().endDate.formatted(date: .numeric, time: .omitted))
+                        self.pass = SeasonPass().active
                     }
                 }
             

@@ -130,15 +130,6 @@ struct TeamData: View {
                                     }.padding().background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8))
 //                                }.clipped()
                             }.padding(.bottom)
-//                            Spacer()
-//                            Section{
-                                
-//                            }.padding(.bottom)
-//                            Spacer()
-//                            Text(viewModel.pass ? "remove pass" : "add pass").padding().background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8)).padding().onTapGesture {
-//                                viewModel.pass.toggle()
-//                            }
-//                            Spacer()
                             
                             Text("save".trad()).frame(maxWidth: .infinity, alignment: .center)
                                 .disabled(viewModel.emptyFields())
@@ -150,9 +141,7 @@ struct TeamData: View {
                             
                             if viewModel.team != nil{
                                 Button(action:{
-                                    if viewModel.team!.delete(){
-                                        self.presentationMode.wrappedValue.dismiss()
-                                    }
+                                    viewModel.deleteTeamDialog.toggle()
                                 }){
                                     HStack{
                                         Text("team.delete.title".trad())
@@ -166,7 +155,20 @@ struct TeamData: View {
                     }
                 }.frame(maxHeight: .infinity, alignment: .top)
             }
-        
+            .alert("team.delete.message".trad(), isPresented: $viewModel.deleteTeamDialog){
+                Button("cancel".trad(), role: .cancel){}
+                Button("keep.players".trad()){
+                    if viewModel.team!.delete(deletePlayers: false){
+                        self.presentationMode.wrappedValue.dismiss()
+                    }
+                }
+                Button("team.delete.title".trad(), role: .destructive){
+                    if viewModel.team!.delete(){
+                        self.presentationMode.wrappedValue.dismiss()
+                    }
+                }
+                
+            }
         .onAppear{
             viewModel.getPlayers()
         }
@@ -177,6 +179,7 @@ struct TeamData: View {
 
 class TeamDataModel: ObservableObject{
     @Published var deleteDialog: Bool = false
+    @Published var deleteTeamDialog: Bool = false
     @Published var name: String = ""
     @Published var organization: String = ""
     @Published var selectedColor: Int = 0

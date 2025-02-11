@@ -13,7 +13,7 @@ struct ReportConfigurator: View {
     @State var attackDetail: Bool = false
     @State var matchCompare: Bool = false
     @State var errorTree: Bool = false
-    @State var countHidden: Bool = true
+    @State var countHidden: Bool = false
     @State var setDetail: Bool = false
     @State private var loading: Bool = false
 
@@ -44,22 +44,30 @@ struct ReportConfigurator: View {
                     ScrollView{
                         VStack{
                             HStack{
+//                                VStack{
+//                                    Image(systemName: "tablecells.fill").foregroundStyle(errorTree ? .white : .cyan).font(.largeTitle).padding()
+//                                    Text("error.tree".trad())
+//                                }.padding().frame(maxWidth: .infinity, maxHeight: .infinity)
+//                                    .background(errorTree ? .cyan : .white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8))
+//                                    .onTapGesture {
+//                                        errorTree.toggle()
+//                                    }
+//                                
+//                                VStack{
+//                                    Image(systemName: "contact.sensor.fill").foregroundStyle(matchCompare ? .white : .cyan).font(.largeTitle).padding()
+//                                    Text("match.compare".trad())
+//                                }.padding().frame(maxWidth: .infinity, maxHeight: .infinity)
+//                                    .background(matchCompare ? .cyan : .white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8))
+//                                    .onTapGesture {
+//                                        matchCompare.toggle()
+//                                    }
                                 VStack{
-                                    Image(systemName: "tablecells.fill").foregroundStyle(errorTree ? .white : .cyan).font(.largeTitle).padding()
-                                    Text("error.tree".trad())
+                                    Image(systemName: "chart.bar.doc.horizontal.fill").foregroundStyle(pointLog ? .white : .cyan).font(.largeTitle).padding()
+                                    Text("point.log".trad())
                                 }.padding().frame(maxWidth: .infinity, maxHeight: .infinity)
-                                    .background(errorTree ? .cyan : .white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8))
+                                    .background(pointLog ? .cyan : .white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8))
                                     .onTapGesture {
-                                        errorTree.toggle()
-                                    }
-                                
-                                VStack{
-                                    Image(systemName: "contact.sensor.fill").foregroundStyle(matchCompare ? .white : .cyan).font(.largeTitle).padding()
-                                    Text("match.compare".trad())
-                                }.padding().frame(maxWidth: .infinity, maxHeight: .infinity)
-                                    .background(matchCompare ? .cyan : .white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8))
-                                    .onTapGesture {
-                                        matchCompare.toggle()
+                                        pointLog.toggle()
                                     }
                                 
                                 VStack{
@@ -99,25 +107,25 @@ struct ReportConfigurator: View {
                                         receiveDetail.toggle()
                                     }
                             }
-                            HStack{
-                                VStack{
-                                    Image(systemName: "chart.bar.doc.horizontal.fill").foregroundStyle(pointLog ? .white : .cyan).font(.largeTitle).padding()
-                                    Text("point.log".trad())
-                                }.padding().frame(maxWidth: .infinity, maxHeight: .infinity)
-                                    .background(pointLog ? .cyan : .white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8))
-                                    .onTapGesture {
-                                        pointLog.toggle()
-                                    }
-                                
-                                VStack{
-                                    Image(systemName: "plusminus.circle").foregroundStyle(countHidden ? .white : .cyan).font(.largeTitle).padding()
-                                    Text("hidden.count".trad())
-                                }.padding().frame(maxWidth: .infinity, maxHeight: .infinity)
-                                    .background(countHidden ? .cyan : .white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8))
-                                    .onTapGesture {
-                                        countHidden.toggle()
-                                    }
-                            }
+//                            HStack{
+//                                VStack{
+//                                    Image(systemName: "chart.bar.doc.horizontal.fill").foregroundStyle(pointLog ? .white : .cyan).font(.largeTitle).padding()
+//                                    Text("point.log".trad())
+//                                }.padding().frame(maxWidth: .infinity, maxHeight: .infinity)
+//                                    .background(pointLog ? .cyan : .white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8))
+//                                    .onTapGesture {
+//                                        pointLog.toggle()
+//                                    }
+//                                
+//                                VStack{
+//                                    Image(systemName: "plusminus.circle").foregroundStyle(countHidden ? .white : .cyan).font(.largeTitle).padding()
+//                                    Text("hidden.count".trad())
+//                                }.padding().frame(maxWidth: .infinity, maxHeight: .infinity)
+//                                    .background(countHidden ? .cyan : .white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8))
+//                                    .onTapGesture {
+//                                        countHidden.toggle()
+//                                    }
+//                            }
                         }
                     }
                 }.padding().background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 15)).padding()

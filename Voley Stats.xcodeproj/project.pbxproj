@@ -50,6 +50,7 @@
 		5505DC382C41300D0020CA32 /* DirectionsCourt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5505DC372C41300D0020CA32 /* DirectionsCourt.swift */; };
 		5505DC3A2C5F82940020CA32 /* DirectionsGraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5505DC392C5F82940020CA32 /* DirectionsGraph.swift */; };
 		55163B1F2C1B1CD800E85870 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 55163B1E2C1B1CD800E85870 /* GoogleService-Info.plist */; };
+		551A24332D5B6A57005EE753 /* MailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 551A24322D5B6A57005EE753 /* MailView.swift */; };
 		551C10C72CC2B0FA00B3D215 /* SetData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 551C10C62CC2B0F500B3D215 /* SetData.swift */; };
 		552CFEBB2AEE3A8A00F5F3A4 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 552CFEBA2AEE3A8A00F5F3A4 /* FirebaseFirestore */; };
 		552CFEBD2AEE3A8A00F5F3A4 /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 552CFEBC2AEE3A8A00F5F3A4 /* FirebaseFirestoreSwift */; };
@@ -203,6 +204,7 @@
 		5505DC372C41300D0020CA32 /* DirectionsCourt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionsCourt.swift; sourceTree = "<group>"; };
 		5505DC392C5F82940020CA32 /* DirectionsGraph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionsGraph.swift; sourceTree = "<group>"; };
 		55163B1E2C1B1CD800E85870 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		551A24322D5B6A57005EE753 /* MailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailView.swift; sourceTree = "<group>"; };
 		551C10C62CC2B0F500B3D215 /* SetData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetData.swift; sourceTree = "<group>"; };
 		55236E812B178305007B9A3E /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		55236E832B178305007B9A3E /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
@@ -400,6 +402,7 @@
 				5559A6532B8F1D4D0022F97C /* TrainingCapture.swift */,
 				5559A6552B9707100022F97C /* FillStats.swift */,
 				55445E4B2BC91424006528A2 /* LaunchScreen.storyboard */,
+				551A24322D5B6A57005EE753 /* MailView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -871,6 +874,7 @@
 				55FD5DDC2A152B0900C9844E /* Font.swift in Sources */,
 				5559A6522B8DD03E0022F97C /* ReportConfigurator.swift in Sources */,
 				5556E0E529F1455800D8F7B5 /* DigTable.swift in Sources */,
+				551A24332D5B6A57005EE753 /* MailView.swift in Sources */,
 				55C3EA872B440A110057F22A /* ContentView.swift in Sources */,
 				55F7FD6429EA8D9200617907 /* Voley_StatsApp.swift in Sources */,
 				5559A6542B8F1D4D0022F97C /* TrainingCapture.swift in Sources */,

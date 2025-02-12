@@ -6,10 +6,12 @@ import FirebaseStorage
 import ProvisioningProfile
 import StoreKit
 import OSLog
+import MessageUI
 
 struct UserView: View {
     @ObservedObject var viewModel: UserViewModel
     @EnvironmentObject var network : NetworkMonitor
+    @Environment(\.openURL) private var openUrl
     @Environment(\.dismiss) var dismiss
     @State var tab: String = "general".trad()
     @Namespace var animation
@@ -116,6 +118,44 @@ struct UserView: View {
                         if network.isConnected && viewModel.pass{
                             viewModel.saving.toggle()
                             viewModel.saveFirestore()
+                        }
+                    }
+                    
+                    HStack{
+                        
+                            HStack{
+                                Text("send.feedback".trad())
+                                Image(systemName: "text.bubble").padding(.horizontal)
+                            }.frame(maxWidth: .infinity).foregroundStyle(viewModel.pass ? .white : .gray)
+                        
+                    }.padding().background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 15)).padding().onTapGesture {
+                        if MailView.canSendMail(){
+                            viewModel.sendingMail.toggle()
+                        }else{
+                            viewModel.makeToast(msg: "mail.error".trad(), type: .error)
+                        }
+                    }.sheet(isPresented: $viewModel.sendingMail) {
+                        MailView(result: $viewModel.mailResult)
+                            .onDisappear {
+                                if let result = viewModel.mailResult {
+                                    switch result {
+                                        case .success(let mailResult):
+                                            switch mailResult {
+                                                case .sent:
+                                                    viewModel.makeToast(msg: "mail.success".trad(), type: .success)
+                                                case .saved:
+                                                    viewModel.makeToast(msg: "mail.draft".trad(), type: .info)
+                                                case .cancelled:
+                                                    viewModel.makeToast(msg: "mail.cancelled".trad(), type: .error)
+                                                case .failed:
+                                                    viewModel.makeToast(msg: "mail.error".trad(), type: .error)
+                                                @unknown default:
+                                                    viewModel.makeToast(msg: "mail.error".trad(), type: .error)
+                                            }
+                                        case .failure(let error):
+                                            viewModel.makeToast(msg: error.localizedDescription, type: .error)
+                                    }
+                            }
                         }
                     }
                     
@@ -618,8 +658,11 @@ class UserViewModel: ObservableObject{
     @Published var deleteAccount: Bool = false
     @Published var secured: Bool = true
     @Published var password: String = ""
+    @Published var sendingMail: Bool = false
+    @Published var mailResult: Result<MFMailComposeResult, Error>? = nil
     var pass: Bool = SeasonPass().active
     var productIds: [(String, String)] = [("season.pass.full", "ticket.fill")]
+    
     private let logger = Logger(
         subsystem: "Voley Stats",
         category: "stats store"
@@ -640,6 +683,16 @@ class UserViewModel: ObservableObject{
         }
     }
     
+    func sendEmail(openUrl: OpenURLAction) {
+            let urlString = "mailto:pauhermosillad@gmail.com?subject=Feedback&body=Hi%20there!"
+            guard let url = URL(string: urlString) else { return }
+            
+            openUrl(url) { accepted in
+                if !accepted {
+                    // Handle the error, e.g., show an alert
+                }
+            }
+        }
     
     func process(transaction verificationResult: VerificationResult<StoreKit.Transaction>) async {
         do {

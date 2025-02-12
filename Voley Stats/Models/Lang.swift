@@ -497,7 +497,15 @@ struct Lang{
             "unknown.error":"An unknown error occurred, try again later.",
             "email.in.use":"Email already in use",
             "email.format":"Invalid email format",
-            "password.weak":"Weak password, use at least 6 characters"
+            "password.weak":"Weak password, use at least 6 characters",
+            "feedbak.default.subject":"Feedback from Voley Stats",
+            "feedbak.default.message":"",
+            "send.feedback":"Send feedback",
+            "mail.error":"An error occurred while sending the email, try again later.",
+            "mail.success":"Email sent successfully",
+            "mail.draft":"Email saved as draft",
+            "mail.cancelled":"Email sending cancelled"
+            
         ],
         "es":[
             "your.teams":"Tus equipos",
@@ -991,7 +999,14 @@ struct Lang{
             "unknown.error":"Ha ocurrido un error, intentelo de nuevo más tarde.",
             "email.in.use":"El email ya está en uso",
             "email.format":"Formato de email incorrecto",
-            "password.weak":"La contraseña es muy débil, debe tener al menos 6 caracteres"
+            "password.weak":"La contraseña es muy débil, debe tener al menos 6 caracteres",
+            "feedbak.default.subject":"Feedback de Voley Stats",
+            "feedbak.default.message":"",
+            "send.feedback":"Enviar feedback",
+            "mail.error":"Ha ocurrido un error, intentelo de nuevo más tarde.",
+            "mail.success":"Email enviado correctamente",
+            "mail.draft":"Email guardado como borrador",
+            "mail.cancelled":"Email cancelado"
         ]
     ]
 }

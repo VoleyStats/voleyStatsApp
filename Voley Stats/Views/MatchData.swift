@@ -97,10 +97,8 @@ struct MatchData: View {
 //                                }
                             }.padding().background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8))
                         }
-                        Spacer()
-                        Section(header: VStack{
-                            Text("match.settings".trad().uppercased()).font(.caption).foregroundColor(.gray).padding(.horizontal)
-                        }.frame(maxWidth: .infinity, alignment: .leading)){
+                        VStack{
+                            Text("match.settings".trad().uppercased()).font(.caption).foregroundColor(.gray).padding(.horizontal).frame(maxWidth: .infinity, alignment: .leading)
                             VStack{
                                 VStack(alignment: .leading){
                                     Text("number.sets".trad()).font(.caption)
@@ -151,8 +149,7 @@ struct MatchData: View {
                                     }
                                 }
                             }.padding().background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8))
-                        }
-                        Spacer()
+                        }.padding(.vertical)
                         if viewModel.match != nil{
                             Section(header: VStack{
                                 Text("set.management".trad().uppercased()).font(.caption).foregroundColor(.gray).padding(.horizontal)
@@ -191,12 +188,8 @@ struct MatchData: View {
                         }){
                             Text("save".trad()).frame(maxWidth: .infinity, alignment: .center)
                         }.disabled(viewModel.emptyFields()).padding().background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8)).foregroundColor(viewModel.emptyFields() ? .gray : .cyan)
-                        Spacer()
-                        Spacer()
-                        Spacer()
-                        Spacer()
+                        
                     }
-                    
                     .alert(isPresented:$viewModel.showAlert) {
                         Alert(
                             title: Text("error".trad()),

@@ -36,8 +36,10 @@ struct TeamCard: View{
             }.frame(maxWidth: .infinity, alignment: .leading).padding()
             
         }
+        .spotlight(1, shape: .rounded, roundedRadius: 15, text: "tutorial.team.card".trad())
         .clipped()
         .frame(height: 200)
+        
 //        .overlay(Image(systemName: "multiply").onTapGesture {
 //            deleteTap()
 //        }.padding(), alignment: .topTrailing)

@@ -36,25 +36,48 @@ struct ListElement: View{
                     }.frame(maxWidth: .infinity, alignment: .leading).padding(.horizontal)
                     HStack{
                         ForEach(match.sets(), id:\.id){set in
-                            ZStack{
-                                Circle().fill( .white.opacity(set.first_serve != 0 ? 1 : 0.1)).frame(maxWidth: 60, maxHeight: 60)
-                                if set.first_serve != 0{
-                                    NavigationLink(destination: AnyView(StatsView(viewModel: StatsViewModel(team: team, match: match, set: set))))
-                                    {
+                            if match.id == viewModel.matches.first?.id ?? 0{
+                                ZStack{
+                                    Circle().fill( .white.opacity(set.first_serve != 0 ? 1 : 0.1)).frame(maxWidth: 60, maxHeight: 60)
+                                    if set.first_serve != 0{
+                                        NavigationLink(destination: AnyView(StatsView(viewModel: StatsViewModel(team: team, match: match, set: set))))
+                                        {
+                                            
+                                            Text("\(set.score_us)-\(set.score_them)").foregroundColor(.black).font(.custom("", size: 11))
+                                        }
+                                    }else{
                                         
-                                        Text("\(set.score_us)-\(set.score_them)").foregroundColor(.black).font(.custom("", size: 11))
+                                        NavigationLink(destination: AnyView(SetData(viewModel: SetDataModel(team: team, match: match, set: set))))
+                                        {
+                                            
+                                            Image(systemName: "arrowtriangle.right.circle").resizable().aspectRatio(contentMode: .fit).frame(maxWidth: 60, maxHeight: 60).foregroundColor(.cyan)//.font(.headline)
+                                            
+                                            
+                                        }
                                     }
-                                }else{
-                                    
-                                    NavigationLink(destination: AnyView(SetData(viewModel: SetDataModel(team: team, match: match, set: set))))
-                                    {
+                                }.spotlight(3, shape: .circle, text: "tutorial.access.set".trad())
+                            }else{
+                                ZStack{
+                                    Circle().fill( .white.opacity(set.first_serve != 0 ? 1 : 0.1)).frame(maxWidth: 60, maxHeight: 60)
+                                    if set.first_serve != 0{
+                                        NavigationLink(destination: AnyView(StatsView(viewModel: StatsViewModel(team: team, match: match, set: set))))
+                                        {
+                                            
+                                            Text("\(set.score_us)-\(set.score_them)").foregroundColor(.black).font(.custom("", size: 11))
+                                        }
+                                    }else{
                                         
-                                        Image(systemName: "arrowtriangle.right.circle").resizable().aspectRatio(contentMode: .fit).frame(maxWidth: 60, maxHeight: 60).foregroundColor(.cyan)//.font(.headline)
-                                        
-                                        
+                                        NavigationLink(destination: AnyView(SetData(viewModel: SetDataModel(team: team, match: match, set: set))))
+                                        {
+                                            
+                                            Image(systemName: "arrowtriangle.right.circle").resizable().aspectRatio(contentMode: .fit).frame(maxWidth: 60, maxHeight: 60).foregroundColor(.cyan)//.font(.headline)
+                                            
+                                            
+                                        }
                                     }
                                 }
-                            }//.frame(maxWidth: 60, maxHeight: 60)
+                            }
+                            //.frame(maxWidth: 60, maxHeight: 60)
                         }
                         
                     }.frame(maxWidth: .infinity, alignment: .trailing)

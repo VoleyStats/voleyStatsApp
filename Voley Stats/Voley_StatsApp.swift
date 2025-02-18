@@ -56,10 +56,19 @@ struct Voley_StatsApp: App {
         navBarAppearance.titleTextAttributes = [.foregroundColor: UIColor.white]
 //        pilot = .init(initial: .ListTeam)
         CustomFonts.registerFonts()
+        print()
         if Team.all().isEmpty{
             DB().createDemoTeam()
             print("demo team created")
+            
         }
+        if !UserDefaults.standard.bool(forKey: "firstLaunch") {
+            UserDefaults.standard.set(true, forKey: "mainTutorial")
+            UserDefaults.standard.set(true, forKey: "captureTutorial")
+            UserDefaults.standard.set(true, forKey: "fillTutorial")
+            UserDefaults.standard.set(true, forKey: "firstLaunch")
+        }
+        
 //        user = Auth.auth().currentUser
 //        if user = user {
 //            let id = user.uid

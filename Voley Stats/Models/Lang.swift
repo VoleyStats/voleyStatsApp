@@ -504,7 +504,22 @@ struct Lang{
             "mail.error":"An error occurred while sending the email, try again later.",
             "mail.success":"Email sent successfully",
             "mail.draft":"Email saved as draft",
-            "mail.cancelled":"Email sending cancelled"
+            "mail.cancelled":"Email sending cancelled",
+            "tutorial.team.card":"Click to access team details and players",
+            "tutorial.team.options":"Access team matches, tournaments and stats",
+            "tutorial.access.set":"Click to access the set",
+            "tutorial.pick.player":"Pick a player",
+            "tutorial.pick.action":"Pick an action",
+            "tutorial.tap.enter":"Tap to save the action",
+            "tutorial.adjust.score":"Click to adjust the sscore and serving team",
+            "tutorial.adjust.rotation":"Click to adjust the rotation",
+            "tutorial.fill.stats":"Enter to fill the stats you missed during live",
+            "skip":"Skip",
+            "back":"Back",
+            "next":"Next",
+            "active.player":"Active players",
+            "inactive.player":"Inactive players",
+            "show.tutorial":"Show tutorial"
             
         ],
         "es":[
@@ -1006,7 +1021,22 @@ struct Lang{
             "mail.error":"Ha ocurrido un error, intentelo de nuevo más tarde.",
             "mail.success":"Email enviado correctamente",
             "mail.draft":"Email guardado como borrador",
-            "mail.cancelled":"Email cancelado"
+            "mail.cancelled":"Email cancelado",
+            "tutorial.team.card":"Clica para ver los detalles de tu equipo y sus jugadores",
+            "tutorial.team.options":"Accede a los partidos, torneos y estadísticas de tu equipo",
+            "tutorial.access.set":"Clica para configurar el set y capturar estadísticas",
+            "tutorial.pick.player":"Selecciona un jugador",
+            "tutorial.pick.action":"Selecciona una accion",
+            "tutorial.tap.enter":"Toca para guardar la jugada",
+            "tutorial.adjust.score":"Clica para ajustar el marcador o el equipo sacador",
+            "tutorial.adjust.rotation":"Clica para ajustar la rotación",
+            "tutorial.fill.stats":"Entra para rellenar las acciones que no pudiste rellenar en vivo",
+            "skip":"Saltar",
+            "back":"Atrás",
+            "next":"Siguiente",
+            "active.player":"Jugadores activos",
+            "inactive.player":"Jugadores inactivos",
+            "show.tutorial":"Ver tutorial"
         ]
     ]
 }

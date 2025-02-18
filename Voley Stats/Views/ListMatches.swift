@@ -156,19 +156,34 @@ struct ListMatches: View {
                                 }
                             }
                             ForEach(viewModel.matches, id:\.id){match in
-                                
-                                ListElement(team: viewModel.team(), match: match, viewModel: viewModel) {
-                                    if viewModel.selectMatches {
-                                        if viewModel.reportMatches.contains(match){
-                                            viewModel.reportMatches = viewModel.reportMatches.filter{$0.id != match.id}
+                                if match.id == viewModel.matches.first?.id ?? 0{
+                                    ListElement(team: viewModel.team(), match: match, viewModel: viewModel) {
+                                        if viewModel.selectMatches {
+                                            if viewModel.reportMatches.contains(match){
+                                                viewModel.reportMatches = viewModel.reportMatches.filter{$0.id != match.id}
+                                            }else{
+                                                viewModel.reportMatches.append(match)
+                                            }
+                                            
                                         }else{
-                                            viewModel.reportMatches.append(match)
+                                            viewModel.matchSelected = match
                                         }
                                         
-                                    }else{
-                                        viewModel.matchSelected = match
                                     }
-                                    
+                                }else{
+                                    ListElement(team: viewModel.team(), match: match, viewModel: viewModel) {
+                                        if viewModel.selectMatches {
+                                            if viewModel.reportMatches.contains(match){
+                                                viewModel.reportMatches = viewModel.reportMatches.filter{$0.id != match.id}
+                                            }else{
+                                                viewModel.reportMatches.append(match)
+                                            }
+                                            
+                                        }else{
+                                            viewModel.matchSelected = match
+                                        }
+                                        
+                                    }
                                 }
                                 
                             }

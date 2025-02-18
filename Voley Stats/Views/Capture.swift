@@ -24,7 +24,7 @@ struct Capture: View {
                     }
                     .onTapGesture{
                         viewModel.adjust.toggle()
-                    }
+                    }.spotlight(4, shape: .rounded, roundedRadius: 8, text: "tutorial.adjust.score".trad())
                 ZStack{
                     statb.fill(.pink)
                     Text("\(viewModel.point_them)").font(Font.body)
@@ -86,6 +86,7 @@ struct Capture: View {
                     //}.padding().background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8))
 //                    Rectangle().fill(.clear)
                 }.clipped()
+                    .spotlight(5, shape: .rounded, roundedRadius: 8, text: "tutorial.adjust.rotation".trad())
             }.frame(maxHeight: sq).padding(.horizontal)
             HStack {
                 ZStack{
@@ -133,7 +134,7 @@ struct Capture: View {
                         Text("enter".trad()).foregroundColor(.white)
                     }.onTapGesture {
                         viewModel.saveAction()
-                    }
+                    }.spotlight(3, shape: .rounded, roundedRadius: 8, text: "tutorial.tap.enter".trad())
                 }.frame(maxWidth: sq*4)
             }.frame(maxHeight: sq).padding(.horizontal)
             
@@ -165,11 +166,15 @@ struct Capture: View {
                                     case (-200...200, ...0):
                                         viewModel.player = player
                                         viewModel.action = Action.find(id: 6)
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                                             viewModel.saveAction()
                                         }
-//                                    case (-200...200, 0...):
-//                                        print("down")
+                                    case (-200...200, 0...):
+                                        viewModel.player = player
+                                        viewModel.action = Action.find(id: 7)
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                                            viewModel.saveAction()
+                                        }
                                     default: print("default")
                                 }
                             })
@@ -180,27 +185,31 @@ struct Capture: View {
                                 viewModel.saveAction()
                             }
                         }
-                        .gesture(DragGesture()
-                            .onEnded{v in
-                                switch(v.translation.width, v.translation.height) {
-                                        
-                                    case (-200...200, ...0):
-                                        viewModel.player = player
-                                        viewModel.action = Action.find(id: 6)
-                                        viewModel.saveAction()
+//                        .gesture(DragGesture()
+//                            .onEnded{v in
+//                                print(v.translation.height)
+//                                switch(v.translation.width, v.translation.height) {
+//                                        
+//                                    case (-200...200, ...0):
+//                                        viewModel.player = player
+//                                        viewModel.action = Action.find(id: 6)
+//                                        viewModel.saveAction()
+////                                    case (-200...200, 0...):
+////                                        print("down")
 //                                    case (-200...200, 0...):
 //                                        print("down")
-                                    default: print("default")
-                                }
-                            })
-                        .onTapGesture(count: 2){
-                            viewModel.player = player
-                            viewModel.action = Action.find(id: 5)
-                            viewModel.saveAction()
-                        }
+//                                    default: print("default")
+//                                }
+//                            })
+//                        .onTapGesture(count: 2){
+//                            viewModel.player = player
+//                            viewModel.action = Action.find(id: 5)
+//                            viewModel.saveAction()
+//                        }
                         .overlay(Image("Voleibol").scaleEffect(0.01, anchor: .center).opacity(player == viewModel.server ? 1 : 0).padding().offset(x: 40.0, y: -20.0))
                     }
                 }.padding().background(RoundedRectangle(cornerRadius: 8).fill(.white.opacity(0.2))).padding(.trailing, 5).frame(maxWidth: sq*2)
+                    .spotlight(1, shape: .rounded, roundedRadius: 8, text: "tutorial.pick.player".trad())
                 if viewModel.stage != .K3 && viewModel.set.directionDetail{
                     HStack{
                         if viewModel.stage == .K2{
@@ -239,6 +248,10 @@ struct Capture: View {
                         HStack {
                             ForEach(actions, id:\.self){sub in
                                 VStack{
+                                    let act = sub.first as? Action
+                                    if act != nil {
+                                        Text(act!.getType().trad().uppercased()).font(.caption).foregroundColor(act!.color())
+                                    }
                                     ForEach(sub, id:\.id){action in
                                         //                                    if !((action.area == .serve || action.area == .receive) && viewModel.directionDetail){
                                         if !((action.area == .serve || action.area == .receive) && viewModel.set.directionDetail){
@@ -257,6 +270,7 @@ struct Capture: View {
                         }
                         
                     }.padding().background(RoundedRectangle(cornerRadius: 8).fill(.white.opacity(0.2)))
+                        .spotlight(2, shape: .rounded, roundedRadius: 8, text: "tutorial.pick.action".trad())
                 }
             }.padding()
         }
@@ -372,6 +386,7 @@ struct Capture: View {
         .overlay(viewModel.showTimeout ? timeOutModal() : nil)
         .overlay(viewModel.showSummary ? summaryModal() : nil)
         .overlay(viewModel.showSetPreferences ? setPreferences() : nil)
+        .overlay(viewModel.qrModal ? qrModal() : nil)
         .font(.custom("stats", size: 12))
         .onDisappear(perform: {
             viewModel.updateSet()
@@ -397,91 +412,117 @@ struct Capture: View {
                     Image(systemName: "multiply").font(.title2)
                 }.frame(maxWidth: .infinity, alignment: .trailing)
             }.padding([.top, .trailing])
-            VStack{
+            ScrollView{
                 VStack{
-//                        VStack{
-                    Text("game.mode".trad().uppercased()).font(.caption).foregroundColor(.gray).frame(maxWidth: .infinity, alignment: .leading).padding(.horizontal)
-//                        }
+                    
                     VStack{
-                        Text("game.mode".trad()).frame(maxWidth: .infinity, alignment: .leading).font(.caption)
-                        Picker(selection: $viewModel.gameMode, label: Text("game.mode".trad())) {
-                            //                        Text("Pick one").tag(0)
-                            Text("6-6").tag("6-6")
-                            Text("4-2").tag("4-2")
-                            Text("6-2").tag("6-2")
-                            Text("5-1").tag("5-1")
-                        }.pickerStyle(.segmented)
-                    }.padding().background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8)).padding(.horizontal)
-                }.padding(.top)
-//                    VStack{
-                Text("rotation".trad().uppercased()).font(.caption).foregroundColor(.gray).frame(maxWidth: .infinity, alignment: .leading).padding([.top, .horizontal])
-//                    }.padding(.top)
-//                    ZStack{
-//                        RoundedRectangle(cornerRadius: 10, style: .continuous).fill(.white.opacity(0.1))
-                VStack{
-                    Court(rotation: $viewModel.rotationArray, numberPlayers: viewModel.match.n_players, editable: true, teamPlayers: viewModel.team.activePlayers())
-                    HStack{
-                        Image(systemName: "backward.fill").padding().frame(maxWidth: .infinity, maxHeight: 50).background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8))
-                            .onTapGesture {
-                                viewModel.rotate(inverse: true)
-                                rotArray = viewModel.rotation.get(rotate: viewModel.rotationTurns).map{$0?.id ?? 0}
-//                                        if (viewModel.rotation.contains{$0 != nil}){
-//                                            viewModel.rotate(inverse: true)
-//                                        }
+                        VStack{
+                            //                        VStack{
+                            Text("game.mode".trad().uppercased()).font(.caption).foregroundColor(.gray).frame(maxWidth: .infinity, alignment: .leading).padding(.horizontal)
+                            //                        }
+                            VStack{
+                                Text("game.mode".trad()).frame(maxWidth: .infinity, alignment: .leading).font(.caption)
+                                Picker(selection: $viewModel.gameMode, label: Text("game.mode".trad())) {
+                                    //                        Text("Pick one").tag(0)
+                                    Text("6-6").tag("6-6")
+                                    Text("4-2").tag("4-2")
+                                    Text("6-2").tag("6-2")
+                                    Text("5-1").tag("5-1")
+                                }.pickerStyle(.segmented)
+                            }.padding().background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8)).padding(.horizontal)
+                        }.padding(.top)
+                        //                    VStack{
+                        Text("rotation".trad().uppercased()).font(.caption).foregroundColor(.gray).frame(maxWidth: .infinity, alignment: .leading).padding([.top, .horizontal])
+                        //                    }.padding(.top)
+                        //                    ZStack{
+                        //                        RoundedRectangle(cornerRadius: 10, style: .continuous).fill(.white.opacity(0.1))
+                        VStack{
+                            Court(rotation: $viewModel.rotationArray, numberPlayers: viewModel.match.n_players, showName: true, editable: true, teamPlayers: viewModel.team.activePlayers())
+                            HStack{
+                                Image(systemName: "backward.fill").padding().frame(maxWidth: .infinity, maxHeight: 50).background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8))
+                                    .onTapGesture {
+                                        viewModel.rotate(inverse: true)
+                                        rotArray = viewModel.rotation.get(rotate: viewModel.rotationTurns).map{$0?.id ?? 0}
+                                        //                                        if (viewModel.rotation.contains{$0 != nil}){
+                                        //                                            viewModel.rotate(inverse: true)
+                                        //                                        }
+                                    }
+                                Image(systemName: "forward.fill").padding().frame(maxWidth: .infinity, maxHeight: 50).background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8))
+                                    .onTapGesture {
+                                        viewModel.rotate()
+                                        rotArray = viewModel.rotation.get(rotate: viewModel.rotationTurns).map{$0?.id ?? 0}
+                                        //                                        if (viewModel.rotation.contains{$0 != nil}){
+                                        //                                            viewModel.rotate(inverse: false)
+                                        //                                        }
+                                    }
+                            }.frame(width: 300, height: 50)
+                            if !viewModel.checkSetters(){
+                                Text("not.enough.setters".trad()).foregroundStyle(.red).padding()
                             }
-                        Image(systemName: "forward.fill").padding().frame(maxWidth: .infinity, maxHeight: 50).background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8))
-                            .onTapGesture {
-                                viewModel.rotate()
-                                rotArray = viewModel.rotation.get(rotate: viewModel.rotationTurns).map{$0?.id ?? 0}
-//                                        if (viewModel.rotation.contains{$0 != nil}){
-//                                            viewModel.rotate(inverse: false)
-//                                        }
+                            //                            Button(action:{
+                            //                                viewModel.rotate()
+                            //                                rotArray = viewModel.rotation.get(rotate: viewModel.rotationTurns).map{$0?.id ?? 0}
+                            //                            }){
+                            //                                HStack{
+                            //                                    Text("rotate".trad()).font(.body).foregroundColor(.white)
+                            //                                    Image(systemName: "arrow.triangle.2.circlepath")
+                            //                                }.padding()
+                            //                            }.border(.white, width: 3).padding()
+                        }.padding().frame(maxWidth: .infinity).background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8)).padding(.horizontal)
+                        
+                        Text("rotation.qr".trad().uppercased()).font(.caption).foregroundColor(.gray).frame(maxWidth: .infinity, alignment: .leading).padding([.horizontal, .top])
+                        VStack(alignment: .leading){
+                            Text("team.code".trad()).font(.caption)
+                            HStack(alignment: .center){
+                                TextField("team.code".trad(), text: $viewModel.teamCode).textFieldStyle(TextFieldDark()).padding(.trailing)
+                                
+                                //.padding(.bottom)
+                                Text(viewModel.side).font(.title2).padding(.vertical, 10).padding(.horizontal).background(.white.opacity(0.1)).clipShape(Capsule()).onTapGesture {
+                                    viewModel.side = viewModel.side == "A" ? "B" : "A"
+                                }
+                                Image(systemName: "qrcode").font(.title)
+                                    .foregroundStyle(viewModel.rotationArray.filter{$0 != nil}.count == viewModel.match.n_players ? .white : .gray)
+                                    .padding(.vertical, 10).padding(.horizontal).background(.white.opacity(0.1)).clipShape(Capsule()).onTapGesture {
+                                        if viewModel.rotationArray.filter{$0 != nil}.count == viewModel.match.n_players{
+                                            viewModel.qrModal.toggle()
+                                        }
+                                    }
                             }
-                    }.frame(width: 300, height: 50)
-                    if !viewModel.checkSetters(){
-                        Text("not.enough.setters".trad()).foregroundStyle(.red).padding()
-                    }
-//                            Button(action:{
-//                                viewModel.rotate()
-//                                rotArray = viewModel.rotation.get(rotate: viewModel.rotationTurns).map{$0?.id ?? 0}
-//                            }){
-//                                HStack{
-//                                    Text("rotate".trad()).font(.body).foregroundColor(.white)
-//                                    Image(systemName: "arrow.triangle.2.circlepath")
-//                                }.padding()
-//                            }.border(.white, width: 3).padding()
-                }.padding().frame(maxWidth: .infinity).background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8)).padding(.horizontal)
-//                    }.padding(.horizontal)
-                
-            }
-//                Spacer()
-            Text("save".trad()).foregroundColor(viewModel.checkSetters() ? .cyan : .gray).font(.body)
-            .padding()
-            .frame(maxWidth: .infinity)
-            .background(.white.opacity(0.1))
-            .clipShape(statb)
-            .padding()
-            .onTapGesture {
-                let rot = Rotation.create(rotation: Rotation(team: viewModel.team, rotationArray: viewModel.rotationArray))
-                if rot != nil {
-                    if rot!.1.id != viewModel.rotation.id{
-                        viewModel.rotation = rot!.1
-                        viewModel.rotationTurns = rot!.0
+                        }.padding().frame(maxWidth: .infinity).background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8)).padding(.horizontal)
+                        //                    }.padding(.horizontal)
                         
                     }
-                    if viewModel.server.id != 0{
-                        viewModel.server = viewModel.rotation.server(rotate: viewModel.rotationTurns)
-                    }
+                    //                Spacer()
+                    Text("save".trad()).foregroundColor(viewModel.checkSetters() ? .cyan : .gray).font(.body)
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(.white.opacity(0.1))
+                        .clipShape(statb)
+                        .padding()
+                        .onTapGesture {
+                            let rot = Rotation.create(rotation: Rotation(team: viewModel.team, rotationArray: viewModel.rotationArray))
+                            if rot != nil {
+                                if rot!.1.id != viewModel.rotation.id{
+                                    viewModel.rotation = rot!.1
+                                    viewModel.rotationTurns = rot!.0
+                                    
+                                }
+                                if viewModel.server.id != 0{
+                                    viewModel.server = viewModel.rotation.server(rotate: viewModel.rotationTurns)
+                                }
+                            }
+                            if viewModel.liberos != viewModel.set.liberos{
+                                viewModel.set.liberos = viewModel.liberos
+                                viewModel.set.update()
+                            }
+                            viewModel.saveAdjust()
+                            
+                        }.disabled(!viewModel.checkSetters())
+                    //                Spacer()
                 }
-                if viewModel.liberos != viewModel.set.liberos{
-                    viewModel.set.liberos = viewModel.liberos
-                    viewModel.set.update()
-                }
-                viewModel.saveAdjust()
-                
-            }.disabled(!viewModel.checkSetters())
-//                Spacer()
-        }.padding().background(Color.swatch.dark.high).clipShape(RoundedRectangle(cornerRadius: 8)).frame(maxHeight: .infinity, alignment: .center).padding()
+            }
+        }.padding().background(.black).clipShape(RoundedRectangle(cornerRadius: 8)).frame(maxHeight: .infinity, alignment: .center).padding()
+        
     }
     
     @ViewBuilder
@@ -731,6 +772,23 @@ struct Capture: View {
         .padding()
         
     }
+    
+    @ViewBuilder
+    func qrModal() -> some View {
+        VStack{
+            ZStack{
+                Image(systemName: "multiply").font(.title2).onTapGesture {
+                    viewModel.qrModal.toggle()
+                }.frame(maxWidth: .infinity, alignment: .trailing)
+            }
+            let r = Rotation(team: viewModel.team, one: viewModel.rotationArray[0], two: viewModel.rotationArray[1], three: viewModel.rotationArray[2], four: viewModel.rotationArray[3], five: viewModel.rotationArray[4], six: viewModel.rotationArray[5])
+            r.genrateQR(set: viewModel.set, teamSide: viewModel.side, teamCode: viewModel.teamCode).interpolation(.none).resizable().scaledToFit().padding()
+        }.padding()
+            .background(.black)
+            .clipShape(RoundedRectangle(cornerRadius: 25))
+//            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .frame(width:500, height: 500)
+    }
 }
 
 class CaptureModel: ObservableObject{
@@ -762,6 +820,10 @@ class CaptureModel: ObservableObject{
     @Published var showSetPreferences: Bool = false
     @Published var indexLibero: Int = 0
     @Published var liberos: [Int] = [0,0]
+    @Published var side: String = "A"
+    @Published var teamCode: String
+    @Published var qrModal: Bool = false
+    
     var direction: String = ""
     var order: Double = 0
     var lastStat: Stat?
@@ -775,7 +837,7 @@ class CaptureModel: ObservableObject{
         liberos = set.liberos.map{$0 == nil ? 0 : $0!}
         let stats = set.stats().filter{s in return ![0, 98, 99].contains(s.action)}
         self.gameMode = set.gameMode
-        
+        self.teamCode = team.name.prefix(3).uppercased()
         if (stats.isEmpty){
             rotation = set.rotation
             serve = set.first_serve

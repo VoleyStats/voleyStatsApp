@@ -116,15 +116,46 @@ struct StatsView: View {
                                     Image(systemName: "lock.fill")
                                 }
                             }.font(.caption).padding(10).background(viewModel.checkStats() ? .gray.opacity(0.2) : .cyan).clipShape(RoundedRectangle(cornerRadius: 8))
+                                .spotlight(6, shape: .rounded, roundedRadius: 8, text: "tutorial.fill.stats".trad())
                         }.disabled(viewModel.checkStats()).foregroundStyle(viewModel.checkStats() ? .gray : .white)
-                        
-                        NavigationLink(destination: CaptureHelp()){
-                            Image(systemName: "questionmark.circle").font(.title3)
+                        if viewModel.selTab == 1{
+                            Menu{
+                                Button(action:{
+                                    viewModel.tutorialStep = 1
+                                    viewModel.tutorial = true
+                                    viewModel.quickActionsSlider = true
+                                }){
+                                    Text("show.tutorial".trad())
+                                    Image(systemName: "questionmark.circle")
+                                }
+                                NavigationLink(destination: CaptureHelp()){
+                                    HStack{
+                                        Text("help".trad())
+                                        Image(systemName: "text.page").font(.title3)
+                                    }
+                                }
+                            }label:{
+                                Label("help", systemImage: "questionmark.circle")
+                            }
+                        }else{
+                            
                         }
+                        
                     }
                 }
             }
         }
+        .spotlightOverlay(show: $viewModel.tutorial, currentSpot: $viewModel.tutorialStep, name: "captureTutorial")
+        .overlay(viewModel.quickActionsSlider && !viewModel.tutorial ?
+                 ZStack{
+                    Rectangle().fill(Color.swatch.dark.mid.opacity(0.5)).ignoresSafeArea()
+                    PresentationSlider(title: "quick.action.tips".trad(),slides:[
+                        Slide(title: "slide.swipeup.title".trad(), subtitle: "slide.swipeup.text".trad(), image: Image("slide_export")),
+                        Slide(title: "slide.swipedown.title".trad(), subtitle: "slide.swipedown.text".trad().trad(), image: Image("slide_stats")),
+                        Slide(title: "slide.doubletap.title".trad(), subtitle: "slide.doubletap.text".trad(), image: Image("slide_fill")),
+                        Slide(title: "slide.autosave.title".trad(), subtitle: "slide.autosave.text", image: Image("slide_backup"))
+                    ], cta_text: "start.capturing".trad(), cta_action: {viewModel.quickActionsSlider.toggle()}, skip_action: {viewModel.quickActionsSlider.toggle()}).frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center).padding()
+                }.transition(.move(edge: .bottom)) : nil)
         .toast(show: $viewModel.showToast, Toast(show: $viewModel.showToast, type: viewModel.type, message: viewModel.message))
         .foregroundColor(.white)
         .background(Color.swatch.dark.high)
@@ -138,6 +169,9 @@ class StatsViewModel: ObservableObject{
     @Published var showToast: Bool = false
     @Published var type: ToastType = .success
     @Published var message: String = "copied.to.clipboard".trad()
+    @Published var tutorial: Bool = UserDefaults.standard.bool(forKey: "captureTutorial")
+    @Published var tutorialStep: Int = 1
+    @Published var quickActionsSlider: Bool = UserDefaults.standard.bool(forKey: "captureTutorial")
     let team: Team
     let match: Match
     let set: Set

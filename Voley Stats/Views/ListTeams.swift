@@ -56,28 +56,8 @@ struct ListTeams: View {
                                             viewModel.getMatchesElements(team: viewModel.team())
                                         }
                                     })
+                                
                         }
-                        .alert("team.delete.message".trad(), isPresented: $viewModel.deleteDialog){
-                            Button("cancel".trad(), role: .cancel){}
-                            Button("keep.players".trad()){
-                                if viewModel.team().delete(deletePlayers: false){
-                                    viewModel.getAllTeams()
-                                }
-                            }
-                            Button("team.delete.title".trad(), role: .destructive){
-                                if viewModel.team().delete(){
-                                    viewModel.getAllTeams()
-                                }
-                            }
-                            
-                        }
-//                        .confirmationDialog("team.delete.message".trad(), isPresented: $viewModel.deleteDialog, titleVisibility: .visible){
-//                            Button("team.delete.title".trad(), role: .destructive){
-//                                if viewModel.team().delete(){
-//                                    viewModel.getAllTeams()
-//                                }
-//                            }
-//                        }
                         
                     }
                     if viewModel.selected == viewModel.allTeams.count{
@@ -168,7 +148,10 @@ struct ListTeams: View {
                             TabButton(selection: $viewModel.tab, title: "team.stats".trad(), animation: animation, action: {
                                 viewModel.min = true
                             })
-                        }.background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 7)).padding([.horizontal, .top])
+                        }
+                        .spotlight(2, shape: .rounded, roundedRadius: 7, text: "tutorial.team.options".trad())
+                        .background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 7)).padding([.horizontal, .top])
+                            
                     }
                     VStack{
                         if viewModel.tab == "matches".trad() || viewModel.tab == "tournaments".trad() {
@@ -200,6 +183,7 @@ struct ListTeams: View {
                 }.background(.gray)
             }
         }
+        
         .onAppear{
             viewModel.getAllTeams()
 //            viewModel.tab = "matches".trad()
@@ -218,6 +202,14 @@ struct ListTeams: View {
             ToolbarItem(placement: .primaryAction) {
                 if Auth.auth().currentUser != nil {
                     HStack{
+                        Button(action: {
+                            viewModel.tutorialStep = 1
+                            viewModel.tutorial = true
+                            
+                        }){
+                            Image(systemName: "questionmark.circle")
+//                            Text("show.tutorial".trad())
+                        }
                         NavigationLink(destination: UserView(viewModel: UserViewModel())){
                             Image(systemName: "person.circle").font(.title3)
                         }
@@ -230,30 +222,43 @@ struct ListTeams: View {
                         NavigationLink(destination: Login(viewModel: LoginModel(login: false))){
                             Text("sign.up".trad().uppercased()).font(.caption).padding(10).background(.cyan).clipShape(RoundedRectangle(cornerRadius: 8))
                         }.disabled(!network.isConnected)
-                        Menu {
+                        Menu{
                             Button(action: {
-                                viewModel.lang = "es"
-                                UserDefaults.standard.set("es", forKey: "locale")
-                                viewModel.tab = viewModel.tab.lowercased().trad()
+                                viewModel.tutorialStep = 1
+                                viewModel.tutorial = true
+                                
                             }){
-                                Text("spanish".trad())
-                                if viewModel.lang == "es" {
-                                    Image(systemName: "checkmark.circle.fill")
-                                }
-                            }.frame(maxWidth: .infinity)
-                            Button(action: {
-                                viewModel.lang = "en"
-                                UserDefaults.standard.set("en", forKey: "locale")
-                                viewModel.tab = viewModel.tab.trad()
-                            }){
-                                Text("english".trad())
-                                if viewModel.lang == "en" {
-                                    Image(systemName: "checkmark.circle.fill")
-                                }
-                            }.frame(maxWidth: .infinity)
+                                Image(systemName: "questionmark.circle")
+                                Text("show.tutorial".trad())
+                            }
+                            Menu {
+                                Button(action: {
+                                    viewModel.lang = "es"
+                                    UserDefaults.standard.set("es", forKey: "locale")
+                                    viewModel.tab = viewModel.tab.lowercased().trad()
+                                }){
+                                    Text("spanish".trad())
+                                    if viewModel.lang == "es" {
+                                        Image(systemName: "checkmark.circle.fill")
+                                    }
+                                }.frame(maxWidth: .infinity)
+                                Button(action: {
+                                    viewModel.lang = "en"
+                                    UserDefaults.standard.set("en", forKey: "locale")
+                                    viewModel.tab = viewModel.tab.trad()
+                                }){
+                                    Text("english".trad())
+                                    if viewModel.lang == "en" {
+                                        Image(systemName: "checkmark.circle.fill")
+                                    }
+                                }.frame(maxWidth: .infinity)
+                            } label: {
+                                Label("language".trad(), systemImage: "globe")
+                            }
                         } label: {
-                            Label("language".trad(), systemImage: "globe")
+                            Label("settings".trad(), systemImage: "gearshape")
                         }
+                        
                     }.padding(.vertical)
                 }
             }
@@ -266,10 +271,14 @@ struct ListTeams: View {
         }
         .quickLookPreview($viewModel.statsFile)
         .overlay(viewModel.reportLang && (viewModel.matchSelected != nil || !viewModel.reportMatches.isEmpty) ? langChooseModal() : nil)
-        
+        .spotlightOverlay(show: $viewModel.tutorial, currentSpot: $viewModel.tutorialStep, name: "mainTutorial")
         .background(
             Color.swatch.dark.high
         )
+        .id(viewModel.tutorial)
+        .onChange(of: viewModel.tutorial){
+            print(viewModel.tutorial)
+        }
         .foregroundColor(.white)
         .preferredColorScheme(.dark)
         
@@ -315,6 +324,9 @@ class ListTeamsModel: ObservableObject{
     @Published var selected: Int = 0
     @Published var reportLang: Bool = false
     @Published var min:Bool = false
+    
+    @Published var tutorial: Bool = UserDefaults.standard.bool(forKey: "mainTutorial")
+    @Published var tutorialStep: Int = 1
     let df = DateFormatter()
     
     init(){

@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct PresentationSlider: View {
+    let title: String
     let slides: [Slide]
     let cta_text:String
     let cta_action: ()->()
@@ -39,6 +40,9 @@ struct PresentationSlider: View {
                                 }
                                 
                             }.padding(.horizontal)
+                            if self.title != ""{
+                                Text(self.title).font(.title).padding(.vertical)
+                            }
 //                            Spacer()
                             VStack{
                                 slides[i].image
@@ -89,11 +93,11 @@ struct Slide{
     var image: Image
 }
 
-#Preview {
-    PresentationSlider(slides:[
-        Slide(title: "this is a test slide", subtitle: "in this subtitle we will test the slider", image: Image("slide_export")),
-        Slide(title: "this is the test slide 2", subtitle: "in this subtitle we will test another slider", image: Image("slide_stats")),
-        Slide(title: "this is the test slide 2", subtitle: "in this subtitle we will test another slider", image: Image("slide_fill")),
-        Slide(title: "this is the test slide 2", subtitle: "in this subtitle we will test another slider", image: Image("slide_backup"))
-    ], cta_text: "start capturing stats", cta_action: {}, skip_action: {})
-}
+//#Preview {
+//    PresentationSlider(slides:[
+//        Slide(title: "this is a test slide", subtitle: "in this subtitle we will test the slider", image: Image("slide_export")),
+//        Slide(title: "this is the test slide 2", subtitle: "in this subtitle we will test another slider", image: Image("slide_stats")),
+//        Slide(title: "this is the test slide 2", subtitle: "in this subtitle we will test another slider", image: Image("slide_fill")),
+//        Slide(title: "this is the test slide 2", subtitle: "in this subtitle we will test another slider", image: Image("slide_backup"))
+//    ], cta_text: "start capturing stats", cta_action: {}, skip_action: {})
+//}

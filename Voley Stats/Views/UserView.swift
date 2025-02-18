@@ -245,6 +245,9 @@ struct UserView: View {
                     Text("\("active.pass.until".trad()): \(SeasonPass().endDate.formatted(date: .numeric, time: .omitted))").font(.title2).frame(maxWidth: .infinity)//.foregroundStyle(Color.swatch.dark.high)
                     Image(systemName: "ticket.fill").resizable().aspectRatio(contentMode: .fill).rotationEffect(.degrees(-20)).foregroundStyle(.white.opacity(0.5))//.padding()
                 }.padding().frame(height: 100).background(Color(hex: "#ffbf00") ?? .yellow).clipShape(RoundedRectangle(cornerRadius: 8)).padding()
+                    .onTapGesture{
+                        viewModel.newPass.toggle()
+                    }
             }
         }.background(Color.swatch.dark.high).foregroundStyle(.white)
             .navigationTitle("user.area".trad())
@@ -425,7 +428,7 @@ struct UserView: View {
     func slidesModal() -> some View {
             ZStack{
                 Rectangle().fill(Color.swatch.dark.mid.opacity(0.5)).ignoresSafeArea()
-                PresentationSlider(slides:[
+                PresentationSlider(title: "welcome.to.pass".trad(),slides:[
                     Slide(title: "slide.export.title".trad(), subtitle: "slide.export.text".trad(), image: Image("slide_export")),
                     Slide(title: "slide.stats.title".trad(), subtitle: "slide.stats.text".trad().trad(), image: Image("slide_stats")),
                     Slide(title: "slide.fill.title".trad(), subtitle: "slide.fill.text".trad(), image: Image("slide_fill")),

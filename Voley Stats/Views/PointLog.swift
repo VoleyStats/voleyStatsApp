@@ -54,9 +54,11 @@ struct PointLog: View {
                             RoundedRectangle(cornerRadius: 15).fill(.white.opacity(0.3))
                             LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 6), spacing: 20){
                                 HStack{
-                                    Image(systemName: viewModel.descending ? "chevron.up" : "chevron.down").onTapGesture {
-                                        viewModel.descending.toggle()
-                                    }
+                                    Image(systemName: "arrow.up.arrow.down").symbolRenderingMode(.palette).foregroundStyle(.cyan, .white).rotationEffect(.degrees(viewModel.descending ? 180 : 0)).animation(.easeInOut, value: viewModel.descending).onTapGesture {
+                                        withAnimation{
+                                            viewModel.descending.toggle()
+                                        }
+                                    }.padding(.horizontal)
                                     Text("stage".trad())
                                 }
                                 Text("server".trad())
@@ -64,7 +66,7 @@ struct PointLog: View {
                                 Text("action.type".trad())
                                 Text("action".trad())
                                 Text("score".trad())
-                            }.padding()
+                            }.padding([.vertical, .trailing])
                         }.clipped().frame(maxHeight: 20).padding(.vertical)
                         ScrollView {
                             ForEach(viewModel.finals ? viewModel.finalsLog : viewModel.fullLog.sorted(by: viewModel.descending ? { $0.order > $1.order } : { $0.order < $1.order }), id:\.id){ stat in

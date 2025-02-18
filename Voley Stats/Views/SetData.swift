@@ -11,6 +11,7 @@ import UIPilot
 struct SetData: View {
     @ObservedObject var viewModel: SetDataModel
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    @EnvironmentObject var path:PathManager
     var body: some View {
         VStack (alignment: .center){
             ScrollView{
@@ -90,6 +91,10 @@ struct SetData: View {
         .overlay(viewModel.liberosModel ? liberosModal() : nil)
         .overlay(viewModel.qrModal ? qrModal() : nil)
         .onAppear{
+            
+            if viewModel.set.stats().count > 0 {
+                self.presentationMode.wrappedValue.dismiss()
+            }
             viewModel.players = viewModel.team.activePlayers()
         }
     }

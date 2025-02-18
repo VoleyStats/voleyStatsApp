@@ -645,13 +645,18 @@ struct FillStats: View {
     
     @ViewBuilder
     func actionModal() -> some View {
+        ZStack{
+            Rectangle().fill(.black.opacity(0.5))
             VStack{
                 ZStack{
-                    Button(action:{
-                        viewModel.showActions.toggle()
-                    }){
-                        Image(systemName: "multiply").font(.title2)
-                    }.frame(maxWidth: .infinity, alignment: .trailing)
+                    let ac = Action.find(id: viewModel.nextPoint!.action)!
+                    if viewModel.pointTo(action: ac, player: viewModel.nextPoint!.player) == viewModel.nextPoint!.to {
+                        Button(action:{
+                            viewModel.showActions.toggle()
+                        }){
+                            Image(systemName: "multiply").font(.title2)
+                        }.frame(maxWidth: .infinity, alignment: .trailing)
+                    }
                     Text("actions".trad()).font(.title2).frame(maxWidth: .infinity)
                 }.padding()
                 let ac = Action.find(id: viewModel.nextPoint!.action)!
@@ -726,11 +731,12 @@ struct FillStats: View {
                     }
                 }
             }.padding()
-            .foregroundColor(.white)
-            .background(.black.opacity(0.9))
-            .clipShape(RoundedRectangle(cornerRadius: 25))
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .padding()
+                .foregroundColor(.white)
+                .background(.black.opacity(0.9))
+                .clipShape(RoundedRectangle(cornerRadius: 25))
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .padding()
+        }.ignoresSafeArea()
     }
 }
 
@@ -834,22 +840,7 @@ class FillStatsModel: ObservableObject{
             s.order < self.lastStat?.order ?? 0 &&
             s.order > self.lastPoint?.order ?? 0}.last
     }
-    func checkSetters()->Bool{
-        var ref = lastStat
-        if lastStat == nil || lastStat?.action == 0{
-            ref = nextPoint
-        }
-        let rotation = ref!.rotation.get(rotate: ref!.rotationTurns)
-        let front = [rotation[1],rotation[2],rotation[3]].filter{$0?.position == .setter}.count
-        let back = [rotation[0],rotation[4],rotation[5]].filter{$0?.position == .setter}.count
-        if self.set.gameMode == "5-1"{
-            return front+back >= 1
-        }else if self.set.gameMode == "6-2" || self.set.gameMode == "4-2"{
-            return back == 1 && front == 1
-        }else{
-            return true
-        }
-    }
+    
     func makeToast(type: ToastType, message: String){
         self.message = message
         self.type = type

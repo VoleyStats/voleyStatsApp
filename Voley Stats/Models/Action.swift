@@ -228,7 +228,7 @@ let actionsByType = [
     "dig":[23, 5, 21],
     "receive":[1, 2, 3, 4, 22],
     "fault":[28, 29, 30, 31, 32, 33, 34],
-    "attack":[6, 9, 10, 11, 16, 17, 18, 34],
+    "attack":[6, 9, 10, 11, 16, 17, 34],
     "set": [24, 42],
     "free": [25, 35, 36, 37],
     "downhit": [12, 14, 19]
@@ -246,8 +246,8 @@ let actionsToStat = [
         "error":[15]
     ],
     ActionAreas.attack:[
-        "kills":[6,9,10,11],
-        "errors":[16,17,18,34]
+        "kills":[9,10,11],
+        "errors":[16,17,34]
     ]
 ]
 

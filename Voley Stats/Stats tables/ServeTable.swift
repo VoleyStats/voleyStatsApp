@@ -28,7 +28,7 @@ struct ServeTable: View {
             }.padding(3)
             ForEach(players, id:\.id){player in
                 let stat = stats.filter{s in return s.server == player && s.stage != Stages.K1.rawValue && actionsByType["serve"]!.contains(s.action)}
-                let total = stats.filter{s in return s.server == player && s.stage != Stages.K1.rawValue && s.to != 0}.count
+                let total = stat.count
                 let won = getWon(stat:stats, player:player)
                 let pts = getTotals(stat: stat)
                 if total != 0 {
@@ -47,7 +47,7 @@ struct ServeTable: View {
                 }
             }
             let stat = stats.filter{s in return s.server.id != 0 && s.stage != Stages.K1.rawValue && actionsByType["serve"]!.contains(s.action)}
-            let total = stats.filter{s in return s.server.id != 0 && s.stage != Stages.K1.rawValue && s.to != 0}.count
+            let total = stat.count
             let won = getWon(stat:stats)
             let pts = getTotals(stat: stat)
             if total != 0 {
@@ -81,6 +81,7 @@ struct ServeTable: View {
         }
     }
     func getTotals(stat: [Stat])->(Int, Int, Int, Int, Float){
+        print(stat.map{Action.find(id: $0.action)?.name})
         let s2 = stat.filter{s in return s.action==41}.count
         let s1 = stat.filter{s in return s.action==40}.count
         let op = stat.filter{s in return s.action==39}.count

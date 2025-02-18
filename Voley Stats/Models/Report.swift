@@ -163,7 +163,7 @@ class Report: PDF{
         var players = 2
         team.players().forEach{player in
             let ps = stats.filter{s in return s.player == player.id}
-            let serves = stats.filter{s in return s.server == player && s.stage != 1 && s.to != 0}
+            let serves = stats.filter{s in return s.server == player && s.stage != 1 && actionsByType["serve"]!.contains(s.action)}
             if ps.count > 0 || serves.count > 0{
                 players += 1
                 addText(x: x+5, y: y, text: "\(player.number)", font: self.fonts["body"]!, color:UIColor.black, width: 20, alignment: .left)
@@ -273,7 +273,7 @@ class Report: PDF{
         match.sets().forEach{set in
             players += 1
             let ps = stats.filter{s in return s.set == set.id && s.player != 0}
-            let serves = stats.filter{s in return s.set == set.id && s.server.id != 0 && s.stage != 1 && s.to != 0}
+            let serves = stats.filter{s in return s.set == set.id && s.server.id != 0 && s.stage != 1 && actionsByType["serve"]!.contains(s.action)}
             addText(x: x, y: y, text: "\("totals".trad()) set \(set.number)", font: self.fonts["bodyBold"]!, color:UIColor.black)
             x+=110
             var gp = 0
@@ -369,7 +369,7 @@ class Report: PDF{
         addText(x: x, y: y, text: "\("match".trad()) \("totals".trad())", font: self.fonts["bodyBold"]!, color:UIColor.black)
         x+=110
         let ps = stats.filter{s in return s.player != 0}
-        let serves = stats.filter{s in return s.server.id != 0 && s.stage != 1 && s.to != 0}
+        let serves = stats.filter{s in return s.server.id != 0 && s.stage != 1 && actionsByType["serve"]!.contains(s.action)}
         var gp = 0
 //        if self.sections.contains(.hiddenCount){
 //            gp = ps.filter{$0.to == 1}.count - ps.filter{$0.to == 2}.count
@@ -592,7 +592,7 @@ class Report: PDF{
         var players = 2
         team.players().forEach{player in
             let ps = stats.filter{s in return s.player == player.id}
-            let serves = stats.filter{s in return s.server == player && s.stage != 1 && s.to != 0}
+            let serves = stats.filter{s in return s.server == player && s.stage != 1 && actionsByType["serve"]!.contains(s.action)}
             if ps.count > 0 || serves.count > 0{
                 players += 1
                 addText(x: x+5, y: y, text: "\(player.number)", font: self.fonts["body"]!, color:UIColor.black, width: 20, alignment: .left)
@@ -699,7 +699,7 @@ class Report: PDF{
         addText(x: x, y: y, text: "\("totals".trad())", font: self.fonts["bodyBold"]!, color:UIColor.black)
         x+=110
         let ps = stats.filter{s in return s.player != 0}
-        let serves = stats.filter{s in return s.server.id != 0 && s.stage != 1 && s.to != 0}
+        let serves = stats.filter{s in return s.server.id != 0 && s.stage != 1 && actionsByType["serve"]!.contains(s.action)}
         var gp = 0
 //        if self.sections.contains(.hiddenCount){
 //            gp = ps.filter{$0.to == 1}.count - ps.filter{$0.to == 2}.count
@@ -879,7 +879,7 @@ class Report: PDF{
         var players = 2
         team.players().forEach{player in
             let ps = stats.filter{s in return s.player == player.id}
-            let serves = stats.filter{s in return s.server == player && s.stage != 1 && s.to != 0}
+            let serves = stats.filter{s in return s.server == player && s.stage != 1 && actionsByType["serve"]!.contains(s.action)}
             if ps.count > 0 || serves.count > 0{
                 players += 1
                 addText(x: x+5, y: y, text: "\(player.number)", font: self.fonts["body"]!, color:UIColor.black, width: 20, alignment: .left)
@@ -976,7 +976,7 @@ class Report: PDF{
         addText(x: x, y: y, text: "\("totals".trad())", font: self.fonts["bodyBold"]!, color:UIColor.black)
         x+=110
         let ps = stats.filter{s in return s.player != 0}
-        let serves = stats.filter{s in return s.server.id != 0 && s.stage != 1 && s.to != 0}
+        let serves = stats.filter{s in return s.server.id != 0 && s.stage != 1 && actionsByType["serve"]!.contains(s.action)}
         var gp = 0
 //        if self.sections.contains(.hiddenCount){
 //            gp = ps.filter{$0.to == 1}.count - ps.filter{$0.to == 2}.count

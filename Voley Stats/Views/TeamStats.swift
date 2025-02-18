@@ -250,8 +250,8 @@ struct TeamStats: View {
 //        }
         
         self.teamStats = team.fullStats(startDate: startDate, endDate: endDate, matches: self.matches, tournaments: self.tournaments, player: player)
-        print(startDate, endDate)
-        print(self.team.fullStats(startDate: startDate, endDate: endDate, matches: self.matches, tournaments: self.tournaments, player: player))
+//        print(startDate, endDate)
+//        print(self.team.fullStats(startDate: startDate, endDate: endDate, matches: self.matches, tournaments: self.tournaments, player: player))
         
         self.serveHistory = [
             (.blue, team.historicalStats(startDate: startDate, endDate: endDate, actions: [8], matches: self.matches, tournaments: self.tournaments, player: player), "ace"),
@@ -263,8 +263,8 @@ struct TeamStats: View {
         let rcv3 = team.historicalStats(startDate: startDate, endDate: endDate, actions: [4], matches: self.matches, tournaments: self.tournaments, player: player)
         self.receiveHistory = [(.red, err, "errors"), (.orange, rcv1, "1-"+"receive".trad()), (.yellow, rcv2, "2-"+"receive".trad()), (.green, rcv3, "3-"+"receive".trad())]
         
-        let kills = team.historicalStats(startDate: startDate, endDate: endDate, actions: [6,9,10,11], matches: self.matches, tournaments: self.tournaments, player: player)
-        let atkErr = team.historicalStats(startDate: startDate, endDate: endDate, actions: [16,17,18,34], matches: self.matches, tournaments: self.tournaments, player: player)
+        let kills = team.historicalStats(startDate: startDate, endDate: endDate, actions: [9,10,11], matches: self.matches, tournaments: self.tournaments, player: player)
+        let atkErr = team.historicalStats(startDate: startDate, endDate: endDate, actions: [16,17,34], matches: self.matches, tournaments: self.tournaments, player: player)
         self.attackHistory = [(.red, atkErr, "errors"), (.green, kills, "kills")]
         self.directions = team.stats(startDate: startDate, endDate: endDate, matches: self.matches, tournaments: self.tournaments, player: player).filter{$0.direction.contains("#")}
         self.loading = false

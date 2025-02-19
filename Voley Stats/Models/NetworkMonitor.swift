@@ -1,7 +1,8 @@
 import SwiftUI
 import Network
+import Foundation
 
-class NetworkMonitor: ObservableObject {
+final class NetworkMonitor: ObservableObject {
     private let networkMonitor = NWPathMonitor()
     private let workerQueue = DispatchQueue(label: "Monitor")
     var isConnected = false
@@ -9,11 +10,6 @@ class NetworkMonitor: ObservableObject {
     init() {
         networkMonitor.pathUpdateHandler = { path in
             self.isConnected = path.status == .satisfied
-            Task {
-                await MainActor.run {
-                    self.objectWillChange.send()
-                }
-            }
         }
         networkMonitor.start(queue: workerQueue)
     }

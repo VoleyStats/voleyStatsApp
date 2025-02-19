@@ -1,32 +1,40 @@
 import SQLite
 import SwiftUI
 
-class Tournament:Equatable {
-    var id:Int;
+class Tournament: Model {
+    typealias Expression = SQLite.Expression
+//    var id:Int;
     var name:String
     var team:Team
     var location:String
     var startDate:Date
     var endDate:Date
-    static func ==(lhs: Tournament, rhs: Tournament) -> Bool {
-        return lhs.id == rhs.id
-    }
-    init(name:String, team:Team, location:String, startDate: Date, endDate:Date){
+    var pass: Bool
+//    static func ==(lhs: Tournament, rhs: Tournament) -> Bool {
+//        return lhs.id == rhs.id
+//    }
+    init(name:String, team:Team, location:String, startDate: Date, endDate:Date, pass:Bool){
         self.name=name
         self.team=team
         self.location=location
         self.startDate=startDate
         self.endDate=endDate
-        self.id=0
+        self.pass = pass
+        super.init(id: 0)
     }
     
-    init(id:Int, name:String, team:Team, location:String, startDate: Date, endDate:Date){
+    init(id:Int, name:String, team:Team, location:String, startDate: Date, endDate:Date, pass:Bool){
         self.name=name
         self.team=team
         self.location=location
         self.startDate=startDate
         self.endDate=endDate
-        self.id=id
+        self.pass = pass
+        super.init(id: id)
+    }
+    
+    override var description : String {
+        return self.name
     }
     
     var description : String {
@@ -45,7 +53,8 @@ class Tournament:Equatable {
                     Expression<Int>("id") <- tournament.id,
                     Expression<String>("location") <- tournament.location,
                     Expression<Date>("date_start") <- tournament.startDate,
-                    Expression<Date>("date_end") <- tournament.endDate
+                    Expression<Date>("date_end") <- tournament.endDate,
+                    Expression<Bool>("pass") <- tournament.pass
                 ))
             }else{
                 let id = try database.run(Table("tournament").insert(
@@ -53,10 +62,12 @@ class Tournament:Equatable {
                     Expression<Int>("team") <- tournament.team.id,
                     Expression<String>("location") <- tournament.location,
                     Expression<Date>("date_start") <- tournament.startDate,
-                    Expression<Date>("date_end") <- tournament.endDate
+                    Expression<Date>("date_end") <- tournament.endDate,
+                    Expression<Bool>("pass") <- tournament.pass
                 ))
                 tournament.id = Int(id)
             }
+//            DB.saveToFirestore(collection: "tournaments", object: tournament)
             return tournament
         } catch {
             print("ERROR: \(error)")
@@ -75,8 +86,10 @@ class Tournament:Equatable {
                 Expression<String>("location") <- self.location,
                 Expression<Date>("date_start") <- self.startDate,
                 Expression<Date>("date_end") <- self.endDate,
+                Expression<Bool>("pass") <- self.pass
             ])
             if try database.run(update) > 0 {
+//                DB.saveToFirestore(collection: "tournaments", object: self)
                 return true
             }
         } catch {
@@ -93,6 +106,7 @@ class Tournament:Equatable {
             self.matches().forEach({$0.delete()})
             let delete = Table("tournament").filter(self.id == Expression<Int>("id")).delete()
             try database.run(delete)
+//            DB.deleteOnFirestore(collection: "tournaments", object: self)
             return true
             
         } catch {
@@ -114,7 +128,9 @@ class Tournament:Equatable {
                     team: Team.find(id: tournament[Expression<Int>("team")])!,
                     location: tournament[Expression<String>("location")],
                     startDate: tournament[Expression<Date>("date_start")],
-                    endDate: tournament[Expression<Date>("date_end")]))
+                    endDate: tournament[Expression<Date>("date_end")],
+                    pass: tournament[Expression<Bool>("pass")]
+                ))
             }
             return tournaments
         } catch {
@@ -136,12 +152,24 @@ class Tournament:Equatable {
                 team: Team.find(id: tournament[Expression<Int>("team")])!,
                 location: tournament[Expression<String>("location")],
                 startDate: tournament[Expression<Date>("date_start")],
-                endDate: tournament[Expression<Date>("date_end")])
+                endDate: tournament[Expression<Date>("date_end")],
+                pass: tournament[Expression<Bool>("pass")])
         } catch {
             print(error)
             return nil
         }
     }
+    
+    func addPass(){
+        self.pass = true
+        if self.update(){
+            self.matches().forEach{match in
+                match.pass = true
+                match.update()
+            }
+        }
+    }
+    
     func getStartDateString()->String{
         let df = DateFormatter()
         df.dateFormat = "yyyy/MM/dd"
@@ -169,7 +197,20 @@ class Tournament:Equatable {
             }
             
             for match in try database.prepare(query) {
-                matches.append(Match(opponent: match[Expression<String>("opponent")], date: match[Expression<Date>("date")], location: match[Expression<String>("location")], home: match[Expression<Bool>("home")], n_sets: match[Expression<Int>("n_sets")], n_players: match[Expression<Int>("n_players")], team: match[Expression<Int>("team")], league: match[Expression<Bool>("league")], tournament: Tournament.find(id: match[Expression<Int>("tournament")]), id: match[Expression<Int>("id")]))
+                matches.append(Match(
+                    opponent: match[Expression<String>("opponent")],
+                    date: match[Expression<Date>("date")],
+                    location: match[Expression<String>("location")],
+                    home: match[Expression<Bool>("home")],
+                    n_sets: match[Expression<Int>("n_sets")],
+                    n_players: match[Expression<Int>("n_players")],
+                    team: match[Expression<Int>("team")],
+                    league: match[Expression<Bool>("league")],
+                    code: match[Expression<String>("code")],
+                    live: match[Expression<Bool>("live")],
+                    pass: match[Expression<Bool>("pass")],
+                    tournament: Tournament.find(id: match[Expression<Int>("tournament")]),
+                    id: match[Expression<Int>("id")]))
             }
             return matches.sorted{ a, b in a.date > b.date}
         }catch{
@@ -189,7 +230,7 @@ class Tournament:Equatable {
         }
     }
     
-    func toJSON()->Dictionary<String,Any>{
+    override func toJSON()->Dictionary<String,Any>{
         return [
             "id":self.id,
             "name":self.name,

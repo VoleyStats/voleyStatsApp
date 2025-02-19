@@ -1,9 +1,11 @@
 import SQLite
 import SwiftUI
+import FirebaseFirestore
+import AppIntents
 
-
-class Match: Equatable {
-    var id:Int;
+class Match: Model {
+    typealias Expression = SQLite.Expression
+//    var id:Int;
     var opponent:String
     var date:Date
     var n_sets:Int
@@ -13,8 +15,11 @@ class Match: Equatable {
     var home: Bool
     var league:Bool
     var tournament:Tournament?
+    var code:String
+    var live:Bool
+    var pass: Bool
     
-    init(opponent:String, date:Date, location: String, home:Bool, n_sets:Int, n_players:Int, team:Int, league:Bool = false, tournament:Tournament?, id:Int?){
+    init(opponent:String, date:Date, location: String, home:Bool, n_sets:Int, n_players:Int, team:Int, league:Bool = false, code: String, live: Bool, pass: Bool, tournament:Tournament?, id:Int?){
         self.opponent=opponent
         self.date=date
         self.n_sets=n_sets
@@ -24,12 +29,15 @@ class Match: Equatable {
         self.home=home
         self.league=league
         self.tournament=tournament
-        self.id=id ?? 0
+        self.code = code
+        self.live = live
+        self.pass = pass
+        super.init(id: id ?? 0)
     }
     static func ==(lhs: Match, rhs: Match) -> Bool {
         return lhs.id == rhs.id
     }
-    var description : String {
+    override var description : String {
         return self.opponent
     }
     static func createMatch(match: Match)->Match?{
@@ -49,6 +57,9 @@ class Match: Equatable {
                     Expression<Int>("team") <- match.team,
                     Expression<Int>("tournament") <- match.tournament?.id ?? 0,
                     Expression<Bool>("league") <- match.league,
+                    Expression<String>("code") <- match.code,
+                    Expression<Bool>("live") <- match.live,
+                    Expression<Bool>("pass") <- match.pass,
                     Expression<Int>("id") <- match.id
                 ))
             }else{
@@ -61,7 +72,10 @@ class Match: Equatable {
                     Expression<Int>("n_players") <- match.n_players,
                     Expression<Int>("team") <- match.team,
                     Expression<Int>("tournament") <- match.tournament?.id ?? 0,
-                    Expression<Bool>("league") <- match.league
+                    Expression<Bool>("league") <- match.league,
+                    Expression<String>("code") <- match.code,
+                    Expression<Bool>("live") <- match.live,
+                    Expression<Bool>("pass") <- match.pass
                 ))
                 match.id = Int(id)
             }
@@ -71,6 +85,7 @@ class Match: Equatable {
         }
         return nil
     }
+    
     func update() -> Bool{
         guard let database = DB.shared.db else {
             print("no db")
@@ -87,6 +102,9 @@ class Match: Equatable {
                 Expression<Int>("n_players") <- self.n_players,
                 Expression<Int>("tournament") <- self.tournament?.id ?? 0,
                 Expression<Bool>("league") <- self.league,
+                Expression<String>("code") <- self.code,
+                Expression<Bool>("live") <- self.live,
+                Expression<Bool>("pass") <- self.pass,
                 Expression<Int>("team") <- self.team
             ])
             if try database.run(update) > 0 {
@@ -97,6 +115,7 @@ class Match: Equatable {
         }
         return false
     }
+    
     func delete() -> Bool{
         guard let database = DB.shared.db else {
             print("no db")
@@ -113,6 +132,7 @@ class Match: Equatable {
         }
         return false
     }
+    
     func sets() -> [Set]{
         var sets: [Set] = []
         do {
@@ -128,6 +148,11 @@ class Match: Equatable {
                     match: set[Expression<Int>("match")],
                     rotation: Rotation.find(id: set[Expression<Int>("rotation")]) ?? Rotation(team: Team.find(id: self.team)!),
                     liberos: [set[Expression<Int?>("libero1")], set[Expression<Int?>("libero2")]],
+                    rotationTurns: set[Expression<Int>("rotation_turns")],
+                    rotationNumber: set[Expression<Int>("rotation_number")],
+                    directionDetail: set[Expression<Bool>("direction_detail")],
+                    errorDetail: set[Expression<Bool>("error_detail")],
+                    restrictChanges: set[Expression<Bool>("restrict_changes")],
                     result: set[Expression<Int>("result")],
                     score_us: set[Expression<Int>("score_us")],
                     score_them: set[Expression<Int>("score_them")],
@@ -140,13 +165,15 @@ class Match: Equatable {
             return []
         }
     }
+    
     func result() -> (Int, Int) {
         var result = (0, 0)
-        var sets = self.sets()
+        let sets = self.sets()
         result.0 = sets.filter{$0.score_us > $0.score_them}.count
         result.1 = sets.filter{$0.score_us < $0.score_them}.count
         return result
     }
+    
     static func all() -> [Match]{
         var matches: [Match] = []
         do{
@@ -154,7 +181,20 @@ class Match: Equatable {
                 return []
             }
             for match in try database.prepare(Table("match")) {
-                matches.append(Match(opponent: match[Expression<String>("opponent")], date: match[Expression<Date>("date")], location: match[Expression<String>("location")], home: match[Expression<Bool>("home")], n_sets: match[Expression<Int>("n_sets")], n_players: match[Expression<Int>("n_players")], team: match[Expression<Int>("team")], league: match[Expression<Bool>("league")], tournament: Tournament.find(id: match[Expression<Int>("tournament")]), id: match[Expression<Int>("id")]))
+                matches.append(Match(
+                    opponent: match[Expression<String>("opponent")],
+                    date: match[Expression<Date>("date")],
+                    location: match[Expression<String>("location")],
+                    home: match[Expression<Bool>("home")],
+                    n_sets: match[Expression<Int>("n_sets")],
+                    n_players: match[Expression<Int>("n_players")],
+                    team: match[Expression<Int>("team")],
+                    league: match[Expression<Bool>("league")],
+                    code: match[Expression<String>("code")],
+                    live: match[Expression<Bool>("live")],
+                    pass: match[Expression<Bool>("pass")],
+                    tournament: Tournament.find(id: match[Expression<Int>("tournament")]),
+                    id: match[Expression<Int>("id")]))
             }
             return matches
         } catch {
@@ -162,13 +202,14 @@ class Match: Equatable {
             return []
         }
     }
+    
     func stats() -> [Stat]{
         var stats: [Stat] = []
         do{
             guard let database = DB.shared.db else {
                 return []
             }
-            for stat in try database.prepare(Table("stat").filter(Expression<Int>("match")==self.id)) {
+            for stat in try database.prepare(Table("stat").filter(Expression<Int>("match")==self.id).order(Expression<Double>("order"))) {
                 stats.append(Stat(
                     id: stat[Expression<Int>("id")],
                     match: stat[Expression<Int>("match")],
@@ -182,9 +223,14 @@ class Match: Equatable {
                     score_them: stat[Expression<Int>("score_them")],
                     to: stat[Expression<Int>("to")],
                     stage: stat[Expression<Int>("stage")],
-                    server: stat[Expression<Int>("server")],
-                player_in: stat[Expression<Int?>("player_in")],
-                                detail: stat[Expression<String>("detail")], setter: Player.find(id: stat[Expression<Int>("setter")])))
+                    server: Player.find(id: stat[Expression<Int>("server")]) ?? Player(),
+                    player_in: stat[Expression<Int?>("player_in")],
+                    detail: stat[Expression<String>("detail")],
+                    setter: Player.find(id: stat[Expression<Int>("setter")]),
+                    date: nil,
+                    order: stat[Expression<Double>("order")],
+                    direction: stat[Expression<String>("direction")]
+                ))
             }
             return stats
         } catch {
@@ -192,6 +238,7 @@ class Match: Equatable {
             return []
         }
     }
+    
     func rotations() -> [Rotation]{
         var rotations: [Rotation] = []
         do{
@@ -243,6 +290,7 @@ class Match: Equatable {
             return (0, 0)
         }
     }
+    
     func getBests()->Dictionary<String,Player?>{
         var result: Dictionary<String,Player?> = [
             "attack": nil,
@@ -360,7 +408,7 @@ class Match: Equatable {
         }
         let stats = self.stats()
         let pstats = other!.stats()
-        let serves = stats.filter{s in return s.server != 0 && s.stage == 0 && s.to != 0}
+        let serves = stats.filter{s in return s.server.id != 0 && s.stage == 0 && s.to != 0}
         let s2 = serves.filter{s in return s.action==39}.count
         let s1 = serves.filter{s in return s.action==40}.count
         let op = serves.filter{s in return s.action==41}.count
@@ -368,7 +416,7 @@ class Match: Equatable {
         let stotal = serves.count
         let srvmk = stotal > 0 ? Float(op/2 + s1 + 2*s2 + 3*s3)/Float(stotal) : 0
         
-        let pserves = pstats.filter{s in return s.server != 0 && s.stage == 0 && s.to != 0}
+        let pserves = pstats.filter{s in return s.server.id != 0 && s.stage == 0 && s.to != 0}
         let ps2 = pserves.filter{s in return s.action==39}.count
         let ps1 = pserves.filter{s in return s.action==40}.count
         let pop = pserves.filter{s in return s.action==41}.count
@@ -435,12 +483,32 @@ class Match: Equatable {
             guard let match = try database.pluck(Table("match").filter(Expression<Int>("team") == self.team && Expression<Int>("id") != self.id && Expression<Date>("date") <= self.date).order(Expression<Date>("date").desc)) else {
                 return nil
             }
-            print(match[Expression<String>("opponent")])
-            return Match(opponent: match[Expression<String>("opponent")], date: match[Expression<Date>("date")], location: match[Expression<String>("location")], home: match[Expression<Bool>("home")], n_sets: match[Expression<Int>("n_sets")], n_players: match[Expression<Int>("n_players")], team: match[Expression<Int>("team")], league: match[Expression<Bool>("league")], tournament: Tournament.find(id: match[Expression<Int>("tournament")]), id: match[Expression<Int>("id")])
+//            print(match[Expression<String>("opponent")])
+            return Match(
+                opponent: match[Expression<String>("opponent")],
+                date: match[Expression<Date>("date")],
+                location: match[Expression<String>("location")],
+                home: match[Expression<Bool>("home")],
+                n_sets: match[Expression<Int>("n_sets")],
+                n_players: match[Expression<Int>("n_players")],
+                team: match[Expression<Int>("team")],
+                league: match[Expression<Bool>("league")],
+                code: match[Expression<String>("code")],
+                live: match[Expression<Bool>("live")],
+                pass: match[Expression<Bool>("pass")],
+                tournament: Tournament.find(id: match[Expression<Int>("tournament")]),
+                id: match[Expression<Int>("id")])
         } catch {
             print(error)
             return nil
         }
+    }
+    
+    func shareLive(){
+        let db = Firestore.firestore()
+        let ref = db.collection("live_matches").addDocument(data: toJSON())
+        self.code = ref.documentID
+        self.update()
     }
     
     func exportStats() -> String {
@@ -461,6 +529,7 @@ class Match: Equatable {
         
         return csvString
     }
+    
     static func find(id: Int) -> Match?{
         do{
             guard let database = DB.shared.db else {
@@ -469,21 +538,36 @@ class Match: Equatable {
             guard let match = try database.pluck(Table("match").filter(Expression<Int>("id") == id)) else {
                 return nil
             }
-            return Match(opponent: match[Expression<String>("opponent")], date: match[Expression<Date>("date")], location: match[Expression<String>("location")], home: match[Expression<Bool>("home")], n_sets: match[Expression<Int>("n_sets")], n_players: match[Expression<Int>("n_players")], team: match[Expression<Int>("team")], league: match[Expression<Bool>("league")], tournament: Tournament.find(id: match[Expression<Int>("tournament")]), id: match[Expression<Int>("id")])
+            return Match(
+                opponent: match[Expression<String>("opponent")],
+                date: match[Expression<Date>("date")],
+                location: match[Expression<String>("location")],
+                home: match[Expression<Bool>("home")],
+                n_sets: match[Expression<Int>("n_sets")],
+                n_players: match[Expression<Int>("n_players")],
+                team: match[Expression<Int>("team")],
+                league: match[Expression<Bool>("league")],
+                code: match[Expression<String>("code")],
+                live: match[Expression<Bool>("live")],
+                pass: match[Expression<Bool>("pass")],
+                tournament: Tournament.find(id: match[Expression<Int>("tournament")]),
+                id: match[Expression<Int>("id")])
         } catch {
             print(error)
             return nil
         }
     }
+    
     func getDate() -> String {
         let df = DateFormatter()
         df.dateFormat = "dd/MM/yyyy HH.mm"
         return df.string(from: self.date)
     }
+    
     func getStatsString(set: Set?, player: Player, stats: [Stat]) -> String {
         let ps = stats.filter{s in return s.player == player.id}
         //serve stats
-        let serves = stats.filter{s in return s.server == player.id && s.stage == 0 && s.to != 0}
+        let serves = stats.filter{s in return s.server == player && s.stage == 0 && s.to != 0}
         let serveError = serves.filter{s in return [15, 32].contains(s.action)}.count
         let aces = serves.filter{s in return s.action==8}.count
         let pg = serves.filter{s in return s.to == 1}.count
@@ -521,6 +605,7 @@ class Match: Equatable {
         let freeRate = frees.count == 0 ? "0" : String(format: "%.2f", Float(f1 + 2*f2 + 3*f3)/Float(frees.count))
         return "\(set != nil ? String(set!.number) : "partido"),\(player.name),\(serves.count),\(serveError),\(aces),\(pg),\(servePerc),\(blocks.count),\(blocked),\(blockError),\(receives.count),\(rcvErrors),\(s1),\(s2),\(s3),\(rcvRate),\(attacks.count),\(kills),\(killErrors),\(killPerc),\(digs.count),\(digError),\(frees.count),\(freeError),\(f1),\(f2),\(f3),\(freeRate)\n"
     }
+    
     static func truncate(){
         do{
             guard let database = DB.shared.db else {
@@ -533,20 +618,88 @@ class Match: Equatable {
         }
     }
     
-    func toJSON()->Dictionary<String,Any>{
+    override func toJSON()->Dictionary<String,Any>{
         return [
             "id":self.id,
             "opponent":self.opponent,
             "date":self.date.timeIntervalSince1970,
             "n_sets":self.n_sets,
             "n_players":self.n_players,
-            "team":self.team,
+            "team":Team.find(id: self.team)?.toJSON(),
             "location":self.location ,
             "home":self.home,
             "league":self.league,
-            "tournament":self.tournament?.id ?? 0
-            
+            "tournament":Tournament.find(id: self.tournament?.id ?? 0)?.toJSON(),
+            "code":self.code,
+            "live":self.live,
+            "pass":self.pass
         ]
     }
 }
 
+
+struct MatchEntity: AppEntity{
+    let id: String
+    let dbID: Int
+    let name:String
+    let date:Date
+    @Property(title: "Team id")
+    var teamId: Int
+    
+    init(id: String, dbID: Int, name:String, date: Date, teamId:Int){
+        self.id = id
+        self.dbID = dbID
+        self.name = name
+        self.date = date
+        self.teamId = teamId
+    }
+    
+    static var typeDisplayRepresentation: TypeDisplayRepresentation = "Match"
+      var displayRepresentation: DisplayRepresentation {
+          DisplayRepresentation(title: "\(name)", subtitle: "\(date.formatted(date: .numeric, time: .omitted))")
+      }
+
+    static var defaultQuery = MatchQuery()
+
+    private struct MatchOptionsProvider: DynamicOptionsProvider {
+        func results() async throws -> [MatchEntity] {
+            Match.all().map{MatchEntity(id: $0.id.description, dbID: $0.id, name: $0.opponent, date: $0.date, teamId: $0.team)}
+        }
+    }
+}
+
+struct MatchQuery: EntityQuery{
+    typealias Entity = MatchEntity
+    
+    func entities(for identifiers: [MatchEntity.ID]) async throws -> [MatchEntity] {
+        return Match.all().map{MatchEntity(id: $0.id.description, dbID: $0.id, name: $0.opponent, date: $0.date, teamId: $0.team)}.filter { identifiers.contains($0.id) }
+    }
+
+    func suggestedEntities() async throws -> [MatchEntity] {
+        return Match.all().map{MatchEntity(id: $0.id.description, dbID: $0.id, name: $0.opponent, date: $0.date, teamId: $0.team)}
+    }
+    
+    
+    
+}
+
+extension MatchQuery: EntityPropertyQuery{
+    static var properties = QueryProperties{
+        Property(\MatchEntity.$teamId){
+            EqualToComparator{id in { match in match.teamId == id}}
+        }
+    }
+    
+    static var sortingOptions = SortingOptions {
+        SortableBy(\MatchEntity.$teamId)
+      }
+    
+    func entities(
+        matching comparators: [(MatchEntity) -> Bool],
+        mode: ComparatorMode,
+        sortedBy: [Sort<MatchEntity>],
+        limit: Int?
+      ) async throws -> [MatchEntity] {
+          Match.all().map{MatchEntity(id: $0.id.description, dbID: $0.id, name: $0.opponent, date: $0.date, teamId: $0.team)}.filter { match in comparators.allSatisfy { comparator in comparator(match) } }
+      }
+}

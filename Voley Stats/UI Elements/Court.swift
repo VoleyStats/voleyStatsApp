@@ -147,11 +147,11 @@ struct Court: View{
                         showModal.toggle()
                     }){
                         Image(systemName: "multiply")
-                    }.padding().font(.title)
+                    }.padding().font(.title3)
                 }.frame(maxWidth: .infinity, alignment: .trailing)
-                Text("pick.player".trad()).font(.title)
+                Text("pick.player".trad()).font(.title3)
                 ScrollView(.vertical){
-                    let p = teamPlayers.filter{!rotation.contains($0)}.sorted(by: {$0.number < $1.number})
+                    let p = teamPlayers.filter{!rotation.contains($0) && $0.position != .libero}.sorted(by: {$0.number < $1.number})
                     VStack{
                         if rotation[rotationIdx] != nil{
                             ZStack{
@@ -194,8 +194,9 @@ struct Court: View{
                             
                         }.padding(.vertical).frame(maxWidth: .infinity)
                     }
-                }.padding().frame(maxWidth: .infinity)
-            }.background(Color.swatch.dark.high) : nil).clipShape(RoundedRectangle(cornerRadius: 8))
+                }.padding(.horizontal).frame(maxWidth: .infinity)
+            }.background(Color.swatch.dark.high) : nil)
+            .clipShape(RoundedRectangle(cornerRadius: 8))
             .frame(maxWidth: width, maxHeight: height)
     }
     @ViewBuilder

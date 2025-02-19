@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyAxyT3qVBy6ExD4WBTryZSssXMj853OThs</string>
+	<key>GCM_SENDER_ID</key>
+	<string>734080847541</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>pureza.Voley-Stats</string>
+	<key>PROJECT_ID</key>
+	<string>voleystats</string>
+	<key>STORAGE_BUCKET</key>
+	<string>voleystats.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:734080847541:ios:0e569781db639deefd38fc</string>
+	<key>ADMOB_APP_ID</key>
+	<string>ca-app-pub-8540250262664325~8900306263</string>
+</dict>
+</plist>

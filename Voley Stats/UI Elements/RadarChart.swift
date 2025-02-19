@@ -9,7 +9,7 @@ import SwiftUI
 
 struct RadarChart: Shape{
     var maxValue: Int
-    var dataPoints: [(String, Float)]
+    @Binding var dataPoints: [(String, Float)]
     func path(in rect: CGRect)-> Path {
             // ensure we have at least two corners, otherwise send back an empty path
             guard dataPoints.count >= 2 else { return Path() }
@@ -89,13 +89,13 @@ struct RadarChartView: View{
     var maxValue: Int
     @Binding var dataPoints: [(String, Float)]
     var size: Int
-//    init(maxValue: Int, dataPoints: [(String, Float)], size: Int){
-//        self.maxValue = maxValue
-//        self.size = size - 100
-//        self.dataPoints = dataPoints
-//        
-////        print(dataPoints)
-//    }
+    init(maxValue: Int, dataPoints: Binding<[(String, Float)]>, size: Int){
+        self.maxValue = maxValue
+        self.size = size - 100
+        self._dataPoints = dataPoints
+        
+//        print(dataPoints.wrappedValue)
+    }
     var body: some View{
         ZStack{
             let reduce:Int = size/maxValue
@@ -108,9 +108,9 @@ struct RadarChartView: View{
 
                 // calculate how much we need to move with each star corner
                 let angleAdjustment = .pi * 2 / Double(dp.count )
-                ForEach( 0..<dp.count, id:\.self ) {i in
+                ForEach( 0..<self.dataPoints.count, id:\.self ) {i in
                         // figure out the location of this point
-                    let dp = dp[i]
+                    let dp = self.dataPoints[i]
                         let sinAngle = sin(currentAngle+(angleAdjustment*Double(i)))
                         let cosAngle = cos(currentAngle+(angleAdjustment*Double(i)))
                     Text("\(dp.0)").position(CGPoint(x: (center.x*cosAngle)+center.x, y: (center.y * sinAngle)+center.y))
@@ -118,10 +118,10 @@ struct RadarChartView: View{
                     }
             }.padding()
             ForEach(0..<maxValue, id:\.self){i in
-                Polygon(corners: dp.count > 0 ? dp.count : 5).stroke(.white, lineWidth: i == 0 ? 3 : 1).frame(width: CGFloat(size-(reduce*i)), height: CGFloat(size-(reduce*i)))
+                Polygon(corners: self.dataPoints.count > 0 ? self.dataPoints.count : 5).stroke(.white, lineWidth: i == 0 ? 3 : 1).frame(width: CGFloat(size-(reduce*i)), height: CGFloat(size-(reduce*i)))
             }
             Circle().fill(.white).frame(width: 5, height: 5)
-            RadarChart(maxValue: maxValue, dataPoints: self.dataPoints).fill(.cyan.opacity(0.6)).frame(width: CGFloat(size), height: CGFloat(size))
+            RadarChart(maxValue: maxValue, dataPoints: self.$dataPoints).fill(.cyan.opacity(0.6)).frame(width: CGFloat(size), height: CGFloat(size))
         }
     }
 }

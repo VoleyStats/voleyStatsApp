@@ -7,12 +7,14 @@ struct Login: View {
     var body: some View {
         VStack{
 //            Text("player.new".trad()).font(.title)
+            Image("logo").resizable().aspectRatio(contentMode: .fit).frame(width: 300)
             VStack{
+                Text(viewModel.login ? "login".trad() : "sign.up".trad()).font(.largeTitle).padding()
                 Section{
                     VStack{
                         VStack(alignment: .leading){
                             Text("email".trad()).font(.caption)
-                            TextField("email".trad(), text: $viewModel.email).textFieldStyle(TextFieldDark()).border(viewModel.errorCode == .emailError ? .red : .clear)
+                            TextField("email".trad(), text: $viewModel.email).textFieldStyle(TextFieldDark()).textInputAutocapitalization(.never).border(viewModel.errorCode == .emailError ? .red : .clear)
                             if viewModel.errorCode == .emailError{
                                 Text(viewModel.errorMsg!).font(.caption).foregroundStyle(.red)
                             }
@@ -20,16 +22,16 @@ struct Login: View {
                         if !viewModel.login{
                             VStack(alignment: .leading){
                                 Text("username".trad()).font(.caption)
-                                TextField("username".trad(), text: $viewModel.userName).textFieldStyle(TextFieldDark())
+                                TextField("username".trad(), text: $viewModel.userName).textFieldStyle(TextFieldDark()).textInputAutocapitalization(.never)
                             }.padding(.bottom).padding(.horizontal)
                         }
                         VStack(alignment: .leading){
                             Text("password".trad()).font(.caption)
                             ZStack{
                                 if viewModel.secured {
-                                    SecureField("password".trad(), text: $viewModel.password).textFieldStyle(TextFieldDark()).border(viewModel.errorCode == .passwordError ? .red : .clear)
+                                    SecureField("password".trad(), text: $viewModel.password).textFieldStyle(TextFieldDark()).textInputAutocapitalization(.never).border(viewModel.errorCode == .passwordError ? .red : .clear)
                                 }else{
-                                    TextField("password".trad(), text: $viewModel.password).textFieldStyle(TextFieldDark()).border(viewModel.errorCode == .passwordError ? .red : .clear)
+                                    TextField("password".trad(), text: $viewModel.password).textFieldStyle(TextFieldDark()).textInputAutocapitalization(.never).border(viewModel.errorCode == .passwordError ? .red : .clear)
                                 }
                                 Image(systemName: viewModel.secured ? "eye.slash" : "eye").padding().frame(maxWidth: .infinity, alignment: .trailing).onTapGesture{
                                     viewModel.secured.toggle()
@@ -44,9 +46,9 @@ struct Login: View {
                                 Text("verify.password".trad()).font(.caption)
                                 ZStack{
                                     if viewModel.securedRepeat {
-                                        SecureField("verify.password".trad(), text: $viewModel.passwordRepeat).textFieldStyle(TextFieldDark()).border(viewModel.password != viewModel.passwordRepeat ? .red : .clear)
+                                        SecureField("verify.password".trad(), text: $viewModel.passwordRepeat).textFieldStyle(TextFieldDark()).textInputAutocapitalization(.never).border(viewModel.password != viewModel.passwordRepeat ? .red : .clear)
                                     }else{
-                                        TextField("verify.password".trad(), text: $viewModel.passwordRepeat).textFieldStyle(TextFieldDark()).border(viewModel.password != viewModel.passwordRepeat ? .red : .clear)
+                                        TextField("verify.password".trad(), text: $viewModel.passwordRepeat).textFieldStyle(TextFieldDark()).textInputAutocapitalization(.never).border(viewModel.password != viewModel.passwordRepeat ? .red : .clear)
                                     }
                                     Image(systemName: viewModel.securedRepeat ? "eye.slash" : "eye").padding().frame(maxWidth: .infinity, alignment: .trailing).onTapGesture{
                                         viewModel.securedRepeat.toggle()
@@ -57,37 +59,46 @@ struct Login: View {
                                 }
                             }.padding(.top).padding(.horizontal)
                         }
+                        if viewModel.errorCode == .unknownError{
+                            Text(viewModel.errorMsg!).font(.footnote).foregroundStyle(.red)
+                        }
                         
-                    }.padding().background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8))
-                }
+                    }
+//                    .padding().background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8))
+                }.padding(.bottom)
                 Button(action:{
                     viewModel.saving.toggle()
+//                    viewModel.errorCode = nil
+//                    viewModel.errorMsg = nil
                     if viewModel.login{
                         Auth.auth().signIn(withEmail: viewModel.email.lowercased(), password: viewModel.password){ res, err in
-                            if err != nil {
-                                let errorCode = AuthErrorCode(_nsError: err! as NSError).code
+                            if let err = err as NSError? {
+                                let errorCode = AuthErrorCode.Code(rawValue: err.code)!
                                 viewModel.checkError(code: errorCode)
+                                viewModel.saving.toggle()
                             }
                             if res != nil {
-                                
                                 self.presentationMode.wrappedValue.dismiss()
                             }
                         }
                     }else{
                         if viewModel.password == viewModel.passwordRepeat{
                             Auth.auth().createUser(withEmail: viewModel.email, password: viewModel.password){ res, err in
-                                if err != nil {
-                                    let errorCode = AuthErrorCode(_nsError: err! as NSError).code
+                                if let err = err as NSError? {
+                                    let errorCode = AuthErrorCode.Code(rawValue: err.code)!
                                     viewModel.checkError(code: errorCode)
+                                    viewModel.saving.toggle()
                                 }
                                 if res != nil {
                                     let changereq = Auth.auth().currentUser?.createProfileChangeRequest()
                                     changereq?.displayName = viewModel.userName
                                     changereq?.commitChanges{error in
-                                        if error != nil{
-                                            let errorCode = AuthErrorCode(_nsError: err! as NSError).code
-                                            viewModel.checkError(code: errorCode)
+                                        if let error = error as NSError?{
+                                            let errCode = AuthErrorCode.Code(rawValue: error.code)!
+                                            viewModel.checkError(code: errCode)
+                                            viewModel.saving.toggle()
                                         }else {
+                                            UserDefaults.standard.set(String(UnicodeScalar(Array(0x1F300...0x1F3F0).randomElement()!)!), forKey: "avatar")
                                             self.presentationMode.wrappedValue.dismiss()
                                         }
                                     }
@@ -101,19 +112,31 @@ struct Login: View {
                     }
                 }){
                     if viewModel.saving{
-                        ProgressView().progressViewStyle(CircularProgressViewStyle()).tint(.cyan).frame(maxWidth: .infinity, alignment: .center)
+                        ProgressView().progressViewStyle(CircularProgressViewStyle()).tint(.white).frame(maxWidth: .infinity, alignment: .center)
                     }else{
                         Text(viewModel.login ? "login".trad() : "sign.up".trad()).frame(maxWidth: .infinity, alignment: .center)
                     }
-                }.disabled(!viewModel.verify()).padding().background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8)).foregroundColor(!viewModel.verify() ? .gray : .cyan)
+                }.disabled(!viewModel.verify()).padding().background(viewModel.verify() ? .cyan : .cyan.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8)).foregroundColor(!viewModel.verify() ? .gray : .white).padding()
+                
                 
             }
             .padding()
-            .frame(maxHeight: .infinity, alignment: .top)
-            
+            .background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 15))
+            .padding()
+            .frame(maxWidth: 600)
+//            .padding()
+            HStack{
+                Text(viewModel.login ? "no.account.yet".trad() : "account.yet".trad())
+                Text(viewModel.login ? "sign.up".trad() : "login".trad()).font(.body.bold()).foregroundStyle(.cyan).onTapGesture {
+                    viewModel.login.toggle()
+                }
+            }.padding()
         
-        }.background(Color.swatch.dark.high)
-            .navigationTitle(viewModel.login ? "login".trad() : "sign.up".trad()).foregroundColor(.white)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color.swatch.dark.high)
+//            .navigationTitle(viewModel.login ? "login".trad() : "sign.up".trad())
+        .foregroundColor(.white)
     }
 }
 
@@ -127,7 +150,7 @@ class LoginModel: ObservableObject{
     @Published var securedRepeat: Bool = true
     @Published var userName: String = ""
     @Published var saving: Bool = false
-    var login:Bool
+    @Published var login:Bool
     init(login:Bool){
         self.login = login
     }
@@ -149,6 +172,9 @@ class LoginModel: ObservableObject{
         case AuthErrorCode.invalidEmail:
             self.errorCode = .emailError
             self.errorMsg = "email.format".trad()
+        case AuthErrorCode.weakPassword:
+            self.errorCode = .passwordError
+            self.errorMsg = "password.weak".trad()
         default:
             self.errorCode = .unknownError
             self.errorMsg = "unknown.error".trad()
@@ -162,5 +188,9 @@ enum UserForm {
     case matchError
     case unknownError
 }
+
+//#Preview {
+//    Login(viewModel: LoginModel(login: true))
+//}
 
 

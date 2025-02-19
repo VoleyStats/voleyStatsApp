@@ -2,8 +2,9 @@ import SQLite
 import SwiftUI
 import CoreImage.CIFilterBuiltins
 
-class Rotation: Equatable {
-    var id:Int;
+class Rotation: Model {
+    typealias Expression = SQLite.Expression
+//    var id:Int;
     var name:String?
     var team: Team
     var one:Player?
@@ -23,7 +24,7 @@ class Rotation: Equatable {
         self.four = four
         self.five = five
         self.six = six
-        self.id=0
+        super.init(id: 0)
     }
     
     init(team:Team, rotationArray:[Player?]){
@@ -34,7 +35,7 @@ class Rotation: Equatable {
         self.four = rotationArray[3]
         self.five = rotationArray[4]
         self.six = rotationArray[5]
-        self.id=0
+        super.init(id: 0)
     }
     
     init(team:Team, one:Player, two:Player, three: Player, four:Player){
@@ -43,7 +44,7 @@ class Rotation: Equatable {
         self.two = two
         self.three = three
         self.four = four
-        self.id=0
+        super.init(id: 0)
     }
     
     init(team:Team, one:Player, two:Player, three: Player){
@@ -51,16 +52,16 @@ class Rotation: Equatable {
         self.one = one
         self.two = two
         self.three = three
-        self.id=0
+        super.init(id: 0)
     }
     
     init(team:Team){
         self.team=team
-        self.id=0
+        super.init(id: 0)
     }
     init(){
-        self.team=Team(name: "", organization: "", category: "", gender: "", color: .red, id: 0)
-        self.id=0
+        self.team=Team(name: "", organization: "", category: "", gender: "", color: .red, order: 0, pass: false, id: 0)
+        super.init(id: 0)
     }
     
     init(id:Int, name:String?, team:Team, one:Player?, two:Player?, three: Player?, four:Player?, five:Player?, six: Player?){
@@ -72,25 +73,25 @@ class Rotation: Equatable {
         self.four = four
         self.five = five
         self.six = six
-        self.id=id
+        super.init(id: id)
     }
     
-    var description : String {
+    override var description : String {
         var text: String = self.get(rotate: 0).filter{$0 != nil}.reduce("["){ $0 + $1!.name + ", " }
         return text.prefix(text.count-2) + "]"
     }
     
-    func toJSON()->Dictionary<String, Any>{
+    override func toJSON()->Dictionary<String, Any>{
         return [
             "id":self.id,
             "name": self.name,
             "team": self.team.id,
-            "one": self.one?.id ?? 0,
-            "two": self.two?.id ?? 0,
-            "three": self.three?.id ?? 0,
-            "four": self.four?.id ?? 0,
-            "five": self.five?.id ?? 0,
-            "six": self.six?.id ?? 0
+            "one": Player.find(id: self.one?.id ?? 0)?.toJSON(),
+            "two": Player.find(id: self.two?.id ?? 0)?.toJSON(),
+            "three": Player.find(id: self.three?.id ?? 0)?.toJSON(),
+            "four": Player.find(id: self.four?.id ?? 0)?.toJSON(),
+            "five": Player.find(id: self.five?.id ?? 0)?.toJSON(),
+            "six": Player.find(id: self.six?.id ?? 0)?.toJSON()
         ]
     }
     
@@ -128,6 +129,7 @@ class Rotation: Equatable {
                     ))
                     rotation.id = Int(id)
                 }
+//                DB.saveToFirestore(collection: "rotations", object: rotation)
             }
             return (0, rotation)
         } catch {
@@ -153,6 +155,7 @@ class Rotation: Equatable {
                 Expression<Int>("6") <- self.six?.id ?? 0
             ])
             if try database.run(update) > 0 {
+//                DB.saveToFirestore(collection: "rotations", object: self)
                 return true
             }
         } catch {
@@ -168,6 +171,7 @@ class Rotation: Equatable {
         do {
             let delete = Table("rotation").filter(self.id == Expression<Int>("id")).delete()
             try database.run(delete)
+//            DB.deleteOnFirestore(collection: "rotations", object: self)
             return true
             
         } catch {
@@ -255,13 +259,23 @@ class Rotation: Equatable {
                 return nil
             }
             let search = Rotation(team: team, one: one, two: two, three: three, four: four, five: five, six: six)
+//            print("search:", search.description)
             var rotation:Row? = nil
             var rotate: Int = 0
             for r in 0..<search.countPlayers(){
                 var rotArray = search.get(rotate: r, inverse: false)
-                rotation = try database.pluck(Table("rotation").filter(Expression<Int>("1") == rotArray[0]?.id ?? 0 && Expression<Int>("2") == rotArray[1]?.id ?? 0 && Expression<Int>("3") == rotArray[2]?.id ?? 0 && Expression<Int>("4") == rotArray[3]?.id ?? 0 && Expression<Int>("5") == rotArray[4]?.id ?? 0 && Expression<Int>("6") == rotArray[5]?.id ?? 0 && Expression<Int>("team") == team.id))
+//                print(r, rotArray.map{$0?.name})
+                rotation = try database.pluck(Table("rotation").filter(
+                    Expression<Int>("1") == rotArray[0]?.id ?? 0 &&
+                    Expression<Int>("2") == rotArray[1]?.id ?? 0 &&
+                    Expression<Int>("3") == rotArray[2]?.id ?? 0 &&
+                    Expression<Int>("4") == rotArray[3]?.id ?? 0 &&
+                    Expression<Int>("5") == rotArray[4]?.id ?? 0 &&
+                    Expression<Int>("6") == rotArray[5]?.id ?? 0 &&
+                    Expression<Int>("team") == team.id
+                ))
                 if rotation != nil {
-                    rotate = r
+                    rotate = r == 0 ? 0 : 6-r
                     break
                 }
             }
@@ -308,14 +322,8 @@ class Rotation: Equatable {
         if newRotation.six == player{
             newRotation.six = change
         }
-//        let rotArray = newRotation.get(rotate: rotationTurns)
-//        let exists = Rotation.exists(team: self.team, one: rotArray[0], two: rotArray[1], three: rotArray[2], four: rotArray[3], five: rotArray[4], six: rotArray[5])
-//        if exists != nil {
-//            return exists!
-//        }
-        newRotation.id = 0
-        newRotation.name = nil
-        let new = Rotation.create(rotation: newRotation)
+        let rotArray = newRotation.get(rotate: rotationTurns)
+        let new = Rotation.create(rotation: Rotation(team: self.team, one: rotArray[0], two: rotArray[1], three: rotArray[2], four: rotArray[3], five: rotArray[4], six: rotArray[5]))
         return new
     }
     static func truncate(){
@@ -331,15 +339,22 @@ class Rotation: Equatable {
     }
     func checkSetters(gameMode: String, rotationTurns: Int)->Bool{
         let rotation = self.get(rotate: rotationTurns)
-        let front = [rotation[1],rotation[2],rotation[3]].filter{$0?.position == .setter}.count
-        let back = [rotation[0],rotation[4],rotation[5]].filter{$0?.position == .setter}.count
         if gameMode == "5-1"{
-            return front+back >= 1
+            return rotation.filter{$0?.position == .setter}.count >= 1
         }else if gameMode == "6-2" || gameMode == "4-2"{
-            return back == 1 && front == 1
+            if rotation[1]?.position == .setter && rotation[4]?.position == .setter{
+                return true
+            }
+            if rotation[2]?.position == .setter && rotation[5]?.position == .setter{
+                return true
+            }
+            if rotation[3]?.position == .setter && rotation[0]?.position == .setter{
+                return true
+            }
         }else{
             return true
         }
+        return false
     }
     func getSetter(gameMode: String, rotationTurns: Int) -> Player{
         let rotation = self.get(rotate: rotationTurns)
@@ -347,9 +362,29 @@ class Rotation: Equatable {
         case "6-6":
             return self.four == nil ? rotation[1]! : rotation[2]!
         case "4-2":
-            return [rotation[1], rotation[2], rotation[3]].filter{$0?.position == .setter}.first!!
+            if rotation[1]?.position == .setter && rotation[4]?.position == .setter{
+                return rotation[1]!
+            }
+            if rotation[2]?.position == .setter && rotation[5]?.position == .setter{
+                return rotation[2]!
+            }
+            if rotation[3]?.position == .setter && rotation[0]?.position == .setter{
+                return rotation[3]!
+            }
+            return self.two!
+//            return [rotation[1], rotation[2], rotation[3]].filter{$0?.position == .setter}.first!!
         case "6-2":
-            return [rotation[0], rotation[4], rotation[5]].filter{$0?.position == .setter}.first!!
+            if rotation[1]?.position == .setter && rotation[4]?.position == .setter{
+                return rotation[4]!
+            }
+            if rotation[2]?.position == .setter && rotation[5]?.position == .setter{
+                return rotation[5]!
+            }
+            if rotation[3]?.position == .setter && rotation[0]?.position == .setter{
+                return rotation[0]!
+            }
+            return self.two!
+//            return [rotation[0], rotation[4], rotation[5]].filter{$0?.position == .setter}.first!!
         case "5-1":
             return rotation.filter{$0?.position == .setter}.first!!
         default:
@@ -359,8 +394,8 @@ class Rotation: Equatable {
     func countPlayers()->Int{
         return self.get().filter{$0 != nil}.count
     }
-    func genrateQR(set: Set, teamSide: String) -> Image{
-        var data = [team.name, teamSide, 
+    func genrateQR(set: Set, teamSide: String, teamCode: String) -> Image{
+        var data = [teamCode, teamSide,
                     "{\"ZN1\":\"\(self.one!.number)\",\"ZN2\":\"\(self.two!.number)\",\"ZN3\":\"\(self.three!.number)\",\"ZN4\":\"\(self.four!.number)\",\"ZN5\":\"\(self.five != nil ? String(self.five!.number) : "null")\",\"ZN6\":\"\(self.six != nil ? String(self.six!.number) : "null")\"}",
                     "\(set.number)"]
         let context = CIContext()

@@ -11,7 +11,7 @@ struct CollapsibleListElement<Content: View>: View{
             RoundedRectangle(cornerRadius: 15, style: .continuous).fill(.white.opacity(0.1)).shadow(color: .black.opacity(0.2), radius: 5, x: 5, y: 5)
             VStack{
                 HStack{
-                    Text(title).font(.body.weight(.heavy))
+                    Text(title).font(.body.weight(.heavy)).padding(.horizontal)
                         .frame(maxWidth: .infinity, alignment: .leading)
                     Button(action:{
                         withAnimation{

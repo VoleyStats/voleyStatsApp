@@ -225,7 +225,24 @@ class Team: Model {
     }
     
     func activePlayers() -> [Player]{
+        
             return self.players().filter{$0.active == 1}
+    }
+    
+    func countPlayers() -> (Int, Int) {
+        do{
+            guard let database = DB.shared.db else {
+                return (0,0)
+            }
+            let activeOwnPlayers = try database.scalar(Table("player").filter(Expression<Int>("team")==self.id && Expression<Int>("active")==1).count)
+            let activeSharedPlayers = try database.scalar(Table("player_teams").filter(Expression<Int>("team")==self.id && Expression<Int>("active")==1).count)
+            let inactiveOwnPlayers = try database.scalar(Table("player").filter(Expression<Int>("team")==self.id && Expression<Int>("active")==0).count)
+            let inactiveSharedPlayers = try database.scalar(Table("player_teams").filter(Expression<Int>("team")==self.id && Expression<Int>("active")==0).count)
+            return (activeOwnPlayers+activeSharedPlayers, inactiveOwnPlayers+inactiveSharedPlayers)
+        } catch {
+            print(error)
+            return (0,0)
+        }
     }
     
     static func all() -> [Team]{

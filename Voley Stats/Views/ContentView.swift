@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ContentView:View{
     @State var network = NetworkMonitor()
-    @State var path = PathManager()
+    @StateObject var path = PathManager()
     @State var activeSeason:String? = UserDefaults.standard.string(forKey: "season")
     @State var seasonName: String = "\("season".trad()) \(Date.now.formatted(.dateTime.year()))-\(Calendar.current.date(byAdding: .year, value: 1, to: Date.init())?.formatted(.dateTime.year()) ?? Date.now.formatted(.dateTime.year()))"
 //    init(){

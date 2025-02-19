@@ -69,6 +69,8 @@ struct TeamData: View {
                                     }
                                 }.padding()
                             }
+                            let playerCount = viewModel.team?.countPlayers() ?? (0,0)
+                            Text("\(playerCount.0) \("active.player".trad()), \(playerCount.1) \("inactive.player".trad())").font(.caption)
                             Divider().background(Color.gray)
                             NavigationLink(destination: PlayerData(viewModel: PlayerDataModel(team: viewModel.team!, player: nil))){
                                 Image(systemName: "plus")

@@ -186,7 +186,11 @@ struct ListTeams: View {
         
         .onAppear{
             viewModel.getAllTeams()
-//            viewModel.tab = "matches".trad()
+            viewModel.tab = "matches".trad()
+            viewModel.league = false
+            viewModel.tournament = nil
+            viewModel.showTournaments = false
+            viewModel.min = false
             if !viewModel.allTeams.isEmpty && viewModel.selected < viewModel.allTeams.count{
 //                viewModel.getScouts(team: viewModel.team())
                 viewModel.getMatchesElements(team: viewModel.team())
@@ -275,10 +279,6 @@ struct ListTeams: View {
         .background(
             Color.swatch.dark.high
         )
-        .id(viewModel.tutorial)
-        .onChange(of: viewModel.tutorial){
-            print(viewModel.tutorial)
-        }
         .foregroundColor(.white)
         .preferredColorScheme(.dark)
         

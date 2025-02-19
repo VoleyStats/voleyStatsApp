@@ -78,7 +78,6 @@ struct Login: View {
                                 viewModel.saving.toggle()
                             }
                             if res != nil {
-                                print(Auth.auth().currentUser?.uid)
                                 self.presentationMode.wrappedValue.dismiss()
                             }
                         }

@@ -149,12 +149,43 @@ struct StatsView: View {
         .overlay(viewModel.quickActionsSlider && !viewModel.tutorial ?
                  ZStack{
                     Rectangle().fill(Color.swatch.dark.mid.opacity(0.5)).ignoresSafeArea()
-                    PresentationSlider(title: "quick.action.tips".trad(),slides:[
-                        Slide(title: "slide.swipeup.title".trad(), subtitle: "slide.swipeup.text".trad(), image: Image("slide_export")),
-                        Slide(title: "slide.swipedown.title".trad(), subtitle: "slide.swipedown.text".trad().trad(), image: Image("slide_stats")),
-                        Slide(title: "slide.doubletap.title".trad(), subtitle: "slide.doubletap.text".trad(), image: Image("slide_fill")),
-                        Slide(title: "slide.autosave.title".trad(), subtitle: "slide.autosave.text", image: Image("slide_backup"))
-                    ], cta_text: "start.capturing".trad(), cta_action: {viewModel.quickActionsSlider.toggle()}, skip_action: {viewModel.quickActionsSlider.toggle()}).frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center).padding()
+            VStack{
+                Image(systemName: "multiply").font(.title2).frame(maxWidth: .infinity, alignment: .trailing).padding().onTapGesture{
+                    viewModel.quickActionsSlider.toggle()
+                }
+                Text("quick.actions.tip".trad()).font(.title)
+                HStack{
+                    Image(systemName: "hand.point.up.left.fill").font(.system(size: 60)).rotationEffect(.degrees(-90)).overlay(alignment: .bottomLeading){
+                        Image(systemName: "arrow.down").font(.title2).foregroundStyle(.cyan).offset(x: -10, y: 10)
+                    }.padding()
+                    Text("capture.swipe.down".trad()).font(.title3)
+                }.padding()
+                HStack{
+                    Text("capture.swipe.up".trad()).font(.title3)
+                    Image(systemName: "hand.point.up.left.fill").font(.system(size: 60)).overlay(alignment: .topLeading){
+                        Image(systemName: "arrow.up").font(.title2).foregroundStyle(.cyan).offset(x: -10, y: -10)
+                    }.padding()
+                }.padding()
+                HStack{
+                    Image(systemName: "hand.tap.fill").font(.system(size: 60)).symbolRenderingMode(.palette).foregroundStyle(.white,.cyan).overlay(alignment: .bottomLeading){
+                        Image(systemName: "2.circle").font(.title2).offset(x: -10)
+                    }.padding()
+                    Text("capture.double.tap".trad()).font(.title3)
+                }.padding()
+                HStack{
+                    Text("capture.autosave.in.game".trad()).font(.title3)
+                    Image(systemName: "rectangle.and.hand.point.up.left.filled").foregroundStyle(.white,.cyan).font(.system(size: 60)).padding()
+                }.padding()
+                Text("got.it.start".trad()).font(.title3).padding().padding(.horizontal).background(.cyan).clipShape(RoundedRectangle(cornerRadius: 8)).padding().onTapGesture{
+                    viewModel.quickActionsSlider.toggle()
+                }
+            }.padding().background(.black).clipShape(RoundedRectangle(cornerRadius: 15)).foregroundStyle(.white).padding()
+//                    PresentationSlider(title: "quick.action.tips".trad(),slides:[
+//                        Slide(title: "slide.swipeup.title".trad(), subtitle: "slide.swipeup.text".trad(), image: Image("slide_export")),
+//                        Slide(title: "slide.swipedown.title".trad(), subtitle: "slide.swipedown.text".trad().trad(), image: Image("slide_stats")),
+//                        Slide(title: "slide.doubletap.title".trad(), subtitle: "slide.doubletap.text".trad(), image: Image("slide_fill")),
+//                        Slide(title: "slide.autosave.title".trad(), subtitle: "slide.autosave.text", image: Image("slide_backup"))
+//                    ], cta_text: "start.capturing".trad(), cta_action: {viewModel.quickActionsSlider.toggle()}, skip_action: {viewModel.quickActionsSlider.toggle()}).frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center).padding()
                 }.transition(.move(edge: .bottom)) : nil)
         .toast(show: $viewModel.showToast, Toast(show: $viewModel.showToast, type: viewModel.type, message: viewModel.message))
         .foregroundColor(.white)

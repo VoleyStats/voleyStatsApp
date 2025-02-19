@@ -41,7 +41,7 @@ struct PresentationSlider: View {
                                 
                             }.padding(.horizontal)
                             if self.title != ""{
-                                Text(self.title).font(.title).padding(.vertical)
+                                Text(self.title).font(.largeTitle).padding(.vertical).multilineTextAlignment(.center)
                             }
 //                            Spacer()
                             VStack{
@@ -49,8 +49,8 @@ struct PresentationSlider: View {
                                     .resizable().scaledToFit().padding()
                                     .offset(x: offset).animation(.easeInOut, value: current)
                                 Text(slides[i].title)
-                                    .font(.title).offset(x: offset).animation(.easeInOut, value: current)
-                                Text(slides[i].subtitle).offset(x: offset).animation(.easeInOut, value: current)
+                                    .font(.title).offset(x: offset).animation(.easeInOut, value: current).multilineTextAlignment(.center).padding(.bottom)
+                                Text(slides[i].subtitle).offset(x: offset).animation(.easeInOut, value: current).multilineTextAlignment(.center)
                             }.padding()
                             Spacer()
                             HStack{
@@ -101,3 +101,4 @@ struct Slide{
 //        Slide(title: "this is the test slide 2", subtitle: "in this subtitle we will test another slider", image: Image("slide_backup"))
 //    ], cta_text: "start capturing stats", cta_action: {}, skip_action: {})
 //}
+

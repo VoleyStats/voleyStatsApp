@@ -432,7 +432,7 @@ struct UserView: View {
                     Slide(title: "slide.export.title".trad(), subtitle: "slide.export.text".trad(), image: Image("slide_export")),
                     Slide(title: "slide.stats.title".trad(), subtitle: "slide.stats.text".trad().trad(), image: Image("slide_stats")),
                     Slide(title: "slide.fill.title".trad(), subtitle: "slide.fill.text".trad(), image: Image("slide_fill")),
-                    Slide(title: "slide.backup.title".trad(), subtitle: "slide.backup.text", image: Image("slide_backup"))
+                    Slide(title: "slide.backup.title".trad(), subtitle: "slide.backup.text".trad(), image: Image("slide_backup"))
                 ], cta_text: "start.capturing".trad(), cta_action: {viewModel.newPass.toggle()}, skip_action: {viewModel.newPass.toggle()}).frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center).padding()
             }.transition(.move(edge: .bottom))
     }

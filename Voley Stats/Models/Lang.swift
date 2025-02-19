@@ -519,7 +519,23 @@ struct Lang{
             "next":"Next",
             "active.player":"Active players",
             "inactive.player":"Inactive players",
-            "show.tutorial":"Show tutorial"
+            "show.tutorial":"Show tutorial",
+            "welcome.to.pass":"Welcome to season pass!",
+            "slide.export.title":"Export stats to PDF",
+            "slide.export.text":"Create a custom report for your team",
+            "slide.stats.title":"Get your team and player stats in one place",
+            "slide.stats.text":"You will have access to historical and absolute charts, as well as filters to get mor accurate data",
+            "slide.fill.title":"Fill the actions you missed",
+            "slide.fill.text":"Complete the stats by adding the in-rally actions you missed during live",
+            "slide.backup.title":"Backup your data",
+            "slide.backup.text":"Store your season data in the cloud to access it later or from other device",
+            "start.capturing":"Start capturing",
+            "capture.swipe.up":"Swipe up on a player, automatically saves hit in play from the player",
+            "capture.swipe.down":"Swipe down on a player, automatically saves block in play from the player",
+            "capture.double.tap":"Double tap on a player, automatically saves dig in play from the player",
+            "capture.autosave.in.game":"When tapping a player and then an in-rally action, the game will automatically save the action",
+            "got.it.start":"Got it! Start",
+            "quick.actions.tip":"Tips for quicker capture!"
             
         ],
         "es":[
@@ -1036,7 +1052,23 @@ struct Lang{
             "next":"Siguiente",
             "active.player":"Jugadores activos",
             "inactive.player":"Jugadores inactivos",
-            "show.tutorial":"Ver tutorial"
+            "show.tutorial":"Ver tutorial",
+            "welcome.to.pass":"¡Bienvenido al pase de temporada!",
+            "slide.export.title":"Exporta tus estadísticas en PDF",
+            "slide.export.text":"Crea un informe de estadísticas personalizado para tu equipo y sus jugadores",
+            "slide.stats.title":"Obt´n las estadísticas de tu equipo en un solo lugar",
+            "slide.stats.text":"Tendrás acceso a gráficos con datos históricos y absolutos, además de filtros para obtener datos más precisos",
+            "slide.fill.title":"Rellena las acciones que te perdiste",
+            "slide.fill.text":"Completa las estadísticas añadiendo las acciones en juego que no pudiste capturar en vivo",
+            "slide.backup.title":"Crea un respaldo de tus estadísticas",
+            "slide.backup.text":"Guarda los datos de cada temporada en la nube para poder acceder a ellos más tarde o desde otro dispositivo",
+            "start.capturing":"Empezar a capturar",
+            "capture.swipe.up":"Deslizar hacia arriba en un jugador, guarda automaticamente un ataque en juego del jugador",
+            "capture.swipe.down":"Deslizar hacia abajo en un jugador, guarda automaticamente un bloqueo en juego del jugador",
+            "capture.double.tap":"Doble click en un jugador, guarda automaticamente una defensa en juego del jugador",
+            "capture.autosave.in.game":"Si seleccionas un jugador y despues una accion en juego, esta se guarda automaticamente",
+            "got.it.start":"¡Entendido! Empecemos",
+            "quick.actions.tip":"¡Captura acciones más rápido!"
         ]
     ]
 }

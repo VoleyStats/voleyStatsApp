@@ -489,38 +489,44 @@ struct Capture: View {
                                     }
                             }
                         }.padding().frame(maxWidth: .infinity).background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8)).padding(.horizontal)
+                        HStack{
+                            Image(systemName: "i.circle")
+                            Text("rotation.qr.compatibility".trad()).font(.caption)
+                        }.frame(maxWidth: .infinity, alignment: .trailing).padding(.horizontal)
                         //                    }.padding(.horizontal)
                         
                     }
                     //                Spacer()
-                    Text("save".trad()).foregroundColor(viewModel.checkSetters() ? .cyan : .gray).font(.body)
-                        .padding()
-                        .frame(maxWidth: .infinity)
-                        .background(.white.opacity(0.1))
-                        .clipShape(statb)
-                        .padding()
-                        .onTapGesture {
-                            let rot = Rotation.create(rotation: Rotation(team: viewModel.team, rotationArray: viewModel.rotationArray))
-                            if rot != nil {
-                                if rot!.1.id != viewModel.rotation.id{
-                                    viewModel.rotation = rot!.1
-                                    viewModel.rotationTurns = rot!.0
-                                    
-                                }
-                                if viewModel.server.id != 0{
-                                    viewModel.server = viewModel.rotation.server(rotate: viewModel.rotationTurns)
-                                }
-                            }
-                            if viewModel.liberos != viewModel.set.liberos{
-                                viewModel.set.liberos = viewModel.liberos
-                                viewModel.set.update()
-                            }
-                            viewModel.saveAdjust()
-                            
-                        }.disabled(!viewModel.checkSetters())
+                    
                     //                Spacer()
                 }
+                
             }
+            Text("save".trad()).foregroundColor(viewModel.checkSetters() ? .cyan : .gray).font(.body)
+                .padding()
+                .frame(maxWidth: .infinity)
+                .background(.white.opacity(0.1))
+                .clipShape(statb)
+                .padding()
+                .onTapGesture {
+                    let rot = Rotation.create(rotation: Rotation(team: viewModel.team, rotationArray: viewModel.rotationArray))
+                    if rot != nil {
+                        if rot!.1.id != viewModel.rotation.id{
+                            viewModel.rotation = rot!.1
+                            viewModel.rotationTurns = rot!.0
+                            
+                        }
+                        if viewModel.server.id != 0{
+                            viewModel.server = viewModel.rotation.server(rotate: viewModel.rotationTurns)
+                        }
+                    }
+                    if viewModel.liberos != viewModel.set.liberos{
+                        viewModel.set.liberos = viewModel.liberos
+                        viewModel.set.update()
+                    }
+                    viewModel.saveAdjust()
+                    
+                }.disabled(!viewModel.checkSetters())
         }.padding().background(.black).clipShape(RoundedRectangle(cornerRadius: 8)).frame(maxHeight: .infinity, alignment: .center).padding()
         
     }

@@ -503,9 +503,9 @@ struct FillStats: View {
         .onDisappear(perform: {
             //here re-rank the order values back to int
         })
-        .onAppear(perform: {
-            viewModel.players()
-        })
+        .onAppear{
+            
+        }
         .toolbar{
             ToolbarItem(placement: .navigationBarTrailing){
                 NavigationLink(destination: CaptureHelp()){
@@ -769,12 +769,22 @@ class FillStatsModel: ObservableObject{
         self.match = match
         self.team = team
         self.set = set
+        
+        getStats()
+        
+//        rotationArray = rotation.get(rotate: rotationTurns)
+//        players()
+//        self.timeOuts = set.timeOuts()
+    }
+    
+    func getStats(){
         let fullStats = set.stats()
         let stats = fullStats.filter{s in return s.to != 0}
-        let inGame = fullStats.filter{s in nextPoint?.order ?? 0 > s.order && s.to == 0}
-        if (!stats.isEmpty){
+        if(!stats.isEmpty){
             nextPoint = stats.first
             lastPoint = nil
+            let inGame = fullStats.filter{s in nextPoint?.order ?? 0 > s.order && s.to == 0}
+            print(inGame)
             lastStat = inGame.first
             nextStat = inGame.count > 1 ? inGame[1] : nil
             let prevOrd = lastStat != nil ? lastStat!.order : 0
@@ -782,10 +792,8 @@ class FillStatsModel: ObservableObject{
             order = ( prevOrd + nextOrd)/2
             players()
         }
-//        rotationArray = rotation.get(rotate: rotationTurns)
-//        players()
-//        self.timeOuts = set.timeOuts()
     }
+    
     func checkAvailableInGame()->Bool{
         if self.nextPoint != nil{
             return ![.serve, .receive].contains(Action.find(id: self.nextPoint!.action)?.area) && checkAdjust()

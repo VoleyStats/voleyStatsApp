@@ -535,7 +535,8 @@ struct Lang{
             "capture.double.tap":"Double tap on a player, automatically saves dig in play from the player",
             "capture.autosave.in.game":"When tapping a player and then an in-rally action, the game will automatically save the action",
             "got.it.start":"Got it! Start",
-            "quick.actions.tip":"Tips for quicker capture!"
+            "quick.actions.tip":"Tips for quicker capture!",
+            "rotation.qr.compatibility":"Rotation QR works with AppLineup"
             
         ],
         "es":[
@@ -1068,7 +1069,8 @@ struct Lang{
             "capture.double.tap":"Doble click en un jugador, guarda automaticamente una defensa en juego del jugador",
             "capture.autosave.in.game":"Si seleccionas un jugador y despues una accion en juego, esta se guarda automaticamente",
             "got.it.start":"¡Entendido! Empecemos",
-            "quick.actions.tip":"¡Captura acciones más rápido!"
+            "quick.actions.tip":"¡Captura acciones más rápido!",
+            "rotation.qr.compatibility":"El QR de la rotación es compatible con AppLineup"
         ]
     ]
 }

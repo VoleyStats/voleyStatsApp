@@ -11,7 +11,6 @@ import UIPilot
 struct SetData: View {
     @ObservedObject var viewModel: SetDataModel
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    @EnvironmentObject var path:PathManager
     var body: some View {
         VStack (alignment: .center){
             ScrollView{
@@ -57,7 +56,12 @@ struct SetData: View {
                                         }
                                     }
                             }
+                            
                         }.padding().frame(maxWidth: .infinity).background(.white.opacity(0.1)).clipShape(RoundedRectangle(cornerRadius: 8))
+                            HStack{
+                                Image(systemName: "i.circle")
+                                Text("rotation.qr.compatibility".trad()).font(.caption)
+                            }.frame(maxWidth: .infinity, alignment: .trailing).padding(.horizontal)
                     }
                         //                Spacer()
                         liberosForm().padding(.top)
@@ -92,10 +96,11 @@ struct SetData: View {
         .overlay(viewModel.qrModal ? qrModal() : nil)
         .onAppear{
             
-            if viewModel.set.stats().count > 0 {
+            if viewModel.set.stats().count > 0 && !viewModel.isPlaying{
                 self.presentationMode.wrappedValue.dismiss()
+            }else if !viewModel.isPlaying{
+                viewModel.players = viewModel.team.activePlayers()
             }
-            viewModel.players = viewModel.team.activePlayers()
         }
     }
     
@@ -343,6 +348,7 @@ class SetDataModel: ObservableObject{
                 let id = set.update()
                 if id {
                     if isPlaying {
+                        print("here")
                         closeModal.toggle()
                     }else{
                         self.saved = true

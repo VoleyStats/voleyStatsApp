@@ -260,7 +260,7 @@ struct ListTeams: View {
                                 Label("language".trad(), systemImage: "globe")
                             }
                         } label: {
-                            Label("settings".trad(), systemImage: "gearshape")
+                            Label("settings".trad(), systemImage: "gear")
                         }
                         
                     }.padding(.vertical)
